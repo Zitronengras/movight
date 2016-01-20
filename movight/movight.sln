@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{9DCC0766-6F41-EBD5-B5B2-FE8174026D86}") = "movight", "Assembly-CSharp.csproj", "{16954DE2-4062-9EC4-0457-FF42A5C71792}"
+EndProject
+Project("{9DCC0766-6F41-EBD5-B5B2-FE8174026D86}") = "movight", "Assembly-CSharp-Editor.csproj", "{EFD93738-5D29-5249-DA39-8DEEE493EDCB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16954DE2-4062-9EC4-0457-FF42A5C71792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16954DE2-4062-9EC4-0457-FF42A5C71792}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16954DE2-4062-9EC4-0457-FF42A5C71792}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16954DE2-4062-9EC4-0457-FF42A5C71792}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFD93738-5D29-5249-DA39-8DEEE493EDCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFD93738-5D29-5249-DA39-8DEEE493EDCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFD93738-5D29-5249-DA39-8DEEE493EDCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFD93738-5D29-5249-DA39-8DEEE493EDCB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
