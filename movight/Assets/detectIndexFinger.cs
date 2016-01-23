@@ -8,6 +8,7 @@ public class detectIndexFinger : MonoBehaviour {
 	Controller controller = new Controller();
 	Hand rightHand = new Hand();
 	Hand currentHand = new Hand();
+	Finger indexFinger = new Finger();
 	int indexFingerID = 1;
 
 	// Use this for initialization
@@ -42,8 +43,25 @@ public class detectIndexFinger : MonoBehaviour {
 					if (currentHand.IsRight) {
 						rightHand = currentHand;
 						Debug.Log ("************************************************Found right hand" + rightHand);
-						//FingerList fingers = rightHand.fingers();
-						//Finger fingerOnHandsByID = rightHand.finger (indexFingerID);
+						FingerList fingers = rightHand.Fingers;
+						foreach (Finger finger in fingers) {
+							//string fingerDescription = finger.ToString();
+							//Debug.Log ("Finger description: " + fingerDescription);
+							if (finger.IsValid) {
+								Finger.FingerType fingerType = finger.Type;
+								if ( fingerType == Finger.FingerType.TYPE_INDEX) {
+									Debug.Log ("found indexFinger!!!!");
+								}
+								//check for indexFinger
+
+							}
+							/*if (finger) {
+								String fingerDescription = finger.ToString();
+								Debug.Log ("Finger description: " + fingerDescription);
+							}*/
+							//Finger fingerOnHandsByID = rightHand.finger (indexFingerID);
+						}
+
 					}
 				}
 			}
