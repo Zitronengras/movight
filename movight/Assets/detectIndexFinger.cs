@@ -108,9 +108,9 @@ namespace Leap{
 												//Debug.Log ("**************");
 												//float distanceToObject = 1.0f;
 
-												/*if (Physics.Raycast(handControllerPos, rotUnityMiddleScaled, 1)) {
+												if (Physics.Raycast(handControllerPos, distalControl, 1)) {
 													Debug.Log ("*********Lampe getroffen************");
-												}*/
+												}
 
 											}
 										}
