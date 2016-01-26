@@ -11,23 +11,19 @@ namespace Leap{
 		Hand rightHand = new Hand();
 		Hand currentHand = new Hand();
 		Finger indexFinger = new Finger();
-		int indexFingerID = 1;
 		Bone distalBone = new Bone ();
-		float scan = 0.01f;
-		Vector3 normRay;
 
 		Transform handController;
 		Vector3 handControllerPos;
-
-		int hit = 0;
-		int lightLayer;
-		bool isHit;
 
 		//Test
 		Transform bulp;
 
 		//Raycast
 		RaycastHit hitObject = new RaycastHit();
+		LayerMask onlyLightLayer;
+		int hitCounter = 0;
+		int castDistance = 50; //TODO change dynamicly with roomsize
 
 
 
@@ -37,9 +33,8 @@ namespace Leap{
 
 			handController = GameObject.Find ("HeadMountedHandController").transform;
 			handControllerPos = handController.position;
-			//Debug.Log ("UNITY handControllerPos: " + handControllerPos);
 
-			lightLayer = LayerMask.NameToLayer ("light");
+			onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
 
 		}
 
@@ -110,37 +105,20 @@ namespace Leap{
 
 												//for test
 												bulp = GameObject.Find("bulp").transform;
-												Vector3 bulpPos = bulp.position;
-												//Debug.Log ("bulp position: " + bulpPos);
+												Vector3 bulpPos = bulp.position;										
 
-												//Debug.Log ("**************");
-												//float distanceToObject = 1.0f;
+												if (Physics.Raycast (handControllerPos, distalControl, out hitObject, castDistance, onlyLightLayer)) {
 
+													Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+													hitCounter += 1;
 
-												//LayerMask maskLayer = LayerMaskExtensions.Create("Ignore Raycast");
-												//LayerMask layerMask = 1 << LayerMask.NameToLayer ("light"); // only check for collisions with layerX
-												//LayerMask layerMask = ~(1 << LayerMask.NameToLayer ("Ignore Raycast")); // ignore collisions with layerX
+													if (hitCounter == 15) {
+														Debug.Log ("***ausgewählt" + hitObject.collider + " *** " + hitCounter);
+														hitCounter = 0;
+													}											
 
-
-
-												if (Physics.Raycast(handControllerPos, distalControl, out hitObject)) {
-
-													if (hitObject.transform.gameObject.layer == lightLayer) {
-														
-														Debug.Log ("***getroffen***" + hitObject.collider + " *** " + hit);
-														isHit = true;
-
-														//for (int sec = 0; sec <= 10000; sec++) {
-															
-														//if(
-														//}
-
-														//hitObject.collider.attachedRigidbody.
-
-														hit += 1;
-													} else {
-														isHit = false;
-													}
+												} else {
+													//Debug.Log ("hit nothing");
 												}
 
 											}
