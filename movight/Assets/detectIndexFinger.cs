@@ -19,8 +19,15 @@ namespace Leap{
 		Transform handController;
 		Vector3 handControllerPos;
 
+		int hit = 0;
+		int lightLayer;
+		bool isHit;
+
 		//Test
 		Transform bulp;
+
+		//Raycast
+		RaycastHit hitObject = new RaycastHit();
 
 
 
@@ -31,6 +38,8 @@ namespace Leap{
 			handController = GameObject.Find ("HeadMountedHandController").transform;
 			handControllerPos = handController.position;
 			//Debug.Log ("UNITY handControllerPos: " + handControllerPos);
+
+			lightLayer = LayerMask.NameToLayer ("light");
 
 		}
 
@@ -102,14 +111,36 @@ namespace Leap{
 												//for test
 												bulp = GameObject.Find("bulp").transform;
 												Vector3 bulpPos = bulp.position;
-												Debug.Log ("bulp position: " + bulpPos);
-												//Raycast
-												//RaycastHit hit = new RaycastHit();
+												//Debug.Log ("bulp position: " + bulpPos);
+
 												//Debug.Log ("**************");
 												//float distanceToObject = 1.0f;
 
-												if (Physics.Raycast(handControllerPos, distalControl, 1)) {
-													Debug.Log ("*********Lampe getroffen************");
+
+												//LayerMask maskLayer = LayerMaskExtensions.Create("Ignore Raycast");
+												//LayerMask layerMask = 1 << LayerMask.NameToLayer ("light"); // only check for collisions with layerX
+												//LayerMask layerMask = ~(1 << LayerMask.NameToLayer ("Ignore Raycast")); // ignore collisions with layerX
+
+
+
+												if (Physics.Raycast(handControllerPos, distalControl, out hitObject)) {
+
+													if (hitObject.transform.gameObject.layer == lightLayer) {
+														
+														Debug.Log ("***getroffen***" + hitObject.collider + " *** " + hit);
+														isHit = true;
+
+														//for (int sec = 0; sec <= 10000; sec++) {
+															
+														//if(
+														//}
+
+														//hitObject.collider.attachedRigidbody.
+
+														hit += 1;
+													} else {
+														isHit = false;
+													}
 												}
 
 											}
