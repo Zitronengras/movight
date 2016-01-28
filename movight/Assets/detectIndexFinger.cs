@@ -25,6 +25,10 @@ namespace Leap{
 		int hitCounter = 0;
 		int castDistance = 50; //TODO change dynamicly with roomsize
 
+		//countdown
+		bool isHit = false;
+
+
 
 
 
@@ -109,16 +113,24 @@ namespace Leap{
 
 												if (Physics.Raycast (handControllerPos, distalControl, out hitObject, castDistance, onlyLightLayer)) {
 
-													Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+													isHit = true;
 													hitCounter += 1;
 
+													Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+
 													if (hitCounter == 15) {
-														Debug.Log ("***ausgewählt" + hitObject.collider + " *** " + hitCounter);
+														Debug.Log ("***ausgewählt" + hitObject.collider + " *** " + hitCounter + "\n stop select sequence");
+
+														//stop select sequence
 														hitCounter = 0;
+														isHit = false;
 													}											
 
 												} else {
-													//Debug.Log ("hit nothing");
+													hitCounter = 0;
+													isHit = false;
+													
+													Debug.Log ("hit nothing \n stop select sequence");
 												}
 
 											}
