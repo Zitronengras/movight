@@ -2,9 +2,15 @@
 using System.Collections;
 using Leap;
 
-namespace Leap{
+//namespace Leap{
 
-	public class detectIndexFinger : MonoBehaviour {
+	public class DetectIndexFinger : MonoBehaviour{
+
+		public DetectIndexFinger(){
+
+		}
+
+		//GetHandControllerPos();
 
 		Frame frame;
 		Controller controller = new Controller();
@@ -14,37 +20,23 @@ namespace Leap{
 		Bone distalBone = new Bone ();
 
 		Transform handController;
-		Vector3 handControllerPos;
+		Vector3 handControllerPos; //fingerScript
 
-		//Test
-		Transform bulp;
-
-		//Raycast
-		RaycastHit hitObject = new RaycastHit();
-		LayerMask onlyLightLayer;
-		int hitCounter = 0;
-		int castDistance = 50; //TODO change dynamicly with roomsize
-
-		//countdown
-		bool isHit = false;
-
-
-
-
+		Vector3 fingerControl;
 
 		// Use this for initialization
 		void Start () {
 
-			handController = GameObject.Find ("HeadMountedHandController").transform;
-			handControllerPos = handController.position;
+			new SelectObject ();
 
-			onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
+			handController = GameObject.Find ("HeadMountedHandController").transform;
+			handControllerPos = handController.position;		
 
 		}
 
 		// Update is called once per frame
 		void Update () {
-			
+
 			if (controller.IsConnected) {
 				frame = controller.Frame ();
 			} else {
@@ -72,13 +64,15 @@ namespace Leap{
 							if (!extendedFingers.IsEmpty) {	
 								//Debug.Log("extended fingers found");
 								foreach (Finger currentExtFinger in extendedFingers) {
-									
+
 									if (currentExtFinger.IsValid) {
-										
+
 										Finger.FingerType fingerType = currentExtFinger.Type;
 
+									//TODO maybe fingertip??
+
 										if (fingerType == Finger.FingerType.TYPE_INDEX) {
-											
+
 											indexFinger = currentExtFinger;
 											//Debug.Log ("found extended indexFinger");
 
@@ -89,7 +83,7 @@ namespace Leap{
 												//Debug.Log ("DISTAL Bone of indexFinger!");
 
 												//get center point of distal
-												Vector distalBoneCenter = distalBone.Center;
+												Leap.Vector distalBoneCenter = distalBone.Center;
 												//Debug.Log ("distalBoneCenter: " + distalBoneCenter);
 
 												//transform into unityWorld
@@ -103,37 +97,37 @@ namespace Leap{
 												//get head rotation
 												var headRotation = Cardboard.SDK.HeadRotation;
 												//rotate rotUnityDistalBoneCenter with headMovement
-												Vector3 distalControl = headRotation * rotUnityDistalBoneCenter;
+												fingerControl = headRotation * rotUnityDistalBoneCenter;
+												SetFingerControl (fingerControl);
 
-												Debug.DrawRay (handControllerPos, distalControl*10, Color.cyan, 2.0f, true);
+												Debug.DrawRay (handControllerPos, fingerControl*10, Color.cyan, 2.0f, true);
 
 												//for test
-												bulp = GameObject.Find("bulp").transform;
-												Vector3 bulpPos = bulp.position;										
+												/*bulp = GameObject.Find("bulp").transform;
+												Vector3 bulpPos = bulp.position;*/								
 
-												if (Physics.Raycast (handControllerPos, distalControl, out hitObject, castDistance, onlyLightLayer)) {
+												/*if (Physics.Raycast (handControllerPos, distalControl, out hitObject, castDistance, onlyLightLayer)) {
 
-													isHit = true;
-													hitCounter += 1;
+												isHit = true;
+												hitCounter += 1;
 
-													Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+												Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
 
-													if (hitCounter == 15) {
-														Debug.Log ("***ausgewählt" + hitObject.collider + " *** " + hitCounter + "\n stop select sequence");
-
-														//stop select sequence
-														hitCounter = 0;
-														isHit = false;
-													}											
-
-												} else {
+												if (hitCounter == 15) {
+													Debug.Log ("***ausgewählt" + hitObject.collider + " *** " + hitCounter + "\n stop select sequence");
+													setSelectedObject ();
+													//stop select sequence
 													hitCounter = 0;
 													isHit = false;
-													
-													Debug.Log ("hit nothing \n stop select sequence");
-												}
+												}											
 
-											}
+											} else {
+												hitCounter = 0;
+												isHit = false;
+
+												Debug.Log ("hit nothing \n stop select sequence");
+											}*/
+
 										}
 									}
 								}
@@ -144,4 +138,22 @@ namespace Leap{
 			}
 		}
 	}
+
+	public void SetHandControllerPos(Vector3 vector){
+		handControllerPos = vector;
+	}
+
+	public Vector3 GetHandControllerPos(){
+		return handControllerPos;
+	}
+
+	void SetFingerControl(Vector3 vector){
+		fingerControl = vector;
+	}
+
+	public Vector3 GetFingerControl(){
+		return fingerControl;
+	}	
+
 }
+//}
