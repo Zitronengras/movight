@@ -14,7 +14,7 @@ public class SelectObject : MonoBehaviour{
 	bool isHit = false;
 	int hitCounter = 0;
 
-	GameObject selectedObject;
+	GameObject selectedLight;
 
 	//Test
 	Transform bulp;
@@ -45,8 +45,12 @@ public class SelectObject : MonoBehaviour{
 			Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
 
 			if (hitCounter == 15) {
-				Debug.Log ("***ausgewählt" + hitObject.collider + " *** " + hitCounter + "\n stop select sequence");
-				//fingerScript.SetSelectedObject ();
+				Debug.Log ("***ausgewählt" + hitObject.collider.gameObject + " *** " + "\n stop select sequence");
+				selectedLight = hitObject.collider.gameObject;
+				SetSelectedObject (selectedLight); //sets current Object for following control
+				//selectedLight.
+
+
 				//stop select sequence
 				hitCounter = 0;
 				isHit = false;
@@ -60,6 +64,6 @@ public class SelectObject : MonoBehaviour{
 		}
 	}
 	void SetSelectedObject(GameObject gameObject) {
-		selectedObject = gameObject;
+		selectedLight = gameObject;
 	}
 }
