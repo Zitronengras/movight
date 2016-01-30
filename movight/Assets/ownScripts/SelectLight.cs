@@ -42,10 +42,10 @@ public class SelectLight : MonoBehaviour{
 			isHit = true;
 			hitCounter += 1;
 
-			Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+			//Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
 
 			if (hitCounter == 15) {
-				Debug.Log ("***ausgewählt" + hitObject.collider.gameObject + " *** " + "\n stop select sequence");
+				//Debug.Log ("***ausgewählt" + hitObject.collider.gameObject + " *** " + "\n stop select sequence");
 				selectedLight = hitObject.collider.gameObject;
 				SetSelectedObject (selectedLight); //sets current Object for following control
 				//selectedLight.

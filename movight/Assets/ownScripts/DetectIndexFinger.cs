@@ -22,7 +22,8 @@ public class DetectIndexFinger : MonoBehaviour{
 	Bone distalBone = new Bone ();		
 
 	public static Vector3 fingerPos;
-	public static Leap.Vector tipPosition;
+	public static Leap.Vector leapTipPosition;
+	public static bool isFingerDetected = false;
 
 	// Use this for initialization
 	void Start () {
@@ -72,10 +73,12 @@ public class DetectIndexFinger : MonoBehaviour{
 									if (fingerType == Finger.FingerType.TYPE_INDEX) {
 
 										indexFinger = currentExtFinger;
-										tipPosition = indexFinger.TipPosition;
+										leapTipPosition = indexFinger.TipPosition;
+
+										isFingerDetected = true;
 										//Debug.Log ("found extended indexFinger");
 
-									/*	
+										/*	
 									//find distal bone
 										distalBone = indexFinger.Bone (Bone.BoneType.TYPE_DISTAL);
 
@@ -90,12 +93,12 @@ public class DetectIndexFinger : MonoBehaviour{
 											//Vector3 unityDistalBoneCenter = distalBoneCenter.ToUnityScaled();
 										*/
 											// work with tipPositon
-											Vector3 unityDistalBoneCenter = tipPosition.ToUnityScaled();
-											
+											Vector3 unityDistalBoneCenter = leapTipPosition.ToUnityScaled ();
+												
 											//Debug.Log ("UNITY unityDistalBoneCenter: " + unityDistalBoneCenter);
 
 											//rotate because of HMD
-											Vector3 rotUnityDistalBoneCenter = Quaternion.Euler(270, 180, 0) * unityDistalBoneCenter;
+											Vector3 rotUnityDistalBoneCenter = Quaternion.Euler (270, 180, 0) * unityDistalBoneCenter;
 											//Debug.Log ("UNITY rotUnityMiddleScaled: " + rotUnityMiddleScaled);
 
 											//get head rotation
@@ -104,16 +107,19 @@ public class DetectIndexFinger : MonoBehaviour{
 											fingerPos = headRotation * rotUnityDistalBoneCenter;
 											//SetFingerControl (fingerControl);
 
-											Debug.DrawRay (handControllerPos, fingerPos*10, Color.cyan, 2.0f, true);
+											Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
 
 
 
-									//}
-									}
+										//}
+										} 
 								}
 							}
 						}
 					}
+				//TODO right position for else???			
+				}else {
+					isFingerDetected = false;
 				}
 			}
 		}

@@ -24,7 +24,21 @@ public class Position : MonoBehaviour {
 
 		//define area in LeapArea for horizontal control
 		//between x = 70 and x = -70
-		//if(
+
+
+
+		if (DetectIndexFinger.isFingerDetected == true) {
+			
+			Debug.Log ("LeapFingerPos: " + DetectIndexFinger.leapTipPosition);
+			Debug.Log ("LeapFingerPos.x: " + DetectIndexFinger.leapTipPosition.x);
+			
+			if (DetectIndexFinger.leapTipPosition.x <= 70 && DetectIndexFinger.leapTipPosition.x >= -70) {
+
+				Debug.Log ("Finger zwischen 70 und -70");
+
+			}
+
+		}
 
 
 		
