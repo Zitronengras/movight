@@ -11,7 +11,8 @@ public class SelectLight : MonoBehaviour{
 	int castDistance = 50; //TODO change dynamicly with roomsize
 
 	//countdown
-	bool isHit = false;
+	public static bool isLightHit = false;
+	public static bool isLightSelected = false;
 	int hitCounter = 0;
 
 	GameObject selectedLight;
@@ -39,26 +40,27 @@ public class SelectLight : MonoBehaviour{
 
 		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, castDistance, onlyLightLayer)) {
 
-			isHit = true;
+			isLightHit = true;
 			hitCounter += 1;
 
 			//Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
 
 			if (hitCounter == 15) {
+				isLightSelected = true;
 				//Debug.Log ("***ausgewählt" + hitObject.collider.gameObject + " *** " + "\n stop select sequence");
 				selectedLight = hitObject.collider.gameObject;
 				SetSelectedObject (selectedLight); //sets current Object for following control
-				//selectedLight.
+				Debug.Log("getroffenes Licht Objekt: " + selectedLight);
 
 
 				//stop select sequence
 				hitCounter = 0;
-				isHit = false;
+				isLightHit = false;
 			}											
 
 		} else {
 			hitCounter = 0;
-			isHit = false;
+			isLightHit = false;
 
 			//Debug.Log ("hit nothing \n stop select sequence");
 		}

@@ -35,6 +35,7 @@ public class ConstructionDistance : MonoBehaviour {
 			wallDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, hitObject.point);
 
 			//Debug.Log ("Distance to wall:" + wallDistance.ToString());
+			//Debug.Log ("*************");
 
 		} else {
 
