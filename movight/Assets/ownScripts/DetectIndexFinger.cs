@@ -6,28 +6,25 @@ using Leap;
 
 	public class DetectIndexFinger : MonoBehaviour{
 
-		public DetectIndexFinger(){
+		/*public DetectIndexFinger(){
 
-		}
+		}*/
 
 		//GetHandControllerPos();
 
 		Frame frame;
 		Controller controller = new Controller();
+		Transform handController;
+		public static Vector3 handControllerPos; //fingerScript
 		Hand rightHand = new Hand();
 		Hand currentHand = new Hand();
 		Finger indexFinger = new Finger();
-		Bone distalBone = new Bone ();
+		Bone distalBone = new Bone ();		
 
-		Transform handController;
-		Vector3 handControllerPos; //fingerScript
-
-		Vector3 fingerControl;
+		public static Vector3 fingerPos;
 
 		// Use this for initialization
 		void Start () {
-
-			new SelectObject ();
 
 			handController = GameObject.Find ("HeadMountedHandController").transform;
 			handControllerPos = handController.position;		
@@ -97,10 +94,10 @@ using Leap;
 												//get head rotation
 												var headRotation = Cardboard.SDK.HeadRotation;
 												//rotate rotUnityDistalBoneCenter with headMovement
-												fingerControl = headRotation * rotUnityDistalBoneCenter;
-												SetFingerControl (fingerControl);
+												fingerPos = headRotation * rotUnityDistalBoneCenter;
+												//SetFingerControl (fingerControl);
 
-												Debug.DrawRay (handControllerPos, fingerControl*10, Color.cyan, 2.0f, true);
+												Debug.DrawRay (handControllerPos, fingerPos*10, Color.cyan, 2.0f, true);
 
 												//for test
 												/*bulp = GameObject.Find("bulp").transform;
@@ -139,21 +136,21 @@ using Leap;
 		}
 	}
 
-	public void SetHandControllerPos(Vector3 vector){
+	/*public void SetHandControllerPos(Vector3 vector){
 		handControllerPos = vector;
 	}
 
 	public Vector3 GetHandControllerPos(){
 		return handControllerPos;
-	}
+	}*/
 
-	void SetFingerControl(Vector3 vector){
+	/*void SetFingerControl(Vector3 vector){
 		fingerControl = vector;
 	}
 
 	public Vector3 GetFingerControl(){
 		return fingerControl;
-	}	
+	}*/	
 
 }
 //}

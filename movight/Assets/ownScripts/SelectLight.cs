@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SelectObject : MonoBehaviour{
+public class SelectLight : MonoBehaviour{
 	
 	DetectIndexFinger fingerScript;
 
@@ -37,7 +37,7 @@ public class SelectObject : MonoBehaviour{
 		bulp = GameObject.Find("bulp").transform;
 		Vector3 bulpPos = bulp.position;
 
-		if (Physics.Raycast (fingerScript.GetHandControllerPos(), fingerScript.GetFingerControl(), out hitObject, castDistance, onlyLightLayer)) {
+		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, castDistance, onlyLightLayer)) {
 
 			isHit = true;
 			hitCounter += 1;
@@ -60,10 +60,13 @@ public class SelectObject : MonoBehaviour{
 			hitCounter = 0;
 			isHit = false;
 
-			Debug.Log ("hit nothing \n stop select sequence");
+			//Debug.Log ("hit nothing \n stop select sequence");
 		}
 	}
 	void SetSelectedObject(GameObject gameObject) {
 		selectedLight = gameObject;
+	}
+	public GameObject GetSelectedLight() {
+		return selectedLight;
 	}
 }
