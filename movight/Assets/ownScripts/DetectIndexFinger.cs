@@ -21,12 +21,14 @@ public class DetectIndexFinger : MonoBehaviour{
 	Finger indexFinger = new Finger();
 	Bone distalBone = new Bone ();		
 
+
 	public static Vector3 fingerPos;
 	public static Leap.Vector leapTipPosition;
 	public static bool isFingerDetected = false;
 
 	// Use this for initialization
 	void Start () {
+
 
 		handController = GameObject.Find ("HeadMountedHandController").transform;
 		handControllerPos = handController.position;		
@@ -115,17 +117,26 @@ public class DetectIndexFinger : MonoBehaviour{
 											Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
 
 
-
 										//}
-										} 
+										} else{
+											
+											//isFingerDetected = false;
+											//Debug.Log ("isFingerDetected = false");
+
+
+										}
 								}
 							}
 						}
+					}//TODO better "abbruch"ereignis
+					if (currentHand.IsLeft) {
+						SelectLight.isLightSelected = false;
+						Debug.Log ("currentHand.IsLeft: isSelectedLight = false");
 					}
 				//TODO right position for else???			
-				}else {
+				}/*else {
 					isFingerDetected = false;
-				}
+				}*/
 			}
 		}
 	}

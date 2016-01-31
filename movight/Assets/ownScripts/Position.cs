@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Position : MonoBehaviour {
@@ -11,6 +11,11 @@ public class Position : MonoBehaviour {
 	float minRangeValue;
 	float maxRangeValue;
 
+	bool isRangeCalculated = false;
+
+	Vector3 fingerPos;
+
+	int i;
 
 	float maxY;
 	float minY;
@@ -25,6 +30,8 @@ public class Position : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		i = 0;
 
 		maxY = 500.0f / 1000; //millimeter in meter for unity
 		minY = 100.0f / 1000; //millimeter in meter for unity
@@ -54,20 +61,44 @@ public class Position : MonoBehaviour {
 
 		//TODO reihenfolge der werteübergaben stimmt nicht
 
-		if (DetectIndexFinger.isFingerDetected == true && SelectLight.isLightHit && SelectLight.isLightSelected == true) {
+
+		if (ConstructionDistance.isMaxDistanceDetermined == true){
 			
-			//Debug.Log ("LeapFingerPos: " + DetectIndexFinger.leapTipPosition);
-			//Debug.Log ("LeapFingerPos.y: " + DetectIndexFinger.leapTipPosition.y/1000);
+			//Debug.Log ("*******isMaxDistanceDetermined************");
 
-			if (ConstructionDistance.isMaxDistanceDetermined == true) {
+			if (DetectIndexFinger.isFingerDetected == true) { //&& SelectLight.isLightHit				
+			
+				//Debug.Log ("LeapFingerPos: " + DetectIndexFinger.leapTipPosition);
+				//Debug.Log ("LeapFingerPos.y: " + DetectIndexFinger.leapTipPosition.y/1000);
 
-				Debug.Log ("*******************");
-				calculateControlRange ();
-				Debug.Log ("*******************");
-				if (distanceFingerController >= minRangeValue && distanceFingerController <= maxRangeValue) {
-					Debug.Log ("In range");
+				//Debug.Log ("*********isFingerDetected**********");
+
+				if (SelectLight.isLightSelected == true) {
+
+					//TODO isSelectedLight = false at the end of positioning 
+
+					Debug.Log ("*********isLightSelected**********");
+
+					if (isRangeCalculated == false) {
+						calculateControlRange ();
+						isRangeCalculated = true;
+						i += 1;
+						//Debug.Log ("i: " + i.ToString ());
+
+						if (distanceFingerController >= minRangeValue && distanceFingerController <= maxRangeValue) {
+							//Debug.Log ("In range");
+						}
+					}
+					if (isRangeCalculated == true) {
+
+						Debug.Log ("*********isRangeCalculated**********");
+
+						//position light
+						//moveLightDepth();
+						percentagePosition ();
+
+					}
 				}
-
 			}
 
 
@@ -133,6 +164,9 @@ public class Position : MonoBehaviour {
 
 			}*/
 
+		} else {
+			isRangeCalculated = false;
+			i = 0;
 		}
 
 
@@ -170,7 +204,7 @@ public class Position : MonoBehaviour {
 		// 2 
 		//get leapFingerPos
 		//Leap.Vector leapFingerPosInMeter = (DetectIndexFinger.leapTipPosition / 1000);
-		Vector3 fingerPos = DetectIndexFinger.fingerPos;
+		fingerPos = DetectIndexFinger.fingerPos;
 		//Debug.Log ("FingerPos: " + fingerPos.ToString ());
 		//Debug.Log ("handContr: " + DetectIndexFinger.handControllerPos.ToString ());
 		distanceFingerController = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPos);
@@ -204,13 +238,49 @@ public class Position : MonoBehaviour {
 		Debug.Log ("maxRangeValue: " + maxRangeValue.ToString ());
 
 		if (minRangeValue < 0.10) {
-			Debug.LogFormat ("minRangeValue < 0.10");
+			//Debug.LogFormat ("minRangeValue < 0.10");
 		}
 		if (maxRangeValue > 0.60) {
-			Debug.LogFormat ("maxRangeValue > 0.30");
+			//Debug.LogFormat ("maxRangeValue > 0.0");
 		}
-
+		Debug.Log ("range calculated");
 	}
+
+	void moveLightDepth(){
+		
+		selectedLight = selectScript.GetSelectedLight();
+
+		fingerPos = DetectIndexFinger.fingerPos;
+		distanceFingerController = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPos);
+
+		//check for range
+		if (distanceFingerController >= minRangeValue && distanceFingerController <= maxRangeValue) {
+			Debug.LogFormat ("in range");
+		} else {
+			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
+		}
+		//get percentage pos of finger in range
+		//float tmp = 100
+	}
+
+	void percentagePosition(){ //float finger){
+		
+		distanceFingerController = Vector3.Distance (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos);
+		Debug.Log ("distance:" + distanceFingerController.ToString ());
+
+		//for test
+		float tmp = maxRangeValue * 1000.0f;
+		//float dreisatz1 = maxRangeValue / tmp;
+
+		//
+		float dreisatz1right = 100 / tmp;
+		float percentage = dreisatz1right * distanceFingerController;
+
+		Debug.Log ("percentage: " + percentage);
+
+		//return percentage;
+	}
+
 
 
 }
