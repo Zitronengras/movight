@@ -11,7 +11,12 @@ public class Position : MonoBehaviour {
 	float minRangeValue;
 	float maxRangeValue;
 
+	Vector3 lightPosition;
+
 	bool isRangeCalculated = false;
+	float selectedLightDistanceToController;
+
+	float maxWallDistance;
 
 	Vector3 fingerPos;
 
@@ -36,6 +41,7 @@ public class Position : MonoBehaviour {
 		maxY = 500.0f / 1000; //millimeter in meter for unity
 		minY = 100.0f / 1000; //millimeter in meter for unity
 		rangeY = maxY - minY;
+
 
 		//if (DetectIndexFinger.isFingerDetected == true) {
 			
@@ -63,6 +69,9 @@ public class Position : MonoBehaviour {
 
 
 		if (ConstructionDistance.isMaxDistanceDetermined == true){
+
+			//get maxWallDistance
+			maxWallDistance = ConstructionDistance.maxWallDistance;
 			
 			//Debug.Log ("*******isMaxDistanceDetermined************");
 
@@ -74,6 +83,10 @@ public class Position : MonoBehaviour {
 				//Debug.Log ("*********isFingerDetected**********");
 
 				if (SelectLight.isLightSelected == true) {
+
+					selectedLight = selectScript.GetSelectedLight();
+					lightPosition = selectedLight.transform.position;
+
 
 					//TODO isSelectedLight = false at the end of positioning 
 
@@ -95,7 +108,13 @@ public class Position : MonoBehaviour {
 
 						//position light
 						//moveLightDepth();
-						percentagePosition ();
+
+						percentageLightPosition (selectedLightDistanceToController);
+
+						distanceFingerController = Vector3.Distance (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos);
+						percentageFingerPosition (distanceFingerController);
+
+						moveLightDepth ();
 
 					}
 				}
@@ -177,18 +196,17 @@ public class Position : MonoBehaviour {
 		
 		float controlRangeDepth = 300.0f; // 100 percent
 
-		selectedLight = selectScript.GetSelectedLight();
+		//selectedLight = selectScript.GetSelectedLight();
 		//Debug.Log ("1 returned selectedLight position" + selectedLight.transform.position.ToString());
 
-		//get maxWallDistance
-		float maxWallDistance = ConstructionDistance.maxWallDistance;
+
 		//Debug.Log ("maxwalldistance: " + maxWallDistance.ToString ());
 
 		// 1 percentage position of light on raycast between controller and maxWallDistance
 		//walldistance = 100%
 		float scaleHelper = 100 / maxWallDistance; //multiply scaleHelper with position of light
 		//
-		float selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, selectedLight.transform.position);
+		selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, lightPosition);
 		//Debug.Log ("2 selectedLightDistanceToController absolut: " + selectedLightDistanceToController);
 		//
 		/*Vector3 distanceLightContr = selectedLight.transform.position - DetectIndexFinger.handControllerPos;
@@ -198,7 +216,7 @@ public class Position : MonoBehaviour {
 
 		//percentage position of light between controllerand wall
 		float percentagePosOfLight = (scaleHelper * selectedLightDistanceToController); // / 100;  //percent
-		//Debug.Log ("3 percentage pos of Light: " + percentagePosOfLight);
+		Debug.Log ("3 percentage pos of Light: " + percentagePosOfLight);
 
 
 		// 2 
@@ -247,8 +265,14 @@ public class Position : MonoBehaviour {
 	}
 
 	void moveLightDepth(){
-		
+
+		Debug.Log ("Licht position" + selectedLight.transform.position.ToString ());
+
+		Vector3 lightPos = selectedLight.transform.position;
 		selectedLight = selectScript.GetSelectedLight();
+		selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, lightPosition);
+		distanceFingerController = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPos);
+
 
 		fingerPos = DetectIndexFinger.fingerPos;
 		distanceFingerController = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPos);
@@ -260,26 +284,46 @@ public class Position : MonoBehaviour {
 			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 		}
 		//get percentage pos of finger in range
-		//float tmp = 100
+		float tmp = distanceFingerController / percentageLightPosition(selectedLightDistanceToController);
+		float finalDistance = tmp * percentageFingerPosition (distanceFingerController);
+
+		Vector3 normalizedLightVector = lightPos.normalized;
+		//Vector3 newVector = normalizedLightVector * finalDistance;
+		lightPosition = normalizedLightVector * finalDistance;
+		selectedLight.transform.position = lightPosition;
+
+
 	}
 
-	void percentagePosition(){ //float finger){
+	float percentageFingerPosition(float distance){
 		
-		distanceFingerController = Vector3.Distance (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos);
-		Debug.Log ("distance:" + distanceFingerController.ToString ());
-
 		//for test
 		float tmp = maxRangeValue * 1000.0f;
 		//float dreisatz1 = maxRangeValue / tmp;
 
 		//
 		float dreisatz1right = 100 / tmp;
-		float percentage = dreisatz1right * distanceFingerController;
+		float percentage = dreisatz1right * distance;
 
-		Debug.Log ("percentage: " + percentage);
+		Debug.Log ("finger percent: " + percentage);
 
-		//return percentage;
+		return percentage;
 	}
+
+	float percentageLightPosition(float lightDistance){
+
+		float tmp = maxWallDistance * 1000.0f;
+
+		float dreisatz1right = 100 / tmp;
+		float percentage = dreisatz1right * lightDistance;
+
+		Debug.Log ("light percent: " + percentage);
+
+		return percentage;
+
+	}
+
+
 
 
 
