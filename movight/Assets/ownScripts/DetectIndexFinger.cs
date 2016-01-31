@@ -76,6 +76,8 @@ public class DetectIndexFinger : MonoBehaviour{
 										leapTipPosition = indexFinger.TipPosition;
 
 										isFingerDetected = true;
+										//Debug.Log ("isFingerDetected = true");
+
 										//Debug.Log ("found extended indexFinger");
 
 										/*	
@@ -105,6 +107,9 @@ public class DetectIndexFinger : MonoBehaviour{
 											var headRotation = Cardboard.SDK.HeadRotation;
 											//rotate rotUnityDistalBoneCenter with headMovement
 											fingerPos = headRotation * rotUnityDistalBoneCenter;
+											//Debug.Log ("Unity finger pos: " + fingerPos); 
+											//Debug.Log ("Unity finger pos z : " + fingerPos.z); 
+
 											//SetFingerControl (fingerControl);
 
 											Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
