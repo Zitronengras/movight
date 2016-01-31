@@ -107,7 +107,7 @@ public class DetectIndexFinger : MonoBehaviour{
 											var headRotation = Cardboard.SDK.HeadRotation;
 											//rotate rotUnityDistalBoneCenter with headMovement
 											fingerPos = headRotation * rotUnityDistalBoneCenter;
-											//Debug.Log ("Unity finger pos: " + fingerPos); 
+											Debug.Log ("Unity finger pos.x: " + fingerPos.x); 
 											//Debug.Log ("Unity finger pos z : " + fingerPos.z); 
 
 											//SetFingerControl (fingerControl);
