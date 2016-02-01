@@ -114,7 +114,7 @@ public class DetectIndexFinger : MonoBehaviour{
 
 											//SetFingerControl (fingerControl);
 
-											Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
+											//Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
 
 
 										//}

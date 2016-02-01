@@ -5,7 +5,7 @@ public class Position : MonoBehaviour {
 
 	SelectLight selectScript;
 
-	GameObject selectedLight; //= selectScript.GetSelectedLight();
+	GameObject light; //= selectScript.GetSelectedLight();
 
 	//calculateFingerRange
 	float fingerControllerDistanceBegin;
@@ -293,7 +293,7 @@ public class Position : MonoBehaviour {
 
 	void moveLightDepth(GameObject light, Vector3 lightPosition){
 
-		Debug.Log ("vorherige Licht position, eingang der methode" + selectedLight.transform.position.ToString ());
+		Debug.Log ("vorherige Licht position, eingang der methode" + light.transform.position.ToString ());
 
 		//Vector3 lightPos = selectedLight.transform.position;
 		//selectedLight = selectScript.GetSelectedLight();
