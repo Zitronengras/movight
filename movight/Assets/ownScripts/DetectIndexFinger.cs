@@ -82,39 +82,23 @@ public class DetectIndexFinger : MonoBehaviour{
 
 										//Debug.Log ("found extended indexFinger");
 
-										/*	
-									//find distal bone
-										distalBone = indexFinger.Bone (Bone.BoneType.TYPE_DISTAL);
+										// work with tipPositon
+										Vector3 unityDistalBoneCenter = leapTipPosition.ToUnityScaled ();
+											
+										//Debug.Log ("UNITY unityDistalBoneCenter: " + unityDistalBoneCenter);
 
-										if (distalBone.IsValid) {
-											//Debug.Log ("DISTAL Bone of indexFinger!");
+										//rotate because of HMD
+										Vector3 rotUnityDistalBoneCenter = Quaternion.Euler (270, 180, 0) * unityDistalBoneCenter;
+										//Debug.Log ("UNITY rotUnityMiddleScaled: " + rotUnityMiddleScaled);
 
-											//get center point of distal
-											Leap.Vector distalBoneCenter = distalBone.Center;
-											Debug.Log ("distalBoneCenter: " + distalBoneCenter);
+										//get head rotation
+										var headRotation = Cardboard.SDK.HeadRotation;
+										//rotate rotUnityDistalBoneCenter with headMovement
+										fingerPos = headRotation * rotUnityDistalBoneCenter;
+										//Debug.Log ("Unity finger pos: " + fingerPos); 
+										Debug.Log ("Unity finger pos x : " + fingerPos.x); 
 
-											//transform into unityWorld
-											//Vector3 unityDistalBoneCenter = distalBoneCenter.ToUnityScaled();
-										*/
-											// work with tipPositon
-											Vector3 unityDistalBoneCenter = leapTipPosition.ToUnityScaled ();
-												
-											//Debug.Log ("UNITY unityDistalBoneCenter: " + unityDistalBoneCenter);
-
-											//rotate because of HMD
-											Vector3 rotUnityDistalBoneCenter = Quaternion.Euler (270, 180, 0) * unityDistalBoneCenter;
-											//Debug.Log ("UNITY rotUnityMiddleScaled: " + rotUnityMiddleScaled);
-
-											//get head rotation
-											var headRotation = Cardboard.SDK.HeadRotation;
-											//rotate rotUnityDistalBoneCenter with headMovement
-											fingerPos = headRotation * rotUnityDistalBoneCenter;
-											//Debug.Log ("Unity finger pos: " + fingerPos); 
-											//Debug.Log ("Unity finger pos z : " + fingerPos.z); 
-
-											//SetFingerControl (fingerControl);
-
-											//Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
+										//Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
 
 
 										//}
