@@ -27,7 +27,7 @@ public class ConstructionDistance : MonoBehaviour {
 
 		degreeCounter = 0;
 		scanVector = Vector3.forward; //right; // (1,0,0)
-		Debug.Log("initiate scanVector" + scanVector.ToString());
+		//Debug.Log("initiate scanVector" + scanVector.ToString());
 		maxWallDistance = 0;
 		onlyWallsLayer = 1 << LayerMask.NameToLayer ("wall");
 
