@@ -41,7 +41,7 @@ public class SelectLight : MonoBehaviour{
 					//isLightHit = true;
 					hitCounter += 1;
 
-					//Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+					Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
 
 					if (hitCounter == 15) {
 						

@@ -83,22 +83,23 @@ public class DetectIndexFinger : MonoBehaviour{
 										//Debug.Log ("found extended indexFinger");
 
 										// work with tipPositon
-										Vector3 unityDistalBoneCenter = leapTipPosition.ToUnityScaled ();
+										Vector3 unityFingerTip = leapTipPosition.ToUnityScaled ();
 											
 										//Debug.Log ("UNITY unityDistalBoneCenter: " + unityDistalBoneCenter);
 
 										//rotate because of HMD
-										Vector3 rotUnityDistalBoneCenter = Quaternion.Euler (270, 180, 0) * unityDistalBoneCenter;
+										Vector3 rotHMDUnityFingerTip = Quaternion.Euler (270, 180, 0) * unityFingerTip;
 										//Debug.Log ("UNITY rotUnityMiddleScaled: " + rotUnityMiddleScaled);
 
+										//TO change in HeadRotation
 										//get head rotation
 										var headRotation = Cardboard.SDK.HeadRotation;
 										//rotate rotUnityDistalBoneCenter with headMovement
-										fingerPos = headRotation * rotUnityDistalBoneCenter;
+										fingerPos = (headRotation * rotHMDUnityFingerTip); // * 2.5f;
 										//Debug.Log ("Unity finger pos: " + fingerPos); 
 										Debug.Log ("Unity finger pos x : " + fingerPos.x); 
 
-										//Debug.DrawRay (handControllerPos, fingerPos * 10, Color.cyan, 2.0f, true);
+										Debug.DrawRay (handControllerPos, fingerPos, Color.cyan, 2.0f, true);
 
 
 										//}

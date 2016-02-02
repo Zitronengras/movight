@@ -79,19 +79,20 @@ public class Position : MonoBehaviour {
 					}
 
 					//calculate range at the beginning of the selectionsequence
-					if (isHorizontalRangeCalculated == false) {
+					if (isDepthRangeCalculated == true && isHorizontalRangeCalculated == false) {
 
 						calculateHorizontalRange ();
 						isHorizontalRangeCalculated = true;
 
 					}
+
 					if (isDepthRangeCalculated == true && isHorizontalRangeCalculated == true) {
 
 						//Debug.Log ("*********moveLightDepth start**********");
 
 						//TODO get this both directions together!!!!!
-						//moveLightInDepth (light, light.transform.position);
-						moveLightHorizontal ();
+						moveLightInDepth (light, light.transform.position);
+						//moveLightHorizontal ();
 
 						//Debug.Log ("*********moveLightDepth end**********");
 
@@ -143,10 +144,12 @@ public class Position : MonoBehaviour {
 
 	void calculateHorizontalRange(){
 
+
+
 	}
 
 	void moveLightInDepth(GameObject light, Vector3 lightPosition){
-
+		/*
 		//get current distance between light and controller
 		currentLightControllerDistance = Vector3.Distance(DetectIndexFinger.handControllerPos, lightPosition); //selectedLightDistanceToController = 
 		//Debug.Log ("eingang moveLightDepth********");
@@ -157,7 +160,7 @@ public class Position : MonoBehaviour {
 		//TODO what if out of range??
 		//check for range
 		if (currentFingerControllerDistance >= minFingerRange && currentFingerControllerDistance <= maxFingerRange) {
-			Debug.LogFormat ("in range");
+			//Debug.LogFormat ("in range");
 		} else {
 			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 		}
@@ -169,17 +172,30 @@ public class Position : MonoBehaviour {
 		float lightY = light.transform.position.y ;
 		Vector3 onlyYVector = new Vector3(0, lightY, 0);
 
+		//here it gets direction of finger/light
 		Vector3 movingVector = -(onlyYVector) + light.transform.position;
-
 		Vector3 normalizedMovingVector = movingVector.normalized;
+		Vector3 newLightDepthPosition = onlyYVector + (normalizedMovingVector * newLightControllerDistance);
 
-		Vector3 newLightPosition = onlyYVector + (normalizedMovingVector * newLightControllerDistance);
+		//float newLightPositionMagnitude = newLightPosition.magnitude;
+
+		//HORIZONTAL TEST get direction of finger
+		//Vector3 fingerDirection = fingerPos;
+		//Vector3 normalizedFingerDirection = fingerDirection.normalized;
+
+		//lampe gets direction from finger
+		Vector3 newLightPosition = (-(fingerPos) + onlyYVector + newLightDepthPosition) + fingerPos;
+		*/
+
+		//light.transform.position = normalizedFingerDirection; //* newLightPositionMagnitude;
 			
-		light.transform.position = newLightPosition;
+		light.transform.position = fingerPos;
 
 	}
 
 	void moveLightHorizontal(){
+
+
 
 	}
 
