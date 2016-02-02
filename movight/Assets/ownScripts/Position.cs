@@ -57,7 +57,7 @@ public class Position : MonoBehaviour {
 
 				if (SelectLight.isLightSelected == true) { //beeing in selectionsequence
 
-					//Debug.Log ("*********isLightSelected**********");
+					Debug.Log ("*********isLightSelected**********");
 
 					fingerPos = DetectIndexFinger.fingerPos; //unity absolute fingerPosition
 
@@ -91,7 +91,7 @@ public class Position : MonoBehaviour {
 						//Debug.Log ("*********moveLightDepth start**********");
 
 						//TODO get this both directions together!!!!!
-						moveLightInDepth (light, light.transform.position);
+						moveLightInDepth (light, light.transform.position, fingerPos);
 						//moveLightHorizontal ();
 
 						//Debug.Log ("*********moveLightDepth end**********");
@@ -148,8 +148,8 @@ public class Position : MonoBehaviour {
 
 	}
 
-	void moveLightInDepth(GameObject light, Vector3 lightPosition){
-		/*
+	void moveLightInDepth(GameObject light, Vector3 lightPosition, Vector3 fingerPosition){
+		
 		//get current distance between light and controller
 		currentLightControllerDistance = Vector3.Distance(DetectIndexFinger.handControllerPos, lightPosition); //selectedLightDistanceToController = 
 		//Debug.Log ("eingang moveLightDepth********");
@@ -171,25 +171,52 @@ public class Position : MonoBehaviour {
 		//get vector orthogonal to xz-plane, length = light.y
 		float lightY = light.transform.position.y ;
 		Vector3 onlyYVector = new Vector3(0, lightY, 0);
+		float onlyYVectorLength = onlyYVector.magnitude;
 
-		//here it gets direction of finger/light
-		Vector3 movingVector = -(onlyYVector) + light.transform.position;
-		Vector3 normalizedMovingVector = movingVector.normalized;
-		Vector3 newLightDepthPosition = onlyYVector + (normalizedMovingVector * newLightControllerDistance);
+		//here it gets direction of light
+		Vector3 depthVectorAtBeginning = -(onlyYVector) + light.transform.position;
+		Vector3 normalizedMovingVector = depthVectorAtBeginning.normalized;
+		Vector3 newDepthVector = onlyYVector + (normalizedMovingVector * newLightControllerDistance);
+		float newDepthValue = newDepthVector.magnitude;  //contains length of new depth vector orthogonal to y axis
+		//float newlightY = newLightDepthPosition.y;
 
 		//float newLightPositionMagnitude = newLightPosition.magnitude;
 
+		//get length for vector to new light position
+		float aSquare = onlyYVectorLength * onlyYVectorLength;
+		Debug.Log ("aSquare: " + aSquare);
+
+		float bSquare = newDepthValue * newDepthValue;
+		Debug.Log ("bSquare: " + bSquare);
+
+		float Twoab = 2 * (onlyYVectorLength * newDepthValue);
+		Debug.Log ("Twoab: " + Twoab);
+
+
+		Vector2 rechterWinkel = new Vector3 (1, 0, 0);
+		float cosAngle = Mathf.Cos (Vector3.Angle (onlyYVector, rechterWinkel)); //newDepthVector));
+		Debug.Log ("cosAngle: " + cosAngle);
+
+		float newLightVectorLength = Mathf.Sqrt(aSquare + bSquare - (Twoab * cosAngle)); 
+		Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
 		//HORIZONTAL TEST get direction of finger
-		//Vector3 fingerDirection = fingerPos;
-		//Vector3 normalizedFingerDirection = fingerDirection.normalized;
+		Debug.Log("fingerPos: " + fingerPosition.ToString());
+
+		Vector3 normalizedFingerDirection = fingerPosition.normalized;
+		Vector3 newLightVector = normalizedFingerDirection * newLightVectorLength;
+		//newLightVector.y = lightY;
+
+		//float newLightX = fingerPos.x * 2.0f;
+		//float newLightZ = fingerPos.z * 2.0f;
 
 		//lampe gets direction from finger
-		Vector3 newLightPosition = (-(fingerPos) + onlyYVector + newLightDepthPosition) + fingerPos;
-		*/
+		//Vector3 newLightPosition = new Vector3(newLightX, lightY , newLightZ); //(-(fingerPos) + onlyYVector + newLightDepthPosition) + fingerPos;
+
 
 		//light.transform.position = normalizedFingerDirection; //* newLightPositionMagnitude;
 			
-		light.transform.position = fingerPos;
+		light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
+		Debug.Log("new light position: " + light.transform.position.ToString());
 
 	}
 

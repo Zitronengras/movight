@@ -97,7 +97,7 @@ public class DetectIndexFinger : MonoBehaviour{
 										//rotate rotUnityDistalBoneCenter with headMovement
 										fingerPos = (headRotation * rotHMDUnityFingerTip); // * 2.5f;
 										//Debug.Log ("Unity finger pos: " + fingerPos); 
-										Debug.Log ("Unity finger pos x : " + fingerPos.x); 
+										//Debug.Log ("Unity finger pos x : " + fingerPos.x); 
 
 										Debug.DrawRay (handControllerPos, fingerPos, Color.cyan, 2.0f, true);
 
