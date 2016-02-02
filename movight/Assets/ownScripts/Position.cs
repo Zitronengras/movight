@@ -115,8 +115,13 @@ public class Position : MonoBehaviour {
 		float percentagePosOfLightAtBeginning = getPercentageLightPosition(lightControllerDistanceBeginn);
 		//Debug.Log ("percentage pos of Light at the beginning: " + percentagePosOfLightAtBeginning.ToString());
 
-		//calculate start distance fromm finger to controller
+		//calculate start distance from finger to controller
 		fingerControllerDistanceBegin = Vector3.Distance (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos);
+		Debug.Log ("fingerControllerDistanceBegin: " + fingerControllerDistanceBegin.ToString ());
+
+		Vector3 tmp = DetectIndexFinger.fingerPos + DetectIndexFinger.handControllerPos;
+		Debug.Log ("tmp: " + tmp.magnitude.ToString ());
+
 
 		float percentagePosOfFingerAtBeginning = percentagePosOfLightAtBeginning; //adapt percentage position of light on position of finger
 		//Debug.Log ("percentage pos of finger at the beginning: " + percentagePosOfFingerAtBeginning.ToString());
@@ -152,10 +157,12 @@ public class Position : MonoBehaviour {
 		
 		//get current distance between light and controller
 		currentLightControllerDistance = Vector3.Distance(DetectIndexFinger.handControllerPos, lightPosition); //selectedLightDistanceToController = 
-		//Debug.Log ("eingang moveLightDepth********");
-		//Debug.Log ("currentLightControllerDistance" + currentLightControllerDistance.ToString());
+		Debug.Log ("eingang moveLightDepth********");
+		Debug.Log ("1 c currentLightControllerDistance" + currentLightControllerDistance.ToString());
 
 		currentFingerControllerDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos);
+		//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());
+
 
 		//TODO what if out of range??
 		//check for range
@@ -172,37 +179,65 @@ public class Position : MonoBehaviour {
 		float lightY = light.transform.position.y ;
 		Vector3 onlyYVector = new Vector3(0, lightY, 0);
 		float onlyYVectorLength = onlyYVector.magnitude;
+		Debug.Log("2 a onlyYVectorLength: " + onlyYVectorLength.ToString());
 
-		//here it gets direction of light
+
+		//get depth of lightposition
 		Vector3 depthVectorAtBeginning = -(onlyYVector) + light.transform.position;
-		Vector3 normalizedMovingVector = depthVectorAtBeginning.normalized;
-		Vector3 newDepthVector = onlyYVector + (normalizedMovingVector * newLightControllerDistance);
-		float newDepthValue = newDepthVector.magnitude;  //contains length of new depth vector orthogonal to y axis
+			//just for better understanding
+			//depthVectorAtBeginning.y = lightY;
+		Debug.Log("depthVectorAtBeginning: " + depthVectorAtBeginning.ToString());
+
+		float depthLengthAtBeginning = depthVectorAtBeginning.magnitude;
+		Debug.Log("3 b depthLengthAtBeginning: " + depthLengthAtBeginning.ToString());
+
+		Vector3 normalizedDepthVector = depthVectorAtBeginning.normalized;
+
+		float newDepthVectorLength = (normalizedDepthVector * newLightControllerDistance).magnitude;
+		Vector3 newDepthVector = - onlyYVector + (normalizedDepthVector * newLightControllerDistance);
+		//Vector3 newDepthVector = onlyYVector + (normalizedMovingVector * newLightControllerDistance);
+
+		float newDepthLength = newDepthVector.magnitude;  //contains length of new depth vector orthogonal to y axis
+		Debug.Log("##############################");
+
+		Debug.Log("newDepthLength: " + newDepthLength.ToString());
+
+		Debug.Log("##############################");
+
 		//float newlightY = newLightDepthPosition.y;
 
 		//float newLightPositionMagnitude = newLightPosition.magnitude;
 
 		//get length for vector to new light position
 		float aSquare = onlyYVectorLength * onlyYVectorLength;
-		Debug.Log ("aSquare: " + aSquare);
+		Debug.Log ("aSquare: " + aSquare.ToString());
 
-		float bSquare = newDepthValue * newDepthValue;
+		float bSquare = newDepthLength * newDepthLength;
 		Debug.Log ("bSquare: " + bSquare);
 
-		float Twoab = 2 * (onlyYVectorLength * newDepthValue);
-		Debug.Log ("Twoab: " + Twoab);
+			/*float Twoab = 2 * (onlyYVectorLength * newDepthLength);
+			Debug.Log ("Twoab: " + Twoab);*/
 
 
-		Vector2 rechterWinkel = new Vector3 (1, 0, 0);
-		float cosAngle = Mathf.Cos (Vector3.Angle (onlyYVector, rechterWinkel)); //newDepthVector));
-		Debug.Log ("cosAngle: " + cosAngle);
+			//Vector2 rechterWinkel = new Vector3 (1, 0, 0);
+			//Debug.Log("Winkel zwischen onlyY and rechterWinkel: " + Vector3.Angle (onlyYVector, rechterWinkel).ToString());
 
-		float newLightVectorLength = Mathf.Sqrt(aSquare + bSquare - (Twoab * cosAngle)); 
+			//double angle = Vector3.Angle (onlyYVector, rechterWinkel);
+			//Debug.Log("angle: " + angle.ToString());
+
+			//float cosAngle = 0.0f; // System.Math.Cos(angle); //newDepthVector));
+			//Debug.Log ("cosAngle: " + cosAngle);
+
+		// c² = a² + b²
+		float newLightVectorLength = Mathf.Sqrt(aSquare + bSquare); 
 		Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
+
 		//HORIZONTAL TEST get direction of finger
 		Debug.Log("fingerPos: " + fingerPosition.ToString());
 
+		//get direction to fingerTip
 		Vector3 normalizedFingerDirection = fingerPosition.normalized;
+		//direction multiply with new length
 		Vector3 newLightVector = normalizedFingerDirection * newLightVectorLength;
 		//newLightVector.y = lightY;
 
@@ -232,9 +267,7 @@ public class Position : MonoBehaviour {
 		//Debug.Log ("currentFingerMinFingerRangeDistance: " + currentFingerMinFingerRangeDistance.ToString());
 
 		float currentPercentageFingerPosInRange = ((100 / fingerRangeVolume) * currentFingerMinFingerRangeDistance); // like 26% ???
-		//Debug.Log ("currentPercentageFingerPosInRange: " + currentPercentageFingerPosInRange.ToString());
-
-		//Debug.Log ("currentPercentageFingerPos: " + currentPercentageFingerPosInRange.ToString());
+		Debug.Log ("currentPercentageFingerPosInRange: " + currentPercentageFingerPosInRange.ToString());
 
 		return currentPercentageFingerPosInRange;
 	}
@@ -242,7 +275,7 @@ public class Position : MonoBehaviour {
 	float getPercentageLightPosition(float distance){
 
 		float percentagePosOfLightAtBeginning = ((100 / maxWallDistance) * distance); // like 26%
-		//Debug.Log ("percentagePosOfLightAtBeginning: " + percentagePosOfLightAtBeginning.ToString());
+		Debug.Log ("percentagePosOfLightAtBeginning: " + percentagePosOfLightAtBeginning.ToString());
 
 		return percentagePosOfLightAtBeginning;
 
