@@ -14,6 +14,7 @@ public class SelectLight : MonoBehaviour{
 	public static bool isLightHit = false;
 	public static bool isLightSelected = false;
 	int hitCounter = 0;
+	public static int waitCountdown = 15;
 
 	GameObject selectedLight;
 
@@ -43,7 +44,7 @@ public class SelectLight : MonoBehaviour{
 
 					Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
 
-					if (hitCounter == 15) {
+					if (hitCounter == waitCountdown) {
 						
 						//Debug.Log ("***ausgewählt" + hitObject.collider.gameObject + " *** " + "\n stop select sequence");
 						selectedLight = hitObject.collider.gameObject;

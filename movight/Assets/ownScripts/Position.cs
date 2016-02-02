@@ -21,14 +21,7 @@ public class Position : MonoBehaviour {
 	float minFingerRange;
 	float maxFingerRange;
 
-	//calculateHorizontelRange
-	bool isHorizontalRangeCalculated = false;
-	/*float fingerControllerDistanceBegin;
-	float fingerRangeVolume = 0.40f; //40cm
-	float minFingerRange;
-	float maxFingerRange;*/
-
-	//moveLightDepth
+	//moveLight
 	float currentLightControllerDistance;
 	float currentFingerControllerDistance;
 
@@ -73,29 +66,14 @@ public class Position : MonoBehaviour {
 
 						//Debug.Log ("at the beginning: selectedLightDistanceToController: " + selectedLightDistanceToController.ToString ());
 
-						calculateDepthRange (selectedLightDistanceToController);
+						calculateDepthRange (selectedLightDistanceToController, fingerPos);
 						isDepthRangeCalculated = true;
 
 					}
 
-					//calculate range at the beginning of the selectionsequence
-					if (isDepthRangeCalculated == true && isHorizontalRangeCalculated == false) {
-
-						calculateHorizontalRange ();
-						isHorizontalRangeCalculated = true;
-
-					}
-
-					if (isDepthRangeCalculated == true && isHorizontalRangeCalculated == true) {
-
-						//Debug.Log ("*********moveLightDepth start**********");
-
-						//TODO get this both directions together!!!!!
-						moveLightInDepth (light, light.transform.position, fingerPos);
-						//moveLightHorizontal ();
-
-						//Debug.Log ("*********moveLightDepth end**********");
-
+					if (isDepthRangeCalculated == true) {
+						
+						moveLight (light, light.transform.position, fingerPos);
 
 					}
 				}
@@ -109,14 +87,14 @@ public class Position : MonoBehaviour {
 		
 	}
 
-	void calculateDepthRange(float lightControllerDistanceBeginn){ 
+	void calculateDepthRange(float lightControllerDistanceBeginn, Vector3 fingerPosition){ 
 		
 		//percentage position of light between controller and wall
 		float percentagePosOfLightAtBeginning = getPercentageLightPosition(lightControllerDistanceBeginn);
 		//Debug.Log ("percentage pos of Light at the beginning: " + percentagePosOfLightAtBeginning.ToString());
 
 		//calculate start distance from finger to controller
-		fingerControllerDistanceBegin = Vector3.Distance (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos);
+		fingerControllerDistanceBegin = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPosition);
 		Debug.Log ("fingerControllerDistanceBegin: " + fingerControllerDistanceBegin.ToString ());
 
 		float percentagePosOfFingerAtBeginning = percentagePosOfLightAtBeginning; //adapt percentage position of light on position of finger
@@ -143,47 +121,20 @@ public class Position : MonoBehaviour {
 		Debug.Log ("range calculated");
 	}
 
-	void calculateHorizontalRange(){
+	void moveLight(GameObject light, Vector3 lightPosition, Vector3 fingerPosition){
 
-
-
-	}
-
-	void moveLightInDepth(GameObject light, Vector3 lightPosition, Vector3 fingerPosition){
-
-		Debug.Log ("eingang moveLightDepth********");
-
-		float percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
-
-		//TODO what if out of range??
-		//check for range
-		if (percentageFingerPosition > 100) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
-
-			percentageFingerPosition = 100;
-
-		}
-		if (percentageFingerPosition < 0) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
-
-			percentageFingerPosition = 0;
-
-		}
-		Debug.Log ("percentageFingerPosition: " + percentageFingerPosition.ToString());
-
-		//get current distance between light and controller
-		currentLightControllerDistance = Vector3.Distance(DetectIndexFinger.handControllerPos, lightPosition); //selectedLightDistanceToController = 
-		//Debug.Log ("1 c currentLightControllerDistance" + currentLightControllerDistance.ToString());
+		Debug.Log ("Eingang moveLightDepth********");
 
 		//get current distance between finger and controller for getPercentageFingerPosition(...)
 		currentFingerControllerDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPosition); // ????????????????????????
 		//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());			
-		float depth = (maxWallDistance / 100) * getPercentageFingerPosition (currentFingerControllerDistance);
-		//Debug.Log ("depthAtBeginning: " + depth.ToString ());
-			//float newLightControllerDistance = (maxWallDistance / 100) * getPercentageFingerPosition (currentFingerControllerDistance);
-		//Debug.Log ("newLightControllerDitance" + newLightControllerDistance.ToString());
 
-		//get vector orthogonal to xz-plane, length = light.y
+		float percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
+
+		float depth = (maxWallDistance / 100) * percentageFingerPosition;
+		//Debug.Log ("depth: " + depth.ToString ());
+
+		//get orthogonal vector to xz-plane, length = light.y
 		float lightY = light.transform.position.y ;
 		Vector3 onlyYVector = new Vector3(0, lightY, 0);
 		float onlyYVectorLength = onlyYVector.magnitude;
@@ -240,9 +191,6 @@ public class Position : MonoBehaviour {
 		float newLightVectorLength = Mathf.Sqrt(aSquare + bSquare); 
 		//Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
 
-		//HORIZONTAL TEST get direction of finger
-		//Debug.Log("fingerPos: " + fingerPosition.ToString());
-
 		//get direction to fingerTip
 		Vector3 normalizedFingerDirection = fingerPosition.normalized;
 		//direction multiply with new length
@@ -259,13 +207,10 @@ public class Position : MonoBehaviour {
 		//light.transform.position = normalizedFingerDirection; //* newLightPositionMagnitude;
 			
 		light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
+
+		//TODO check for big value changes -> waitCountdown
+
 		Debug.Log("new light position: " + light.transform.position.ToString());
-
-	}
-
-	void moveLightHorizontal(){
-
-
 
 	}
 
@@ -276,6 +221,22 @@ public class Position : MonoBehaviour {
 
 		float currentPercentageFingerPosInRange = ((100 / fingerRangeVolume) * currentFingerMinFingerRangeDistance); // like 26% ???
 		//Debug.Log ("currentPercentageFingerPosInRange: " + currentPercentageFingerPosInRange.ToString());
+
+		//check for range
+		if (currentPercentageFingerPosInRange > 100) {
+			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
+
+			currentPercentageFingerPosInRange = 100;
+
+		}
+		if (currentPercentageFingerPosInRange < 0) {
+			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
+
+			currentPercentageFingerPosInRange = 0;
+
+		}
+
+		Debug.Log ("percentageFingerPosition: " + currentPercentageFingerPosInRange.ToString());
 
 		return currentPercentageFingerPosInRange;
 	}
