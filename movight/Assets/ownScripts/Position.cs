@@ -24,6 +24,13 @@ public class Position : MonoBehaviour {
 	//moveLight
 	float currentLightControllerDistance;
 	float currentFingerControllerDistance;
+	float lastX;
+	float lastZ;
+
+	//checkForMeaningfulChanges
+	float changeValue = 0.001f;
+	int xCounter = 0;
+	int zCounter = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -208,9 +215,13 @@ public class Position : MonoBehaviour {
 			
 		light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
 
-		//TODO check for big value changes -> waitCountdown
+		checkForMeaningfulChangesX (lastX, newLightVector.x);
+		checkForMeaningfulChangesZ (lastZ, newLightVector.z);
 
 		Debug.Log("new light position: " + light.transform.position.ToString());
+
+		lastX = newLightVector.x;
+		lastZ = newLightVector.z;
 
 	}
 
@@ -248,6 +259,45 @@ public class Position : MonoBehaviour {
 
 		return percentagePosOfLightAtBeginning;
 
+	}
+
+	void checkForMeaningfulChangesX(float lastValue, float newValue){
+
+		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
+
+			xCounter += 1;
+			Debug.Log ("xCounter: " + xCounter.ToString ());
+
+			if (xCounter == SelectLight.waitCountdown) {
+
+				//disable current light selection
+				SelectLight.isLightSelected = false;
+
+				Debug.Log ("lampe abgewählt");
+
+				xCounter = 0;
+				zCounter = 0;
+			}
+		}
+	}
+	void checkForMeaningfulChangesZ(float lastValue, float newValue){
+
+		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
+
+			zCounter += 1;
+			Debug.Log ("counter: " + zCounter.ToString ());
+
+			if (zCounter == SelectLight.waitCountdown) {
+
+				//disable current light selection
+				SelectLight.isLightSelected = false;
+
+				Debug.Log ("lampe abgewählt");
+
+				zCounter = 0;
+				xCounter = 0;
+			}
+		}
 	}
 
 }

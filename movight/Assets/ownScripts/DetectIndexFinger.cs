@@ -113,10 +113,6 @@ public class DetectIndexFinger : MonoBehaviour{
 								}
 							}
 						}
-					}//TODO better "abbruch"ereignis
-					if (currentHand.IsLeft) {
-						SelectLight.isLightSelected = false;
-						Debug.Log ("currentHand.IsLeft: isSelectedLight = false");
 					}
 				//TODO right position for else???			
 				}/*else {
