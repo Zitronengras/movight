@@ -8,10 +8,13 @@ public class Position : MonoBehaviour {
 	float maxWallDistance;
 	float onePercentOfWallControllerDistance;
 
+	LayerMask onlyLightLayer;
+
 
 //	float selectedLightDistanceToController;
-
-	//Vector3 fingerPos;
+	GameObject light;
+	Vector3 lightPosition;
+	Vector3 controlPoint;
 
 	//calculateDepthRange
 	bool isDepthRangeCalculated = false;
@@ -19,6 +22,11 @@ public class Position : MonoBehaviour {
 	float fingerRangeVolume = 0.40f; //40cm
 	float minFingerRange;
 	float maxFingerRange;
+
+	//Raycaster
+	RaycastHit hitObject = new RaycastHit();
+	GameObject hitLight;
+	bool lightShouldMove = false;
 
 	//moveLight
 	float currentLightControllerDistance;
@@ -34,6 +42,9 @@ public class Position : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
+
+
 		//GameObject selectScriptObject = GameObject.Find ("SelectLight");
 		//selectScript = selectScriptObject.GetComponent<SelectLight> ();
 
@@ -47,27 +58,39 @@ public class Position : MonoBehaviour {
 			//get maxWallDistance
 			maxWallDistance = ConstructionDistance.maxWallDistance;
 			onePercentOfWallControllerDistance = 100 / maxWallDistance; //variable equals one percent of distance between controller and wall
-			
-			//Debug.Log ("*******isMaxDistanceDetermined************");
 
-			if (DetectIndexFinger.isFingerDetected == true) {				
+			if (SelectLight.isLightSelected == true) {
 
-				//Debug.Log ("*********isFingerDetected**********");
+				light = SelectLight.light; //selected light
+				lightPosition = light.transform.position; //position of selected light
 
-				if (SelectLight.isLightSelected == true) { //beeing in selectionsequence
+				if (DetectIndexFinger.isPositionGesture == true) { //beeing in selectionsequence#
 
-					//Debug.Log ("*********isLightSelected**********");
+					Debug.Log ("in position script and gesture == true");
 
-					//fingerPos = DetectIndexFinger.fingerPos; //unity absolute fingerPosition
+					controlPoint = DetectIndexFinger.controlPoint;
 
-					//light = SelectLight.GetSelectedLight(); //selected light
-					//lightPosition = light.transform.position; //position of selected light
+					if (lightShouldMove == false) {
+						
+						if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-					//selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, SelectLight.lightPosition);
+							hitLight = hitObject.collider.gameObject;
 
-					//TODO isSelectedLight = false at the end of positioning 
+							Debug.Log ("Licht getroffen");
 
-					//calculate range at the beginning of the selectionsequence
+							if(Equals(hitLight.name, light.name)){
+
+								lightShouldMove = true;
+
+							}
+
+						}
+					}
+					if(lightShouldMove == true) {
+
+						moveLight (light, lightPosition, controlPoint);
+
+					}
 
 				}
 			}
@@ -114,7 +137,7 @@ public class Position : MonoBehaviour {
 		Debug.Log ("range calculated");
 	}
 
-	public void moveLight(GameObject light, Vector3 lightPosition, Vector3 fingerPosition){
+	public void moveLight(GameObject light, Vector3 lightPosition, Vector3 controlPoint){
 
 		if (isDepthRangeCalculated == false) {
 
@@ -122,7 +145,7 @@ public class Position : MonoBehaviour {
 
 			float selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, SelectLight.lightPosition);
 
-			calculateDepthRange (selectedLightDistanceToController, fingerPosition);
+			calculateDepthRange (selectedLightDistanceToController, controlPoint);
 			isDepthRangeCalculated = true;
 
 		}
@@ -130,7 +153,7 @@ public class Position : MonoBehaviour {
 		if (isDepthRangeCalculated == true) {
 
 			//get current distance between finger and controller for getPercentageFingerPosition(...)
-			currentFingerControllerDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPosition); // ????????????????????????
+			currentFingerControllerDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, controlPoint); // ????????????????????????
 			//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());			
 
 			float percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
@@ -196,7 +219,7 @@ public class Position : MonoBehaviour {
 			//Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
 
 			//get direction to fingerTip
-			Vector3 normalizedFingerDirection = fingerPosition.normalized;
+			Vector3 normalizedFingerDirection = controlPoint.normalized;
 			//direction multiply with new length
 			Vector3 newLightVector = normalizedFingerDirection * newLightVectorLength;
 			//newLightVector.y = lightY;
@@ -220,11 +243,6 @@ public class Position : MonoBehaviour {
 			lastX = newLightVector.x;
 			lastZ = newLightVector.z;
 		}
-
-		//Debug.Log ("Eingang moveLightDepth********");
-
-
-
 	}
 
 	float getPercentageFingerPosition(float distance){
@@ -268,14 +286,13 @@ public class Position : MonoBehaviour {
 		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
 
 			xCounter += 1;
-			//Debug.Log ("xCounter: " + xCounter.ToString ());
 
 			if (xCounter == SelectLight.deselectCountdown) {
 
-				//disable current light selection
-				SelectLight.isLightSelected = false;
+				//disable current positioning selection
+				lightShouldMove = false;
 
-				Debug.Log ("lampe abgewählt");
+				Debug.Log ("lampe positioniert");
 
 				xCounter = 0;
 				zCounter = 0;
@@ -287,14 +304,13 @@ public class Position : MonoBehaviour {
 		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
 
 			zCounter += 1;
-			//Debug.Log ("counter: " + zCounter.ToString ());
 
 			if (zCounter == SelectLight.waitCountdown) {
 
-				//disable current light selection
-				SelectLight.isLightSelected = false;
+				//disable current positioning selection
+				lightShouldMove = false;
 
-				Debug.Log ("lampe abgewählt");
+				Debug.Log ("lampe positioniert");
 
 				zCounter = 0;
 				xCounter = 0;
