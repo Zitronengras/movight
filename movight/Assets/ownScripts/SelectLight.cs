@@ -16,7 +16,10 @@ public class SelectLight : MonoBehaviour{
 	public static bool isLightHit = false;
 	public static bool isLightSelected = false;
 	int hitCounter = 0;
+	public static int deselectCountdown = 15;
 	public static int waitCountdown = 15;
+	//public static int PositionCountdown = 15;
+
 
 	//GameObject selectedLight;
 

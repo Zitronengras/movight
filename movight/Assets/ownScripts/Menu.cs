@@ -78,9 +78,13 @@ public class Menu : MonoBehaviour {
 
 				}
 				if (isPositionActive == true) {
-					
+
+					deactiveMenu ();
+					SelectLight.waitCountdown = 1;
 					positionScript.moveLight (light, lightPos, fingerPos);
 					Debug.Log ("moveLight()");
+
+
 
 				}
 
@@ -152,7 +156,7 @@ public class Menu : MonoBehaviour {
 
 					Debug.Log ("Position selected");
 
-					deactiveMenu ();
+					//deactiveMenu ();
 
 					isPositionActive = true;
 

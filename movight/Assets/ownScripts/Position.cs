@@ -270,7 +270,7 @@ public class Position : MonoBehaviour {
 			xCounter += 1;
 			//Debug.Log ("xCounter: " + xCounter.ToString ());
 
-			if (xCounter == SelectLight.waitCountdown) {
+			if (xCounter == SelectLight.deselectCountdown) {
 
 				//disable current light selection
 				SelectLight.isLightSelected = false;
