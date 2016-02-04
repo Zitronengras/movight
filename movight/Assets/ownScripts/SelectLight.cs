@@ -20,6 +20,8 @@ public class SelectLight : MonoBehaviour{
 	public static int waitCountdown = 15;
 	//public static int PositionCountdown = 15;
 
+	//TODO no other seletion possible when light selected
+
 
 	//GameObject selectedLight;
 
@@ -41,14 +43,14 @@ public class SelectLight : MonoBehaviour{
 
 		if (DetectIndexFinger.isSelectGesture == true) {
 
-			if (isLightSelected == false) {
+			if (isLightSelected == false) { //select light
 
-				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.indexControlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
 					//isLightHit = true;
 					hitCounter += 1;
 
-					Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+					//Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
 
 					if (hitCounter == waitCountdown) {
 						
@@ -57,30 +59,68 @@ public class SelectLight : MonoBehaviour{
 						lightPosition = light.transform.position;
 
 						//SetSelectedObject (selectedLight); //sets current Object for following control
-						Debug.Log ("getroffenes Licht Objekt: " + light.ToString());
+						Debug.Log ("Licht Objekt getroffen**************************************************: " + light.ToString());
 
 
 						//stop select sequence
 						hitCounter = 0;
 						isLightSelected = true;
 						//isLightHit = false;
-					} else {
+					} /*else {
 
 						isLightSelected = false;
 
-					}
+					}*/
 
-				} else {
+				}/* else {
 					hitCounter = 0;
 					//isLightHit = false;
 					isLightSelected = false;
 
 					//Debug.Log ("hit nothing \n stop select sequence");
-				}
+				}*/
 			}
-		} else {
+			if (isLightSelected == true) { //deselect light
+
+				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.indexControlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+
+					//isLightHit = true;
+					hitCounter += 1;
+
+					//Debug.Log ("***hit light***" + hitObject.collider + " *** " + hitCounter);
+
+					if (hitCounter == waitCountdown) {
+
+						//Debug.Log ("***ausgewählt" + hitObject.collider.gameObject + " *** " + "\n stop select sequence");
+						light = hitObject.collider.gameObject;
+						lightPosition = light.transform.position;
+
+						//SetSelectedObject (selectedLight); //sets current Object for following control
+						Debug.Log ("Licht abgewählt ***************************************: " + light.ToString());
+
+
+
+						//stop select sequence
+						hitCounter = 0;
+						isLightSelected = false;
+						//isLightHit = false;
+					} /*else {
+
+						isLightSelected = false;
+
+					}*/
+
+				}/* else {
+					hitCounter = 0;
+					//isLightHit = false;
+					isLightSelected = false;
+
+					//Debug.Log ("hit nothing \n stop select sequence");
+				}*/
+			}
+		}/* else {
 			isLightSelected = false;
-		}
+		}*/
 	}
 
 	/*void SetSelectedObject(GameObject gameObject) {

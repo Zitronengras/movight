@@ -12,12 +12,12 @@ public class ConstructionDistance : MonoBehaviour {
 	//Vector3 rotatedDirection;
 
 	LayerMask onlyWallsLayer;
-	LayerMask onlyGroundLayer;
+	//LayerMask onlyGroundLayer;
 
 	RaycastHit hitObject = new RaycastHit();
 
 	public static float wallDistance = Mathf.Infinity;
-	public static float groundDistance = Mathf.Infinity;
+	//public static float groundDistance = Mathf.Infinity;
 
 
 	// Use this for initialization
@@ -31,7 +31,7 @@ public class ConstructionDistance : MonoBehaviour {
 		maxWallDistance = 0;
 		onlyWallsLayer = 1 << LayerMask.NameToLayer ("wall");
 
-		onlyGroundLayer = 1 << LayerMask.NameToLayer ("ground");
+		//onlyGroundLayer = 1 << LayerMask.NameToLayer ("ground");
 
 	}
 	
@@ -68,6 +68,7 @@ public class ConstructionDistance : MonoBehaviour {
 
 		//get distance to ground
 		//get distance to wall
+		/*
 		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, Mathf.Infinity, onlyGroundLayer)) {
 
 			//Debug.Log ("hitPoint:" + hitObject.point);
@@ -81,6 +82,7 @@ public class ConstructionDistance : MonoBehaviour {
 			//Debug.Log ("hit nothing \n stop select sequence");
 
 		}
+		*/
 
 	
 	}

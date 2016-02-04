@@ -26,9 +26,9 @@ public class DetectIndexFinger : MonoBehaviour{
 	Bone distalBone = new Bone ();		
 
 
-	public static Vector3 controlPoint;
-	public static Leap.Vector leapIndexTipPosition;
-	public static Leap.Vector leapMiddleTipPosition;
+
+	Leap.Vector leapIndexTipPosition;
+	Leap.Vector leapMiddleTipPosition;
 
 	public static bool isFingerDetected = false;
 
@@ -40,6 +40,8 @@ public class DetectIndexFinger : MonoBehaviour{
 	//checkForSelectGesture
 	public static bool isSelectGesture = false;
 	int checkForSelectGestureCounter = 0;
+	public static Vector3 indexControlPoint;
+	public static Vector3 middleControlPoint;
 
 	//checkForPositionGesture
 	int checkForPositionGestureCounter = 0;
@@ -122,7 +124,53 @@ public class DetectIndexFinger : MonoBehaviour{
 
 			if(indexFinger.IsValid && middleFinger.IsValid){
 				if (!ringFinger.IsValid && !pinkyFinger.IsValid) {
+					
 					Debug.Log("now there should be the selectGesture############################");
+
+					isSelectGesture = true;
+
+
+					leapIndexTipPosition = indexFinger.TipPosition;
+					leapMiddleTipPosition = middleFinger.TipPosition;	
+
+					// work with tipPositon
+					Vector3 unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
+					Vector3 unityMiddleFingerTip = leapMiddleTipPosition.ToUnityScaled ();
+
+					Vector3 rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
+					Vector3 rotHMDMiddleFingerTip = Quaternion.Euler (270, 180, 0) * unityMiddleFingerTip;
+
+					//get angle between fingerTips
+					//float angle = Vector3.Angle(unityIndexFingerTip, unityMiddleFingerTip);
+
+					//Vector3 controlPoint = (unityIndexFingerTip.normalized * angleLength);
+					//controlPoint = Vector3.RotateTowards(controlPoint, unityMiddleFingerTip, 
+
+					//Debug.Log ("UNITY unityDistalBoneCenter: " + unityDistalBoneCenter);
+
+					//rotate because of HMD
+					//Vector3 rotHMDUnityFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
+
+					//float angle = Vector3.Angle(rotHMDUnityFingerTip, unityMiddleFingerTip);
+
+
+					//Debug.Log ("UNITY rotUnityMiddleScaled: " + rotUnityMiddleScaled);
+
+					//TO change in HeadRotation
+					//get head rotation
+					var headRotation = Cardboard.SDK.HeadRotation;
+					//rotate rotUnityDistalBoneCenter with headMovement
+					indexControlPoint = (headRotation * rotHMDIndexFingerTip); // * 2.5f;
+					middleControlPoint = (headRotation * rotHMDMiddleFingerTip); // * 2.5f;
+
+
+					//Debug.Log ("Unity finger pos: " + fingerPos); 
+					//Debug.Log ("Unity finger pos x : " + fingerPos.x); 
+
+					Debug.DrawRay (handControllerPos, indexControlPoint, Color.red, 2.0f, true);
+
+					Debug.DrawRay (handControllerPos, middleControlPoint, Color.cyan, 2.0f, true);
+
 				}
 			}
 

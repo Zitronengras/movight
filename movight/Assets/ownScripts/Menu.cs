@@ -118,7 +118,7 @@ public class Menu : MonoBehaviour {
 		}*/
 	}
 	
-
+	/*
 
 	void selectMenuTile(){
 
@@ -268,4 +268,6 @@ public class Menu : MonoBehaviour {
 		colorTile.SetActive(false);
 
 	}
+
+*/
 }
