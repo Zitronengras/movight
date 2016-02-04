@@ -68,7 +68,7 @@ public class ConstructionDistance : MonoBehaviour {
 
 		//get distance to ground
 		//get distance to wall
-		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, Mathf.Infinity, onlyGroundLayer)) {
+		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, Mathf.Infinity, onlyGroundLayer)) {
 
 			//Debug.Log ("hitPoint:" + hitObject.point);
 			//Debug.Log ("hit ground");

@@ -39,11 +39,11 @@ public class SelectLight : MonoBehaviour{
 	// Update is called once per frame
 	void Update () {
 
-		if (DetectIndexFinger.isFingerDetected == true) {
+		if (DetectIndexFinger.isSelectGesture == true) {
 
 			if (isLightSelected == false) {
 
-				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
 					//isLightHit = true;
 					hitCounter += 1;
@@ -57,7 +57,7 @@ public class SelectLight : MonoBehaviour{
 						lightPosition = light.transform.position;
 
 						//SetSelectedObject (selectedLight); //sets current Object for following control
-						//Debug.Log ("getroffenes Licht Objekt: " + selectedLight);
+						Debug.Log ("getroffenes Licht Objekt: " + light.ToString());
 
 
 						//stop select sequence

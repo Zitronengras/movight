@@ -66,13 +66,13 @@ public class Menu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (DetectIndexFinger.isFingerDetected == true) {				
+		/*if (DetectIndexFinger.isFingerDetected == true) {				
 
 			if (SelectLight.isLightSelected == true) { 
 
 				light = SelectLight.light; //selected light
 				lightPos = light.transform.position;
-				fingerPos = DetectIndexFinger.fingerPos; //unity absolute fingerPosition
+				fingerPos = DetectIndexFinger.controlPoint; //unity absolute fingerPosition
 
 				//if (isMenuActiv == false) {
 				if (isPositionActive == false && isIntensityActive == false && isTemperatureActive == false) {
@@ -95,7 +95,7 @@ public class Menu : MonoBehaviour {
 						activeMenu ();
 						selectMenuTile ();
 
-					}*/
+					}
 
 
 
@@ -115,7 +115,7 @@ public class Menu : MonoBehaviour {
 				
 
 
-		}
+		}*/
 	}
 	
 
@@ -124,7 +124,7 @@ public class Menu : MonoBehaviour {
 
 		//activeMenu ();
 
-		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, ConstructionDistance.maxWallDistance, onlyMenuLayer)) {
+		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyMenuLayer)) {
 
 			hitTile =  hitObject.collider.gameObject;
 			Debug.Log ("hitTile: " + hitTile.ToString ());
