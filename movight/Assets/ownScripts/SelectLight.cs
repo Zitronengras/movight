@@ -8,6 +8,8 @@ public class SelectLight : MonoBehaviour{
 	//Raycast
 	RaycastHit hitObject = new RaycastHit();
 	LayerMask onlyLightLayer;
+	public static GameObject light;
+	public static Vector3 lightPosition;
 	//public static int castDistance;
 
 	//countdown
@@ -48,8 +50,10 @@ public class SelectLight : MonoBehaviour{
 					if (hitCounter == waitCountdown) {
 						
 						//Debug.Log ("***ausgewählt" + hitObject.collider.gameObject + " *** " + "\n stop select sequence");
-						selectedLight = hitObject.collider.gameObject;
-						SetSelectedObject (selectedLight); //sets current Object for following control
+						light = hitObject.collider.gameObject;
+						lightPosition = light.transform.position;
+
+						//SetSelectedObject (selectedLight); //sets current Object for following control
 						//Debug.Log ("getroffenes Licht Objekt: " + selectedLight);
 
 
@@ -77,10 +81,10 @@ public class SelectLight : MonoBehaviour{
 		}
 	}
 
-	void SetSelectedObject(GameObject gameObject) {
+	/*void SetSelectedObject(GameObject gameObject) {
 		selectedLight = gameObject;
 	}
-	public GameObject GetSelectedLight() {
+	public static GameObject GetSelectedLight() {
 		return selectedLight;
-	}
+	}*/
 }

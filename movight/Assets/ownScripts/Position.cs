@@ -3,13 +3,12 @@ using System.Collections;
 
 public class Position : MonoBehaviour {
 
-	SelectLight selectScript;
+	//SelectLight selectScript;
 
 	float maxWallDistance;
 	float onePercentOfWallControllerDistance;
 
-	GameObject light;
-	Vector3 lightPosition;
+
 	float selectedLightDistanceToController;
 
 	Vector3 fingerPos;
@@ -35,8 +34,8 @@ public class Position : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		GameObject selectScriptObject = GameObject.Find ("SelectLight");
-		selectScript = selectScriptObject.GetComponent<SelectLight> ();
+		//GameObject selectScriptObject = GameObject.Find ("SelectLight");
+		//selectScript = selectScriptObject.GetComponent<SelectLight> ();
 
 	}
 	
@@ -61,10 +60,10 @@ public class Position : MonoBehaviour {
 
 					fingerPos = DetectIndexFinger.fingerPos; //unity absolute fingerPosition
 
-					light = selectScript.GetSelectedLight(); //selected light
-					lightPosition = light.transform.position; //position of selected light
+					//light = SelectLight.GetSelectedLight(); //selected light
+					//lightPosition = light.transform.position; //position of selected light
 
-					selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, lightPosition);
+					selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, SelectLight.lightPosition);
 
 					//TODO isSelectedLight = false at the end of positioning 
 
@@ -80,7 +79,7 @@ public class Position : MonoBehaviour {
 
 					if (isDepthRangeCalculated == true) {
 						
-						//moveLight (light, light.transform.position, fingerPos);
+						//moveLight (SelectLight.light, SelectLight.light.transform.position, fingerPos);
 
 					}
 				}
@@ -142,7 +141,7 @@ public class Position : MonoBehaviour {
 		//Debug.Log ("depth: " + depth.ToString ());
 
 		//get orthogonal vector to xz-plane, length = light.y
-		float lightY = light.transform.position.y ;
+		float lightY = SelectLight.light.transform.position.y ;
 		Vector3 onlyYVector = new Vector3(0, lightY, 0);
 		float onlyYVectorLength = onlyYVector.magnitude;
 		//Debug.Log("2 a onlyYVectorLength: " + onlyYVectorLength.ToString());
@@ -213,7 +212,7 @@ public class Position : MonoBehaviour {
 
 		//light.transform.position = normalizedFingerDirection; //* newLightPositionMagnitude;
 			
-		light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
+		SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
 
 		checkForMeaningfulChangesX (lastX, newLightVector.x);
 		checkForMeaningfulChangesZ (lastZ, newLightVector.z);

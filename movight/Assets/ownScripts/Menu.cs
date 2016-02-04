@@ -21,6 +21,8 @@ public class Menu : MonoBehaviour {
 	GameObject positionTile;
 	GameObject colorTile;
 
+	GameObject light;
+
 	public static bool isIntensityActive;
 	public static bool isPositionActive;
 	public static bool isTemperatureActive;
@@ -35,7 +37,7 @@ public class Menu : MonoBehaviour {
 		positionTile  = GameObject.Find ("Position");
 		colorTile  = GameObject.Find ("ColorTemperature");
 		inactiveColor = colorTile.GetComponent<Renderer> ().material.color;
-		highlightColor = new Color(0.31f, 0.74f, 1.0f, 0.5f);
+		highlightColor = new Color(0.17f, 0.70f, 1.0f, 0.6f);
 
 		intensityTile.SetActive(false);
 		positionTile.SetActive(false);
@@ -53,15 +55,15 @@ public class Menu : MonoBehaviour {
 
 				selectMenuTile ();
 
-				}
+			}
 					
 
 
 				
 
 
-			}
 		}
+	}
 	
 
 
@@ -151,9 +153,21 @@ public class Menu : MonoBehaviour {
 
 	void activeMenu(){
 		
+		GameObject menu = GameObject.Find ("Menu");
+
+		Vector3 lightPosition = SelectLight.light.transform.position;
+		Vector3 normalizedLightPosition = lightPosition.normalized;
+		Vector3 menuPosition = normalizedLightPosition * 0.6f;
+		menuPosition.y = lightPosition.y - 0.6f;
+
+		//lightPosition.y -= 0.1f;
+
+		menu.transform.position = menuPosition;
+
 		intensityTile.SetActive(true);
 		positionTile.SetActive(true);
 		colorTile.SetActive(true);
+
 
 	}
 
