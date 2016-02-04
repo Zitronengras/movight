@@ -8,7 +8,7 @@ public class SelectLight : MonoBehaviour{
 	//Raycast
 	RaycastHit hitObject = new RaycastHit();
 	LayerMask onlyLightLayer;
-	int castDistance = 50; //TODO change dynamicly with roomsize
+	//public static int castDistance;
 
 	//countdown
 	public static bool isLightHit = false;
@@ -27,6 +27,7 @@ public class SelectLight : MonoBehaviour{
 		GameObject controllerObject = GameObject.Find ("HeadMountedHandController");
 		fingerScript = controllerObject.GetComponent<DetectIndexFinger> ();
 
+		//castDistance = ConstructionDistance.maxWallDistance;
 
 	}
 
@@ -37,7 +38,7 @@ public class SelectLight : MonoBehaviour{
 
 			if (isLightSelected == false) {
 
-				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, castDistance, onlyLightLayer)) {
+				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
 					//isLightHit = true;
 					hitCounter += 1;
