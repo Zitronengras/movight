@@ -3,6 +3,14 @@ using System.Collections;
 
 public class Menu : MonoBehaviour {
 
+	Position positionScript;
+
+	GameObject light;
+	Vector3 fingerPos;
+	Vector3 lightPos;
+	float selectedLightDistanceToController;
+
+
 	//Raycaster
 	LayerMask onlyMenuLayer;
 	RaycastHit hitObject = new RaycastHit();
@@ -21,7 +29,8 @@ public class Menu : MonoBehaviour {
 	GameObject positionTile;
 	GameObject colorTile;
 
-	GameObject light;
+	bool isMenuActiv = false;
+
 
 	public static bool isIntensityActive;
 	public static bool isPositionActive;
@@ -30,6 +39,10 @@ public class Menu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		GameObject positionScriptObject = GameObject.Find ("PositionLight");
+		positionScript = positionScriptObject.GetComponent<Position> ();
+		//Debug.Log(
 
 		onlyMenuLayer = 1 << LayerMask.NameToLayer ("menu");
 
@@ -53,8 +66,29 @@ public class Menu : MonoBehaviour {
 
 			if (SelectLight.isLightSelected == true) { 
 
-				selectMenuTile ();
+				light = SelectLight.light; //selected light
+				lightPos = light.transform.position;
+				fingerPos = DetectIndexFinger.fingerPos; //unity absolute fingerPosition
 
+				//if (isMenuActiv == false) {
+				if (isPositionActive == false && isIntensityActive == false && isTemperatureActive == false) {
+
+					activeMenu ();
+					selectMenuTile ();
+
+				}
+				if (isPositionActive == true) {
+					
+					positionScript.moveLight (light, lightPos, fingerPos);
+					Debug.Log ("moveLight()");
+
+				}
+
+
+					
+
+					
+				//}
 			}
 					
 
@@ -69,7 +103,7 @@ public class Menu : MonoBehaviour {
 
 	void selectMenuTile(){
 
-		activeMenu ();
+		//activeMenu ();
 
 		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, ConstructionDistance.maxWallDistance, onlyMenuLayer)) {
 
@@ -79,9 +113,9 @@ public class Menu : MonoBehaviour {
 			//hitTile.GetComponent<Renderer> ().material.color = highlightColor;
 
 			Debug.Log ("hitTile.name: " + hitTile.name.ToString ());
+
 			//change color when hit
 			if (hitTile.name.Equals("LightIntensity")) {
-
 
 				isIntensityHit = true;
 				isPositionHit = false;
@@ -91,7 +125,9 @@ public class Menu : MonoBehaviour {
 
 				hitCounter += 1;
 				if (hitCounter == SelectLight.waitCountdown) {
-					//TODO intensity methode
+					
+					isIntensityActive = true;
+
 				}
 
 				//positionTile.GetComponent<Renderer> ().material.color = inactiveColor;
@@ -102,7 +138,7 @@ public class Menu : MonoBehaviour {
 			}
 
 			if (hitTile.name.Equals("Position")) {
-				
+
 				isIntensityHit = false;
 				isPositionHit = true;
 				isTemperatureHit = false;
@@ -110,8 +146,19 @@ public class Menu : MonoBehaviour {
 				hitTile.GetComponent<Renderer> ().material.color = highlightColor;
 
 				hitCounter += 1;
+				Debug.Log ("hitCounter: " + hitCounter.ToString());
+
 				if (hitCounter == SelectLight.waitCountdown) {
-					//Position.moveLight ();
+
+					Debug.Log ("Position selected");
+
+					deactiveMenu ();
+
+					isPositionActive = true;
+
+					hitCounter = 0;
+
+
 				}
 
 				Debug.Log ("position ausgewählt");
@@ -133,7 +180,7 @@ public class Menu : MonoBehaviour {
 
 			//change color back when not hit anymore
 			if (isIntensityHit == false) {
-				
+
 				intensityTile.GetComponent<Renderer> ().material.color = inactiveColor;
 
 			}
@@ -147,9 +194,10 @@ public class Menu : MonoBehaviour {
 				colorTile.GetComponent<Renderer> ().material.color = inactiveColor;
 
 			}
-		
 		}
+		
 	}
+
 
 	void activeMenu(){
 		
@@ -160,14 +208,11 @@ public class Menu : MonoBehaviour {
 		Vector3 menuPosition = normalizedLightPosition * 0.6f;
 		menuPosition.y = lightPosition.y - 0.6f;
 
-		//lightPosition.y -= 0.1f;
-
 		menu.transform.position = menuPosition;
 
 		intensityTile.SetActive(true);
 		positionTile.SetActive(true);
 		colorTile.SetActive(true);
-
 
 	}
 

@@ -18,7 +18,7 @@ public class SelectLight : MonoBehaviour{
 	int hitCounter = 0;
 	public static int waitCountdown = 15;
 
-	GameObject selectedLight;
+	//GameObject selectedLight;
 
 
 	// Use this for initialization
