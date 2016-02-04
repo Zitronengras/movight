@@ -23,7 +23,11 @@ public class Menu : MonoBehaviour {
 	//selectMenuTile
 	Color highlightColor;
 	Color inactiveColor;
-	int hitCounter = 0;
+	int hitIntensityCounter = 0;
+	int hitPositionCounter = 0;
+	int hitTemperatureCounter = 0;
+
+	int menuCountdown = 15;
 
 	GameObject intensityTile;
 	GameObject positionTile;
@@ -32,9 +36,9 @@ public class Menu : MonoBehaviour {
 	bool isMenuActiv = false;
 
 
-	public static bool isIntensityActive;
-	public static bool isPositionActive;
-	public static bool isTemperatureActive;
+	public static bool isIntensityActive = false;
+	public static bool isPositionActive = false;
+	public static bool isTemperatureActive = false;
 
 
 	// Use this for initialization
@@ -79,10 +83,21 @@ public class Menu : MonoBehaviour {
 				}
 				if (isPositionActive == true) {
 
-					deactiveMenu ();
-					SelectLight.waitCountdown = 1;
-					positionScript.moveLight (light, lightPos, fingerPos);
-					Debug.Log ("moveLight()");
+					//if (hitCounter == menuCountdown) {
+
+						deactiveMenu ();
+						SelectLight.waitCountdown = 1;
+						positionScript.moveLight (light, lightPos, fingerPos);
+						Debug.Log ("moveLight()");
+
+					/*} else(hitCounter == menuCountdown){
+
+						activeMenu ();
+						selectMenuTile ();
+
+					}*/
+
+
 
 
 
@@ -121,16 +136,21 @@ public class Menu : MonoBehaviour {
 			//change color when hit
 			if (hitTile.name.Equals("LightIntensity")) {
 
+				hitPositionCounter = 0;
+				hitTemperatureCounter = 0;
+
 				isIntensityHit = true;
 				isPositionHit = false;
 				isTemperatureHit = false;
 
 				hitTile.GetComponent<Renderer> ().material.color = highlightColor;
 
-				hitCounter += 1;
-				if (hitCounter == SelectLight.waitCountdown) {
+				hitIntensityCounter += 1;
+				Debug.LogFormat ("hitCounter: " + hitIntensityCounter.ToString ());
+				if (hitIntensityCounter == menuCountdown) {
 					
 					isIntensityActive = true;
+					hitIntensityCounter = 0;
 
 				}
 
@@ -143,24 +163,27 @@ public class Menu : MonoBehaviour {
 
 			if (hitTile.name.Equals("Position")) {
 
+				hitIntensityCounter = 0;
+				hitTemperatureCounter = 0;
+
+
 				isIntensityHit = false;
 				isPositionHit = true;
 				isTemperatureHit = false;
 
 				hitTile.GetComponent<Renderer> ().material.color = highlightColor;
 
-				hitCounter += 1;
-				Debug.Log ("hitCounter: " + hitCounter.ToString());
+				hitPositionCounter += 1;
+				Debug.Log ("hitCounter: " + hitPositionCounter.ToString());
 
-				if (hitCounter == SelectLight.waitCountdown) {
+				if (hitPositionCounter == menuCountdown) {
 
 					Debug.Log ("Position selected");
 
 					//deactiveMenu ();
 
 					isPositionActive = true;
-
-					hitCounter = 0;
+					hitPositionCounter = 0;
 
 
 				}
@@ -170,6 +193,9 @@ public class Menu : MonoBehaviour {
 			}
 			if (hitTile.name.Equals("ColorTemperature")) {
 
+				hitIntensityCounter = 0;
+				hitPositionCounter = 0;
+
 				isIntensityHit = false;
 				isPositionHit = false;
 				isTemperatureHit = true;
@@ -177,6 +203,21 @@ public class Menu : MonoBehaviour {
 				hitTile.GetComponent<Renderer> ().material.color = highlightColor;
 				//positionTile.GetComponent<Renderer> ().material.color = inactiveColor;
 				//intensityTile.GetComponent<Renderer> ().material.color = inactiveColor;
+
+				hitTemperatureCounter += 1;
+
+				if (hitTemperatureCounter == menuCountdown) {
+
+					Debug.Log ("Position selected");
+
+					//deactiveMenu ();
+
+					isPositionActive = true;
+
+					hitTemperatureCounter = 0;
+
+
+				}
 
 				Debug.Log ("ColorTemperature ausgewählt");
 

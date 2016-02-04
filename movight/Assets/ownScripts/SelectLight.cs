@@ -61,9 +61,8 @@ public class SelectLight : MonoBehaviour{
 
 
 						//stop select sequence
-					
-						isLightSelected = true;
 						hitCounter = 0;
+						isLightSelected = true;
 						//isLightHit = false;
 					} else {
 
