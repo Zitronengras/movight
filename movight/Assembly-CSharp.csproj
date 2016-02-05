@@ -151,6 +151,7 @@
      <Compile Include="Assets\ownScripts\ConstructionDistance.cs" />
      <Compile Include="Assets\ownScripts\DetectIndexFinger.cs" />
      <Compile Include="Assets\ownScripts\Gestures.cs" />
+     <Compile Include="Assets\ownScripts\HandFeedback.cs" />
      <Compile Include="Assets\ownScripts\LightIntensity.cs" />
      <Compile Include="Assets\ownScripts\Menu.cs" />
      <Compile Include="Assets\ownScripts\Position.cs" />

@@ -3,7 +3,10 @@ using System.Collections;
 
 public class SelectLight : MonoBehaviour{
 	
-	//Gestures gestureScript;
+	HandFeedback labelScript;
+	GameObject labelScriptObject;
+
+	Vector3 controlPoint;
 
 	//Raycast
 	RaycastHit hitObject = new RaycastHit();
@@ -37,6 +40,14 @@ public class SelectLight : MonoBehaviour{
 		onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
 
 		GameObject controllerObject = GameObject.Find ("HeadMountedHandController");
+
+		labelScriptObject = GameObject.Find("SelectionLabelObject");
+		//Debug.Log (" 46 labelScriptObject: " + labelScriptObject.ToString ());
+		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
+		//Debug.Log (" 50 labelScript: " + labelScript.ToString ());
+		labelScriptObject.SetActive(false);
+
+
 		//gestureScript = controllerObject.GetComponent<Gestures> ();
 
 		//castDistance = ConstructionDistance.maxWallDistance;
@@ -47,6 +58,11 @@ public class SelectLight : MonoBehaviour{
 	void Update () {
 
 		if (Gestures.isSelectGesture == true) {
+
+			controlPoint = Gestures.controlPoint;
+
+			labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
+
 
 			if (firstPassThrough == true) { //select light
 
@@ -87,24 +103,24 @@ public class SelectLight : MonoBehaviour{
 
 					if (SelectLight.isLightSelected == false) {
 
-							if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-								hitCounter += 1;
-								Debug.Log ("hitCounter: " + hitCounter.ToString ());
+							hitCounter += 1;
+							Debug.Log ("hitCounter: " + hitCounter.ToString ());
 
-								if (hitCounter == waitCountdown) {
+							if (hitCounter == waitCountdown) {
 
-									light = hitObject.collider.gameObject;
-									lightPosition = light.transform.position;
+								light = hitObject.collider.gameObject;
+								lightPosition = light.transform.position;
 
-									Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
+								Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
 
-									//stop select sequence
-									hitCounter = 0;
-									bufferCounter = 0;
-									isLightSelected = true;
-								}
+								//stop select sequence
+								hitCounter = 0;
+								bufferCounter = 0;
+								isLightSelected = true;
 							}
+						}
 					}
 					//
 					if (isLightSelected == true) { //deselect light
@@ -131,6 +147,13 @@ public class SelectLight : MonoBehaviour{
 					}
 				}			
 			}
+		} else {
+			
+			labelScriptObject.SetActive(false);
+
+			Debug.Log ("should set labelScriptObject false*********************");
+				
+
 		}
 	}
 }

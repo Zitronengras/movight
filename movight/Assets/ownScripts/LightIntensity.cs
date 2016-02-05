@@ -3,6 +3,8 @@ using System.Collections;
 
 public class LightIntensity : MonoBehaviour {
 
+	HandFeedback labelScript;
+
 	GameObject light;
 	Light lightSource;
 	float intensity;
@@ -10,11 +12,12 @@ public class LightIntensity : MonoBehaviour {
 
 	//Test
 	GameObject cube;
+	GameObject labelScriptObject;
 
 	string lightSourceTag = "lightSource";
 
 	//range
-	float intensityRangeVolume = 0.30f; //20 virtual cm
+	float intensityRangeVolume = 0.50f; //20 virtual cm
 	float minYIntensityRange;
 	float maxYIntensityRange;
 
@@ -43,7 +46,12 @@ public class LightIntensity : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		cube = GameObject.Find ("CubeRot");
+		labelScriptObject = GameObject.Find("IntensityLabelObject");
+		Debug.Log ("labelScriptObject: " + labelScriptObject.ToString ());
+		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
+		labelScriptObject.SetActive(false);
+
+
 
 		//prepare vector forhorizontalRange
 		//upIntensityRange = Quaternion.Euler (42, 0, 0) * upIntensityRange;
@@ -60,6 +68,7 @@ public class LightIntensity : MonoBehaviour {
 
 			if (Gestures.isIntensityGesture) {
 
+
 				Debug.Log ("im intensity script******************************************************");
 
 				lightSource = light.GetComponentInChildren<Light> ();
@@ -68,6 +77,9 @@ public class LightIntensity : MonoBehaviour {
 
 
 				controlPoint = Gestures.controlPoint;
+
+				labelScript.displayLabel (controlPoint, labelScriptObject);
+
 
 				checkForMeaningFulChanges (controlPoint);
 
@@ -78,6 +90,10 @@ public class LightIntensity : MonoBehaviour {
 					changeIntensity (controlPoint, intensity, lightSource);
 
 				}
+			} else {
+
+				labelScriptObject.SetActive(false);
+
 			}
 		}
 	}

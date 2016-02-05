@@ -4,6 +4,7 @@ using Leap;
 
 public class Gestures : MonoBehaviour {
 
+
 	public static Quaternion headRotation;
 
 	int i = 0;
@@ -35,10 +36,13 @@ public class Gestures : MonoBehaviour {
 
 	//checkForIntensityGesture
 	public static bool isIntensityGesture = false;
-	Leap.Vector palmCenter;
+	Leap.Vector leapPalmCenter;
+	public static Vector3 palmCenter;
+
 
 
 	public static Vector3 controlPoint;
+
 	//TODO get them down
 	Vector3 indexControlPoint;
 	Vector3 middleControlPoint;
@@ -53,7 +57,7 @@ public class Gestures : MonoBehaviour {
 
 
 		handController = GameObject.Find ("HeadMountedHandController").transform;
-		handControllerPos = handController.position;		
+		handControllerPos = handController.position;	
 
 	}
 
@@ -88,20 +92,15 @@ public class Gestures : MonoBehaviour {
 						rightHand = currentHand;
 						//Debug.Log ("Found right hand" + rightHand);
 
-						if (SelectLight.isLightSelected == false) {
+						if (Position.lightShouldMove == true) {
+
+							checkForPositionGesture (rightHand);
+
+						} else {
 							
 							checkForSelectGesture (rightHand);
-
-						} else if (SelectLight.isLightSelected == true) {
-							
 							checkForPositionGesture (rightHand);
 							checkForIntensityGesture (rightHand);
-
-						}
-
-						if (Position.lightShouldMove == false) {
-
-							//checkForSelectGesture (rightHand);
 
 						}
 
@@ -145,23 +144,26 @@ public class Gestures : MonoBehaviour {
 
 					isSelectGesture = true;
 
-					leapIndexTipPosition = indexFinger.TipPosition;
-					leapMiddleTipPosition = middleFinger.TipPosition;	
+					//palm
+					leapPalmCenter = rightHand.PalmPosition;
+					Vector3 unityPalmCenter = leapPalmCenter.ToUnityScaled ();
+					Vector3 rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
+					//get head rotation
+					headRotation = Cardboard.SDK.HeadRotation;
+					palmCenter = (headRotation * rotHMDPalmCenter);
 
+					leapIndexTipPosition = indexFinger.TipPosition;
+					leapMiddleTipPosition = middleFinger.TipPosition;
 					// work with tipPositon
 					Vector3 unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
 					Vector3 unityMiddleFingerTip = leapMiddleTipPosition.ToUnityScaled ();
-
 					Vector3 rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
 					Vector3 rotHMDMiddleFingerTip = Quaternion.Euler (270, 180, 0) * unityMiddleFingerTip;
-
 					Vector3 indexToMiddle = -rotHMDIndexFingerTip + rotHMDMiddleFingerTip;
 					Vector3 normalizedBetweenIndexMiddle = indexToMiddle.normalized;
 					Vector3 pointBetweenIndexMiddle = rotHMDIndexFingerTip + (normalizedBetweenIndexMiddle * (indexToMiddle.magnitude / 2));
-
 					//get head rotation
 					headRotation = Cardboard.SDK.HeadRotation;
-
 					controlPoint = (headRotation * pointBetweenIndexMiddle);
 
 					Debug.DrawRay (handControllerPos, controlPoint, Color.red, 2.0f, true);
@@ -176,6 +178,10 @@ public class Gestures : MonoBehaviour {
 				isSelectGesture = false;
 
 			}
+		} else {
+
+			isSelectGesture = false;
+
 		}
 	}
 
@@ -199,13 +205,19 @@ public class Gestures : MonoBehaviour {
 
 					isPositionGesture = true;
 
-					leapIndexTipPosition = indexFinger.TipPosition;
+					//palm
+					leapPalmCenter = rightHand.PalmPosition;
+					Vector3 unityPalmCenter = leapPalmCenter.ToUnityScaled ();
+					Vector3 rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
+					//get head rotation
+					headRotation = Cardboard.SDK.HeadRotation;
+					palmCenter = (headRotation * rotHMDPalmCenter);
 
+					//indexfinger
+					leapIndexTipPosition = indexFinger.TipPosition;
 					// work with tipPositon
 					Vector3 unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
-
 					Vector3 rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
-
 					//get head rotation
 					headRotation = Cardboard.SDK.HeadRotation;
 
@@ -240,10 +252,10 @@ public class Gestures : MonoBehaviour {
 
 			isIntensityGesture = true;
 
-			palmCenter = rightHand.PalmPosition;
+			leapPalmCenter = rightHand.PalmPosition;
 
 			// work with tipPositon
-			Vector3 unityPalmCenter = palmCenter.ToUnityScaled ();
+			Vector3 unityPalmCenter = leapPalmCenter.ToUnityScaled ();
 
 			Vector3 rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
 
