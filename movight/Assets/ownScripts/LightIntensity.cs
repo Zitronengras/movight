@@ -8,6 +8,7 @@ public class LightIntensity : MonoBehaviour {
 	float intensityRangeVolume = 0.30f; //20 virtual cm
 
 	bool isVerticalRangeCalculated = false;
+	bool isControlActive = false;
 
 	//checkForMeaningfulChanges
 	Vector3 newPosition;
@@ -25,15 +26,20 @@ public class LightIntensity : MonoBehaviour {
 	
 		if (Gestures.isIntensityGesture) {
 
-			Debug.Log ("in intensity script");
+			//Debug.Log ("in intensity script");
 
 			controlPoint = Gestures.controlPoint;
 
 			checkForMeaningFulChanges (controlPoint);
 
+			if (intensityShouldChange) {
 
-			//changeIntensity ();
+				//Debug.Log ("now changeIntensity()");
+				
+				//changeIntensity (controlPoint);
 
+			}
+				
 		}
 
 	}
@@ -91,13 +97,18 @@ public class LightIntensity : MonoBehaviour {
 		if (newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
 
 			changeCounter += 1;
-			Debug.Log ("changeCounter " + changeCounter.ToString());
+			//Debug.Log ("changeCounter " + changeCounter.ToString());
 
 
 			if (changeCounter == SelectLight.waitCountdown) {
 
-				intensityShouldChange = true;
-				Debug.Log("intensityShouldChange = true################################################");
+				if (intensityShouldChange == true) {
+					intensityShouldChange = false;
+				} else {
+					intensityShouldChange = true;
+				}
+
+				Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
 				changeCounter = 0;
 
 			}
