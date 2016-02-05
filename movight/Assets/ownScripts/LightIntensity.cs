@@ -3,6 +3,8 @@ using System.Collections;
 
 public class LightIntensity : MonoBehaviour {
 
+	Color32 color;
+
 	HandFeedback labelScript;
 	GameObject labelScriptObject;
 
@@ -52,6 +54,9 @@ public class LightIntensity : MonoBehaviour {
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
 
+		color = new Color32(227, 24, 23, 100);
+
+
 
 
 		//prepare vector forhorizontalRange
@@ -75,6 +80,8 @@ public class LightIntensity : MonoBehaviour {
 
 				labelScript.displayLabel (controlPoint, labelScriptObject);
 				lightSource = light.GetComponentInChildren<Light> ();
+				lightSource.color = color;
+
 				controlPoint = Gestures.controlPoint;
 
 				checkForMeaningfulChanges (controlPoint);
@@ -215,7 +222,6 @@ public class LightIntensity : MonoBehaviour {
 					changeCounter = 0;
 
 				}
-
 			}
 		}
 

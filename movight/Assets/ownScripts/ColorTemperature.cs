@@ -8,6 +8,7 @@ public class ColorTemperature : MonoBehaviour {
 
 	GameObject light;
 	Light lightSource;
+	Color32 currentColor;
 	Vector3 controlPoint;
 
 	//checkForMeaningfulChanges
@@ -15,6 +16,10 @@ public class ColorTemperature : MonoBehaviour {
 	Vector3 lastPosition;
 	int changeCounter = 0;
 	public static bool temperatureShouldChange = false;
+
+	//
+	float temperaturePositionRange = 40.0f;
+	Color color = new Color32();
 
 
 	// Use this for initialization
@@ -40,6 +45,7 @@ public class ColorTemperature : MonoBehaviour {
 				labelScript.displayLabel (controlPoint, labelScriptObject);
 				lightSource = light.GetComponentInChildren<Light> ();
 				controlPoint = Gestures.controlPoint;
+				currentColor = lightSource.color;
 
 				//checkForMeaningfulChanges (controlPoint);
 
@@ -53,9 +59,18 @@ public class ColorTemperature : MonoBehaviour {
 	
 	}
 
+	void calculateHorizontalRange(){
+
+	}
+
+
+	void changeTemperature(Vector3 controlPoint){
+
+	}
+
 	void checkForMeaningfulChanges(Vector3 controlPoint){
 
-		float changeValue = 0.0001f; //0.001f;
+		float changeValue = 0.0001f;
 		newPosition = controlPoint;
 
 
@@ -63,23 +78,45 @@ public class ColorTemperature : MonoBehaviour {
 			&& newPosition.y <= (lastPosition.y + changeValue) && newPosition.y >= (lastPosition.y - changeValue)
 			&& newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
 
-			changeCounter += 1;
-			//Debug.Log ("changeCounter " + changeCounter.ToString());
+			if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {				
 
-			if (changeCounter == SelectLight.waitCountdown) {
+				changeCounter += 1;
+				Debug.Log ("changeCounter " + changeCounter.ToString());
 
-				if (temperatureShouldChange == true) {
-					temperatureShouldChange = false;
-				} else {
-					temperatureShouldChange = true;
+				if (changeCounter == SelectLight.waitCountdown) {
+
+					if (temperatureShouldChange == true) {
+						temperatureShouldChange = false;
+					} else {
+						temperatureShouldChange = true;
+					}
+
+					changeCounter = 0;
+
 				}
-
-				changeCounter = 0;
-
 			}
 		}
 
+		Debug.Log ("shouldTemperatureChange??: " + temperatureShouldChange.ToString ());
+
 		lastPosition = controlPoint;
+
+	}
+
+	void colorRange(float percentagePosition){
+
+		float numberOfColumns = 39.0f;
+		float widthOfOneColumn = temperaturePositionRange / numberOfColumns; //39 columns in 0.40 positionRange	
+		float percentagWidthOfOneColumn = 100 / numberOfColumns;
+
+		//float onePercent
+
+
+		if (percentagePosition <= percentagWidthOfOneColumn) {
+			color = new Color32(227, 24, 23, 1);
+		}
+
+
 
 	}
 
