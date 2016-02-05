@@ -2,8 +2,7 @@
 using System.Collections;
 using Leap;
 
-
-public class DetectIndexFinger : MonoBehaviour{
+public class Gestures : MonoBehaviour {
 
 	int i = 0;
 
@@ -18,8 +17,6 @@ public class DetectIndexFinger : MonoBehaviour{
 
 	Bone distalBone = new Bone ();		
 
-
-
 	Leap.Vector leapIndexTipPosition;
 	Leap.Vector leapMiddleTipPosition;
 
@@ -33,6 +30,11 @@ public class DetectIndexFinger : MonoBehaviour{
 	//checkForSelectGesture
 	public static bool isSelectGesture = false;
 	int checkForSelectGestureCounter = 0;
+
+	//checkForIntensityGesture
+	public static bool isIntensityGesture = false;
+	Leap.Vector palmCenter;
+
 
 	public static Vector3 controlPoint;
 	//TODO get them down
@@ -84,8 +86,29 @@ public class DetectIndexFinger : MonoBehaviour{
 						rightHand = currentHand;
 						//Debug.Log ("Found right hand" + rightHand);
 
-						checkForSelectGesture (rightHand);
-						checkForPositionGesture (rightHand);
+						if (SelectLight.isLightSelected == false) {
+							
+							checkForSelectGesture (rightHand);
+
+						} else if (SelectLight.isLightSelected == true) {
+							
+							checkForPositionGesture (rightHand);
+							checkForIntensityGesture (rightHand);
+
+						}
+
+						if (Position.lightShouldMove == false) {
+
+							//checkForSelectGesture (rightHand);
+
+						}
+
+						/*if (SelectLight.isLightSelected == true) {
+
+							checkForPositionGesture (rightHand);
+							checkForIntensityGesture (rightHand);
+
+						}*/
 
 
 
@@ -103,13 +126,11 @@ public class DetectIndexFinger : MonoBehaviour{
 
 	void checkForSelectGesture(Hand rightHand){
 
-		Debug.Log ("#########################");
-
 		//check for extended fingers on right hand
 		FingerList extendedFingers = rightHand.Fingers.Extended();
 
 		if (!extendedFingers.IsEmpty) {	
-			
+
 			Finger indexFinger = extendedFingers [0]; //since there is only one per hand
 			Finger middleFinger = extendedFingers [1]; //since there is only one per hand
 			Finger ringFinger = extendedFingers [2]; //since there is only one per hand
@@ -117,8 +138,8 @@ public class DetectIndexFinger : MonoBehaviour{
 
 			if (indexFinger.IsValid && middleFinger.IsValid) {
 				if (!ringFinger.IsValid && !pinkyFinger.IsValid) {
-					
-					Debug.Log ("now there should be the selectGesture############################");
+
+					Debug.Log ("now there should be the selectGesture##################");
 
 					isSelectGesture = true;
 
@@ -149,7 +170,7 @@ public class DetectIndexFinger : MonoBehaviour{
 
 				}
 			} else {
-				
+
 				isSelectGesture = false;
 
 			}
@@ -170,7 +191,7 @@ public class DetectIndexFinger : MonoBehaviour{
 			if(indexFinger.IsValid){
 				if (!middleFinger.IsValid && !ringFinger.IsValid && !pinkyFinger.IsValid) {
 
-					Debug.Log("now there should be the positionGesture############################");
+					Debug.Log("now there should be the positionGesture######################");
 
 					isPositionGesture = true;
 
@@ -198,8 +219,43 @@ public class DetectIndexFinger : MonoBehaviour{
 				isPositionGesture = false;
 
 			}
+		} else {
+
+			isPositionGesture = false;
+
 		}
 	}
 
+	void checkForIntensityGesture(Hand rightHand){
+		//check for extended fingers on right hand
+		FingerList extendedFingers = rightHand.Fingers.Extended();
 
+		if (extendedFingers.IsEmpty) {	
+
+			Debug.Log ("******FAUST***********************");
+
+			isPositionGesture = true;
+
+			palmCenter = rightHand.PalmPosition;
+
+			// work with tipPositon
+			Vector3 unityPalmCenter = palmCenter.ToUnityScaled ();
+
+			Vector3 rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
+
+			//get head rotation
+			var headRotation = Cardboard.SDK.HeadRotation;
+
+			controlPoint = (headRotation * rotHMDPalmCenter);
+
+			Debug.Log ("FistPosition: " + controlPoint.ToString ());
+
+			Debug.DrawRay (handControllerPos, controlPoint, Color.green, 2.0f, true);
+
+		} else {
+
+			isPositionGesture = false;
+
+		}
+	}
 }

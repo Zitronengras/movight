@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SelectLight : MonoBehaviour{
 	
-	DetectIndexFinger fingerScript;
+	//Gestures gestureScript;
 
 	//Raycast
 	RaycastHit hitObject = new RaycastHit();
@@ -13,11 +13,16 @@ public class SelectLight : MonoBehaviour{
 	//public static int castDistance;
 
 	//countdown
+	bool firstPassThrough = true;
 	public static bool isLightHit = false;
 	public static bool isLightSelected = false;
 	int hitCounter = 0;
-	public static int deselectCountdown = 15;
+	public static int deselectCountdown = 20;
 	public static int waitCountdown = 15;
+
+	int bufferCounter = 0;
+	int bufferMax = 50;
+
 	//public static int PositionCountdown = 15;
 
 	//TODO no other seletion possible when light selected
@@ -32,7 +37,7 @@ public class SelectLight : MonoBehaviour{
 		onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
 
 		GameObject controllerObject = GameObject.Find ("HeadMountedHandController");
-		fingerScript = controllerObject.GetComponent<DetectIndexFinger> ();
+		//gestureScript = controllerObject.GetComponent<Gestures> ();
 
 		//castDistance = ConstructionDistance.maxWallDistance;
 
@@ -41,42 +46,92 @@ public class SelectLight : MonoBehaviour{
 	// Update is called once per frame
 	void Update () {
 
-		if (DetectIndexFinger.isSelectGesture == true) {
+		if (Gestures.isSelectGesture == true) {
 
-			if (isLightSelected == false) { //select light
+			if (firstPassThrough == true) { //select light
 
-				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+				if (isLightSelected == false) {
+					//Debug.Log ("bufferCounter" + bufferCounter.ToString ());
 
-					hitCounter += 1;
+					//if (bufferMax) {
+					if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-					if (hitCounter == waitCountdown) {
+						hitCounter += 1;
+						Debug.Log ("hitCounter: " + hitCounter.ToString ());
+
+						if (hitCounter == waitCountdown) {
+
+							light = hitObject.collider.gameObject;
+							lightPosition = light.transform.position;
+
+							Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
+
+							//stop select sequence
+							hitCounter = 0;
+							isLightSelected = true;
+							firstPassThrough = false;
+						}
+					} else {
 						
-						light = hitObject.collider.gameObject;
-						lightPosition = light.transform.position;
-
-						Debug.Log ("Licht Objekt getroffen**************************************************: " + light.ToString());
-
-						//stop select sequence
 						hitCounter = 0;
-						isLightSelected = true;
+						firstPassThrough = true;
+
 					}
 				}
-			}
-			if (isLightSelected == true) { //deselect light
+			} else {
+				
+				bufferCounter += 1;
+				Debug.Log ("bufferCounter: " + bufferCounter.ToString ());
 
-				if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+				if (bufferCounter >= bufferMax) {
 
-					hitCounter += 1;
+					if (SelectLight.isLightSelected == false) {
 
-					if (hitCounter == waitCountdown) {
-						
-						Debug.Log ("Licht abgewählt ***************************************: " + light.ToString());
+							if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-						//stop select sequence
-						hitCounter = 0;
-						isLightSelected = false;
+								hitCounter += 1;
+								Debug.Log ("hitCounter: " + hitCounter.ToString ());
+
+								if (hitCounter == waitCountdown) {
+
+									light = hitObject.collider.gameObject;
+									lightPosition = light.transform.position;
+
+									Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
+
+									//stop select sequence
+									hitCounter = 0;
+									bufferCounter = 0;
+									isLightSelected = true;
+								}
+							}
 					}
-				}
+					//
+					if (isLightSelected == true) { //deselect light
+
+						Debug.Log ("bufferCounter" + bufferCounter.ToString());
+
+						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+
+							hitCounter += 1;
+							Debug.Log ("hitCounter: " + hitCounter.ToString ());
+
+							if (hitCounter == waitCountdown) {
+
+								Debug.Log ("Licht abgewählt ***************************************: " + light.ToString ());
+
+								//stop select sequence
+								hitCounter = 0;
+								bufferCounter = 0;
+								isLightSelected = false;
+							}
+						} else {
+							
+							hitCounter = 0;
+
+						}
+					}
+				}			
 			}
 		}
 	}

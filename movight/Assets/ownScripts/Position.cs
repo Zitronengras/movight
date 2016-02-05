@@ -26,7 +26,7 @@ public class Position : MonoBehaviour {
 	//Raycaster
 	RaycastHit hitObject = new RaycastHit();
 	GameObject hitLight;
-	bool lightShouldMove = false;
+	public static bool lightShouldMove = false;
 
 	//moveLight
 	float currentLightControllerDistance;
@@ -64,15 +64,15 @@ public class Position : MonoBehaviour {
 				light = SelectLight.light; //selected light
 				lightPosition = light.transform.position; //position of selected light
 
-				if (DetectIndexFinger.isPositionGesture == true) { //beeing in selectionsequence#
+				if (Gestures.isPositionGesture == true) { //beeing in selectionsequence
 
 					Debug.Log ("in position script and gesture == true");
 
-					controlPoint = DetectIndexFinger.controlPoint;
+					controlPoint = Gestures.controlPoint;
 
 					if (lightShouldMove == false) {
 						
-						if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
 							hitLight = hitObject.collider.gameObject;
 
@@ -108,7 +108,7 @@ public class Position : MonoBehaviour {
 		//Debug.Log ("percentage pos of Light at the beginning: " + percentagePosOfLightAtBeginning.ToString());
 
 		//calculate start distance from finger to controller
-		fingerControllerDistanceBegin = Vector3.Distance (DetectIndexFinger.handControllerPos, fingerPosition);
+		fingerControllerDistanceBegin = Vector3.Distance (Gestures.handControllerPos, fingerPosition);
 		//Debug.Log ("fingerControllerDistanceBegin: " + fingerControllerDistanceBegin.ToString ());
 
 		float percentagePosOfFingerAtBeginning = percentagePosOfLightAtBeginning; //adapt percentage position of light on position of finger
@@ -141,7 +141,7 @@ public class Position : MonoBehaviour {
 
 			//Debug.Log ("at the beginning: selectedLightDistanceToController: " + selectedLightDistanceToController.ToString ());
 
-			float selectedLightDistanceToController = Vector3.Distance(DetectIndexFinger.handControllerPos, SelectLight.lightPosition);
+			float selectedLightDistanceToController = Vector3.Distance(Gestures.handControllerPos, SelectLight.lightPosition);
 
 			calculateDepthRange (selectedLightDistanceToController, controlPoint);
 			isDepthRangeCalculated = true;
@@ -151,7 +151,7 @@ public class Position : MonoBehaviour {
 		if (isDepthRangeCalculated == true) {
 
 			//get current distance between finger and controller for getPercentageFingerPosition(...)
-			currentFingerControllerDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, controlPoint); // ????????????????????????
+			currentFingerControllerDistance = Vector3.Distance (Gestures.handControllerPos, controlPoint); // ????????????????????????
 			//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());			
 
 			float percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
