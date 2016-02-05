@@ -51,6 +51,9 @@ public class Gestures : MonoBehaviour {
 	int checkForPositionGestureCounter = 0;
 	public static bool isPositionGesture = false;
 
+	//checkForTemperatureGesture
+	public static bool isTemperatureGesture = false;
+
 
 	// Use this for initialization
 	void Start () {
@@ -92,38 +95,36 @@ public class Gestures : MonoBehaviour {
 						rightHand = currentHand;
 						//Debug.Log ("Found right hand" + rightHand);
 
-						if (Position.lightShouldMove == true) {
+						if (SelectLight.isLightSelected == false) { //when no light is selected
 
-							checkForPositionGesture (rightHand);
-
-						} else {
-							
 							checkForSelectGesture (rightHand);
-							checkForPositionGesture (rightHand);
-							checkForIntensityGesture (rightHand);
 
+						} else if (SelectLight.isLightSelected == true) { //when light is selected
+
+							if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
+
+								checkForIntensityGesture (rightHand);
+
+							} else if (Position.lightShouldMove == true) {//if light is moving
+
+								checkForPositionGesture (rightHand);
+
+							} else {
+
+								checkForSelectGesture (rightHand);
+								checkForPositionGesture (rightHand);
+								checkForIntensityGesture (rightHand);
+								checkForTemperatureGesture (rightHand);
+
+							}
 						}
-
-						/*if (SelectLight.isLightSelected == true) {
-
-							checkForPositionGesture (rightHand);
-							checkForIntensityGesture (rightHand);
-
-						}*/
-
-
-
-
-
 					}
-					//TODO right position for else???			
-				}/*else {
-					isFingerDetected = false;
-				}*/
+				}
 			}
 		}
-
 	}
+
+	//TODO correct controlPointValue
 
 	void checkForSelectGesture(Hand rightHand){
 
@@ -274,4 +275,60 @@ public class Gestures : MonoBehaviour {
 
 		}
 	}
+
+	void checkForTemperatureGesture(Hand rightHand){
+
+		//check for extended fingers on right hand
+		FingerList extendedFingers = rightHand.Fingers.Extended();
+
+		if (!extendedFingers.IsEmpty) {	
+
+			Finger indexFinger = extendedFingers [0];
+			Finger middleFinger = extendedFingers [1];
+			Finger ringFinger = extendedFingers [2];
+			Finger pinkyFinger = extendedFingers [3];
+
+			if (indexFinger.IsValid && middleFinger.IsValid && ringFinger.IsValid && pinkyFinger.IsValid) {
+
+				Debug.Log ("now there should be the TemperatureGesture##################");
+
+				isTemperatureGesture = true;
+
+				//palm
+				leapPalmCenter = rightHand.PalmPosition;
+				Vector3 unityPalmCenter = leapPalmCenter.ToUnityScaled ();
+				Vector3 rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
+				//get head rotation
+				headRotation = Cardboard.SDK.HeadRotation;
+				controlPoint = (headRotation * rotHMDPalmCenter);
+
+				/*leapIndexTipPosition = indexFinger.TipPosition;
+				leapMiddleTipPosition = middleFinger.TipPosition;
+				// work with tipPositon
+				Vector3 unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
+				Vector3 unityMiddleFingerTip = leapMiddleTipPosition.ToUnityScaled ();
+				Vector3 rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
+				Vector3 rotHMDMiddleFingerTip = Quaternion.Euler (270, 180, 0) * unityMiddleFingerTip;
+				Vector3 indexToMiddle = -rotHMDIndexFingerTip + rotHMDMiddleFingerTip;
+				Vector3 normalizedBetweenIndexMiddle = indexToMiddle.normalized;
+				Vector3 pointBetweenIndexMiddle = rotHMDIndexFingerTip + (normalizedBetweenIndexMiddle * (indexToMiddle.magnitude / 2));
+				//get head rotation
+				headRotation = Cardboard.SDK.HeadRotation;
+				controlPoint = (headRotation * pointBetweenIndexMiddle);*/
+
+				Debug.DrawRay (handControllerPos, controlPoint, Color.yellow, 2.0f, true);
+				
+			} else {
+
+				isTemperatureGesture = false;
+
+			}
+		} else {
+
+			isTemperatureGesture = false;
+
+		}
+	}
+
+
 }

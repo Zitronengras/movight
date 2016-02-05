@@ -15,6 +15,8 @@ public class HandFeedback : MonoBehaviour {
 	
 	}
 
+	//TODO feedback für Start- und Endpunkt
+
 	public void displayLabel(Vector3 controlPoint, GameObject label){
 
 		label.SetActive(true);
@@ -30,10 +32,10 @@ public class HandFeedback : MonoBehaviour {
 		float newLength = length -  palmDepth; //90%
 
 		Vector3 labelPosition = (palmCenter.normalized) * newLength;
-		Debug.Log ("labelPosition.x: " + labelPosition.z.ToString ());
+		//Debug.Log ("labelPosition.x: " + labelPosition.z.ToString ());
 
 
-		Debug.Log ("controlPosition.z: " + palmCenter.z.ToString ());
+		//Debug.Log ("controlPosition.z: " + palmCenter.z.ToString ());
 
 		label.transform.position = labelPosition;
 

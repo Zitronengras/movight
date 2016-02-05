@@ -4,6 +4,7 @@ using System.Collections;
 public class LightIntensity : MonoBehaviour {
 
 	HandFeedback labelScript;
+	GameObject labelScriptObject;
 
 	GameObject light;
 	Light lightSource;
@@ -12,12 +13,12 @@ public class LightIntensity : MonoBehaviour {
 
 	//Test
 	GameObject cube;
-	GameObject labelScriptObject;
 
 	string lightSourceTag = "lightSource";
 
 	//range
-	float intensityRangeVolume = 0.50f; //20 virtual cm
+	//TODO balancing
+	float intensityRangeVolume = 0.60f; //20 virtual cm
 	float minYIntensityRange;
 	float maxYIntensityRange;
 
@@ -39,7 +40,7 @@ public class LightIntensity : MonoBehaviour {
 	Vector3 newPosition;
 	Vector3 lastPosition;
 	int changeCounter = 0;
-	bool intensityShouldChange = false;
+	public static bool intensityShouldChange = false;
 
 	//TODO for horizontal
 
@@ -47,7 +48,7 @@ public class LightIntensity : MonoBehaviour {
 	void Start () {
 
 		labelScriptObject = GameObject.Find("IntensityLabelObject");
-		Debug.Log ("labelScriptObject: " + labelScriptObject.ToString ());
+		//Debug.Log ("labelScriptObject: " + labelScriptObject.ToString ());
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
 
@@ -58,7 +59,9 @@ public class LightIntensity : MonoBehaviour {
 		//downIntensityRange = Quaternion.Euler (-42, 0, 0) * downIntensityRange;
 	
 	}
-	
+
+	//TODO buffer einbauen
+
 	// Update is called once per frame
 	void Update () {
 
@@ -67,21 +70,14 @@ public class LightIntensity : MonoBehaviour {
 			light = SelectLight.light; //selected light		
 
 			if (Gestures.isIntensityGesture) {
-
-
-				Debug.Log ("im intensity script******************************************************");
-
-				lightSource = light.GetComponentInChildren<Light> ();
-				//intensity = lightSource.intensity;
-				//Debug.Log ("lightSource: " + lightSource.ToString ());
-
-
-				controlPoint = Gestures.controlPoint;
+				
+				//Debug.Log ("im intensity script******************************************************");
 
 				labelScript.displayLabel (controlPoint, labelScriptObject);
+				lightSource = light.GetComponentInChildren<Light> ();
+				controlPoint = Gestures.controlPoint;
 
-
-				checkForMeaningFulChanges (controlPoint);
+				checkForMeaningfulChanges (controlPoint);
 
 				if (intensityShouldChange) {
 
@@ -116,7 +112,7 @@ public class LightIntensity : MonoBehaviour {
 		//for check
 		//get value for range from percentageIntensity
 		float percentageRangeValueAtBeginning = onePercentOfIntensityRange * percentagePosOfFistAtBeginning;
-		Debug.Log ("sollte gleich sein wie anfangs Intensität: " + percentageRangeValueAtBeginning.ToString ());
+		//Debug.Log ("sollte gleich sein wie anfangs Intensität: " + percentageRangeValueAtBeginning.ToString ());
 
 		//get start y value
 		float startY = currentY;
@@ -166,51 +162,64 @@ public class LightIntensity : MonoBehaviour {
 
 		float onePercentOfIntensityMax = possibleMax / 100;
 		float percentageIntensity = onePercentOfIntensityMax * intensity;
-		/*
+
 		//check for range
-		if (currentPercentageFingerPosInRange > 100) {
+		if (percentageIntensity > 100) {
 			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
-			currentPercentageFingerPosInRange = 100;
+			percentageIntensity = 100;
 
 		}
-		if (currentPercentageFingerPosInRange < 0) {
+		if (percentageIntensity < 0) {
 			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
-			currentPercentageFingerPosInRange = 0;
+			percentageIntensity = 0;
 
 		}
-		*/
+
 
 		//Debug.Log ("percentageFingerPosition: " + currentPercentageFingerPosInRange.ToString());
 
 		return percentageIntensity;
 	}
 
-	void checkForMeaningFulChanges(Vector3 controlPoint){
+
+	//TODO for x and z values as well???
+	void checkForMeaningfulChanges(Vector3 controlPoint){
 
 		float changeValue = 0.0001f; //0.001f;
 		newPosition = controlPoint;
 
-		if (newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
+		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
+			&& newPosition.y <= (lastPosition.y + changeValue) && newPosition.y >= (lastPosition.y - changeValue)
+			&& newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
 
-			changeCounter += 1;
-			//Debug.Log ("changeCounter " + changeCounter.ToString());
+			Debug.Log ("no big change***********************");
 
+			if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {
 
-			if (changeCounter == SelectLight.waitCountdown) {
+				Debug.Log ("values " + newPosition.x.ToString () + newPosition.y.ToString () + newPosition.z.ToString ());
 
-				if (intensityShouldChange == true) {
-					intensityShouldChange = false;
-				} else {
-					intensityShouldChange = true;
+				changeCounter += 1;
+				Debug.Log ("changeCounter " + changeCounter.ToString());
+
+				if (changeCounter == SelectLight.waitCountdown) {
+
+					if (intensityShouldChange == true) {
+						intensityShouldChange = false;
+					} else {
+						intensityShouldChange = true;
+					}
+
+					//Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
+					changeCounter = 0;
+
 				}
-
-				Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
-				changeCounter = 0;
 
 			}
 		}
+
+		Debug.Log ("shouldIntensityChange??: " + intensityShouldChange.ToString ());
 
 		lastPosition = controlPoint;
 

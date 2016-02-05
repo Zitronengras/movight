@@ -151,7 +151,7 @@ public class SelectLight : MonoBehaviour{
 			
 			labelScriptObject.SetActive(false);
 
-			Debug.Log ("should set labelScriptObject false*********************");
+			//Debug.Log ("should set labelScriptObject false*********************");
 				
 
 		}

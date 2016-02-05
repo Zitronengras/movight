@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Position : MonoBehaviour {
 
-	//HandFeedback labelScript;
-	//GameObject labelScriptObject;
+	HandFeedback labelScript;
+	GameObject labelScriptObject;
 
 	float maxWallDistance;
 	float onePercentOfWallControllerDistance;
@@ -45,11 +45,11 @@ public class Position : MonoBehaviour {
 
 		onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
 
-		/*labelScriptObject = GameObject.Find("SelectionLabelObject");
-		Debug.Log ("SelectionLabelObject: " + labelScriptObject.ToString ());
+		labelScriptObject = GameObject.Find("PositionLabelObject");
+		//Debug.Log ("PositionLabelObject: " + labelScriptObject.ToString ());
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
-		Debug.Log ("labelScript: " + labelScript.ToString ());
-		labelScriptObject.SetActive(false);*/
+		//Debug.Log ("labelScript: " + labelScript.ToString ());
+		labelScriptObject.SetActive(false);
 
 
 		//GameObject selectScriptObject = GameObject.Find ("SelectLight");
@@ -73,11 +73,11 @@ public class Position : MonoBehaviour {
 
 				if (Gestures.isPositionGesture == true) { //beeing in selectionsequence
 
-					Debug.Log ("in position script and gesture == true");
+					//Debug.Log ("in position script and gesture == true");
 
 					controlPoint = Gestures.controlPoint;
 
-					//labelScript.displayLabel (controlPoint, labelScriptObject);
+					labelScript.displayLabel (controlPoint, labelScriptObject);
 
 
 					if (lightShouldMove == false) {
