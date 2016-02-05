@@ -50,11 +50,11 @@ public class ConstructionDistance : MonoBehaviour {
 
 		/*
 		//get distance to wall
-		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.fingerPos, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
+		if (Physics.Raycast (Gestures.handControllerPos, Gestures.fingerPos, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
 
 			//Debug.Log ("hitPoint:" + hitObject.point);
 
-			wallDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, hitObject.point);
+			wallDistance = Vector3.Distance (Gestures.handControllerPos, hitObject.point);
 
 			Debug.Log ("Distance to wall:" + wallDistance.ToString());
 			//Debug.Log ("*************");
@@ -69,11 +69,11 @@ public class ConstructionDistance : MonoBehaviour {
 		//get distance to ground
 		//get distance to wall
 		/*
-		if (Physics.Raycast (DetectIndexFinger.handControllerPos, DetectIndexFinger.controlPoint, out hitObject, Mathf.Infinity, onlyGroundLayer)) {
+		if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, Mathf.Infinity, onlyGroundLayer)) {
 
 			//Debug.Log ("hitPoint:" + hitObject.point);
 			//Debug.Log ("hit ground");
-			groundDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, hitObject.point);
+			groundDistance = Vector3.Distance (Gestures.handControllerPos, hitObject.point);
 
 			//Debug.Log ("Distance to ground:" + groundDistance.ToString());
 
@@ -91,11 +91,11 @@ public class ConstructionDistance : MonoBehaviour {
 
 		while (degreeCounter < 360) {
 
-			if (Physics.Raycast (DetectIndexFinger.handControllerPos, scanVector, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
+			if (Physics.Raycast (Gestures.handControllerPos, scanVector, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
 				
-				//Debug.DrawRay (DetectIndexFinger.handControllerPos, scanVector * 30, Color.red, 50.0f, true);
+				//Debug.DrawRay (Gestures.handControllerPos, scanVector * 30, Color.red, 50.0f, true);
 
-				wallDistance = Vector3.Distance (DetectIndexFinger.handControllerPos, hitObject.point);
+				wallDistance = Vector3.Distance (Gestures.handControllerPos, hitObject.point);
 
 				if (wallDistance > maxWallDistance) {
 				

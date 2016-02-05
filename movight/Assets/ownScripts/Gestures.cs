@@ -4,6 +4,8 @@ using Leap;
 
 public class Gestures : MonoBehaviour {
 
+	public static Quaternion headRotation;
+
 	int i = 0;
 
 	Frame frame;
@@ -158,7 +160,7 @@ public class Gestures : MonoBehaviour {
 					Vector3 pointBetweenIndexMiddle = rotHMDIndexFingerTip + (normalizedBetweenIndexMiddle * (indexToMiddle.magnitude / 2));
 
 					//get head rotation
-					var headRotation = Cardboard.SDK.HeadRotation;
+					headRotation = Cardboard.SDK.HeadRotation;
 
 					controlPoint = (headRotation * pointBetweenIndexMiddle);
 
@@ -205,7 +207,7 @@ public class Gestures : MonoBehaviour {
 					Vector3 rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
 
 					//get head rotation
-					var headRotation = Cardboard.SDK.HeadRotation;
+					headRotation = Cardboard.SDK.HeadRotation;
 
 					controlPoint = (headRotation * rotHMDIndexFingerTip);
 
@@ -234,7 +236,7 @@ public class Gestures : MonoBehaviour {
 
 		if (extendedFingers.IsEmpty) {	
 
-			Debug.Log ("******FAUST***********************");
+			Debug.Log ("******FAUST**");
 
 			isIntensityGesture = true;
 
@@ -246,11 +248,11 @@ public class Gestures : MonoBehaviour {
 			Vector3 rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
 
 			//get head rotation
-			var headRotation = Cardboard.SDK.HeadRotation;
+			headRotation = Cardboard.SDK.HeadRotation;
 
 			controlPoint = (headRotation * rotHMDPalmCenter);
 
-			Debug.Log ("FistPosition.y: " + controlPoint.y.ToString ());
+			//Debug.Log ("FistPosition.y: " + controlPoint.y.ToString ());
 
 			Debug.DrawRay (handControllerPos, controlPoint, Color.green, 2.0f, true);
 
