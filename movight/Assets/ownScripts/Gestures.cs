@@ -177,6 +177,8 @@ public class Gestures : MonoBehaviour {
 		}
 	}
 
+	//TODO is in position even when the gesture is not there
+
 	void checkForPositionGesture(Hand rightHand){
 		//check for extended fingers on right hand
 		FingerList extendedFingers = rightHand.Fingers.Extended();
@@ -191,7 +193,7 @@ public class Gestures : MonoBehaviour {
 			if(indexFinger.IsValid){
 				if (!middleFinger.IsValid && !ringFinger.IsValid && !pinkyFinger.IsValid) {
 
-					Debug.Log("now there should be the positionGesture######################");
+					Debug.Log("############### positionGesture ######################");
 
 					isPositionGesture = true;
 
@@ -234,7 +236,7 @@ public class Gestures : MonoBehaviour {
 
 			Debug.Log ("******FAUST***********************");
 
-			isPositionGesture = true;
+			isIntensityGesture = true;
 
 			palmCenter = rightHand.PalmPosition;
 
@@ -248,13 +250,13 @@ public class Gestures : MonoBehaviour {
 
 			controlPoint = (headRotation * rotHMDPalmCenter);
 
-			Debug.Log ("FistPosition: " + controlPoint.ToString ());
+			Debug.Log ("FistPosition.y: " + controlPoint.y.ToString ());
 
 			Debug.DrawRay (handControllerPos, controlPoint, Color.green, 2.0f, true);
 
 		} else {
 
-			isPositionGesture = false;
+			isIntensityGesture = false;
 
 		}
 	}

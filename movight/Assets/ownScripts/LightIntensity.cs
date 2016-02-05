@@ -3,7 +3,17 @@ using System.Collections;
 
 public class LightIntensity : MonoBehaviour {
 
-	float intensityRangeVolume = 0.40f;
+	Vector3 controlPoint;
+
+	float intensityRangeVolume = 0.30f; //20 virtual cm
+
+	bool isVerticalRangeCalculated = false;
+
+	//checkForMeaningfulChanges
+	Vector3 newPosition;
+	Vector3 lastPosition = new Vector3(0,0,0);
+	int changeCounter = 0;
+	bool intensityShouldChange = false;
 
 	// Use this for initialization
 	void Start () {
@@ -13,9 +23,22 @@ public class LightIntensity : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+		if (Gestures.isIntensityGesture) {
+
+			Debug.Log ("in intensity script");
+
+			controlPoint = Gestures.controlPoint;
+
+			checkForMeaningFulChanges (controlPoint);
+
+
+			//changeIntensity ();
+
+		}
+
 	}
-	/*
-	void calculateHorizontalRange(float lightControllerDistanceBeginn, Vector3 fingerPosition){ 
+
+	/*void calculateVerticalRange(Vector3 controlPoint){ 
 
 		//percentage position of light between controller and wall
 		float percentagePosOfLightAtBeginning = getPercentageLightPosition(lightControllerDistanceBeginn);
@@ -47,5 +70,41 @@ public class LightIntensity : MonoBehaviour {
 			//Debug.LogFormat ("maxRangeValue > 0.0");
 		}*
 		Debug.Log ("range calculated");
+	}
+
+	void changeIntensity(){
+
+		if (isVerticalRangeCalculated == false) {
+			//calculateVerticalRange ();
+		}
+		if(isVerticalRangeCalculated == true){
+
+		}
+
 	}*/
+
+	void checkForMeaningFulChanges(Vector3 controlPoint){
+
+		float changeValue = 0.001f;
+		newPosition = controlPoint;
+
+		if (newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
+
+			changeCounter += 1;
+			Debug.Log ("changeCounter " + changeCounter.ToString());
+
+
+			if (changeCounter == SelectLight.waitCountdown) {
+
+				intensityShouldChange = true;
+				Debug.Log("intensityShouldChange = true################################################");
+				changeCounter = 0;
+
+			}
+		}
+
+		lastPosition = controlPoint;
+
+	}
+
 }

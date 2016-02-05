@@ -81,7 +81,7 @@ public class SelectLight : MonoBehaviour{
 			} else {
 				
 				bufferCounter += 1;
-				Debug.Log ("bufferCounter: " + bufferCounter.ToString ());
+				//Debug.Log ("bufferCounter: " + bufferCounter.ToString ());
 
 				if (bufferCounter >= bufferMax) {
 
@@ -108,8 +108,6 @@ public class SelectLight : MonoBehaviour{
 					}
 					//
 					if (isLightSelected == true) { //deselect light
-
-						Debug.Log ("bufferCounter" + bufferCounter.ToString());
 
 						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
