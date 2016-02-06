@@ -56,6 +56,7 @@ public class SelectLight : MonoBehaviour{
 		//lightSelectedMaterial = new Material(Shader.Find("Standard"));
 
 		highlighter = GameObject.Find("LightHighlight");
+		Debug.Log("highlighter: " + highlighter.ToString());
 		highlighter.SetActive(false);
 
 
@@ -81,12 +82,12 @@ public class SelectLight : MonoBehaviour{
 				if (isLightSelected == false) {
 					//Debug.Log ("bufferCounter" + bufferCounter.ToString ());
 
-					highlighter.SetActive (false);
+					//highlighter.SetActive (false);
 
 					//if (bufferMax) {
 					if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-						highlighter.SetActive (true);
+						//highlighter.SetActive (true);
 
 						/*GameObject hitGameObject = hitObject.collider.gameObject;
 						Renderer objectRenderer = hitGameObject.GetComponent<Renderer> (); //.GetComponent<Renderer> ();
@@ -112,15 +113,16 @@ public class SelectLight : MonoBehaviour{
 							light = hitObject.collider.gameObject;
 							lightPosition = light.transform.position;
 
-							MeshRenderer highlighterRenderer = highlighter.GetComponent<MeshRenderer> (); //.material;
+							/*MeshRenderer highlighterRenderer = highlighter.GetComponent<MeshRenderer> (); //.material;
 							highlighterMaterial = highlighterRenderer.material;
 							highlighterMaterial.color = new Color32(255,255,255,1);
-							highlighterRenderer.material = highlighterMaterial;
+							highlighterRenderer.material = highlighterMaterial;*/
+
+							highlighter.SetActive (true);
 
 							Debug.Log ("Licht Objekt ausgewählt*********************************: " + light.ToString ());
 
-
-							//stop select sequence
+							//stop tmp elements of select sequence
 							hitCounter = 0;
 							isLightSelected = true;
 							firstPassThrough = false;						
