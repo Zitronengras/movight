@@ -33,6 +33,10 @@ public class ColorTemperature : MonoBehaviour {
 	float temperaturePositionRange = 40.0f;
 	Color color = new Color32();
 
+	Color[] temperatureColors = new Color[numberOfColumns];
+
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -44,6 +48,9 @@ public class ColorTemperature : MonoBehaviour {
 		labelScriptObject.SetActive(false);
 
 		percentagWidthOfOneColumn = 100 / numberOfColumns;
+
+		fillColorArray (temperatureColors);
+
 			
 	}
 	
@@ -115,6 +122,7 @@ public class ColorTemperature : MonoBehaviour {
 
 			float percentagePosition = getPercentagePalmPosition (controlPoint);
 			lightSource.color = getColor (percentagePosition);
+			getPercentageTemperatureValue (currentColor);
 
 		}
 			
@@ -138,6 +146,40 @@ public class ColorTemperature : MonoBehaviour {
 	float getPercentageTemperatureValue(Color32 currentColor){
 
 		float percentageTemperaturValue;
+
+		for (int i = 0; i < temperatureColors.Length; i++) {
+
+			if (temperatureColors[i].r == currentColor.r && temperatureColors[i].g == currentColor.g && temperatureColors[i].b == currentColor.b) {
+				percentageTemperaturValue = (100 / numberOfColumns) * (i);
+			}
+
+		}
+			/*else if (currentColor == Color32 (233, 92, 14, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 2;
+			} else if (currentColor == Color32 (239, 131, 1, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 3;
+			} else if (currentColor == Color32 (246, 165, 0, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 4;
+			} else if (currentColor == Color32 (251, 188, 0, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 5;
+			} else if (currentColor == Color32 (253, 202, 0, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 6;
+			} else if (currentColor == Color32 (255, 219, 0, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 7;
+			} else if (currentColor == Color32 (255, 228, 0, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 8;
+			} else if (currentColor == Color32 (255, 235, 0, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 9;
+			} else if (currentColor == Color32 (255, 235, 10, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 10;
+			} else if (currentColor == Color32 (254, 237, 20, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 11;
+			} else if (currentColor == Color32 (254, 237, 27, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 12;
+			} else if (currentColor == Color32 (252, 238, 69, 1)) {
+				percentageTemperaturValue = (100 / numberOfColumns) * 13;
+			} 
+		}
 
 		/*
 		if (currentColor == Color32 (227, 24, 23, 1)) {
@@ -270,7 +312,7 @@ public class ColorTemperature : MonoBehaviour {
 
 		if (percentagePosition >= 0 && percentagePosition <= percentagWidthOfOneColumn) {
 			color = new Color32 (227, 24, 23, 1);
-		} else if (percentagePosition >  percentagWidthOfOneColumn && percentagePosition <= (percentagWidthOfOneColumn * 2)) {
+		} /* else if (percentagePosition >  percentagWidthOfOneColumn && percentagePosition <= (percentagWidthOfOneColumn * 2)) {
 			color = new Color32 (233, 92, 14, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 2) && percentagePosition <= (percentagWidthOfOneColumn * 3)) {
 			color = new Color32 (239, 131, 1, 1);
@@ -278,7 +320,8 @@ public class ColorTemperature : MonoBehaviour {
 			color = new Color32 (246, 165, 0, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 4) && percentagePosition <= (percentagWidthOfOneColumn * 5)) {
 			color = new Color32 (251, 188, 0, 1);
-		} else if (percentagePosition > (percentagWidthOfOneColumn * 5) && percentagePosition <= (percentagWidthOfOneColumn * 6)) {
+		} 
+		else if (percentagePosition > (percentagWidthOfOneColumn * 5) && percentagePosition <= (percentagWidthOfOneColumn * 6)) {
 			color = new Color32 (253, 202, 0, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 6) && percentagePosition <= (percentagWidthOfOneColumn * 7)) {
 			color = new Color32 (255, 219, 0, 1);
@@ -318,7 +361,7 @@ public class ColorTemperature : MonoBehaviour {
 			color = new Color32 (168, 217, 239, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 24) && percentagePosition <= (percentagWidthOfOneColumn * 25)) {
 			color = new Color32 (105, 198, 234, 1);
-		} else if (percentagePosition > (percentagWidthOfOneColumn * 25) && percentagePosition <= (percentagWidthOfOneColumn * 26)) { //blue
+		}  else if (percentagePosition > (percentagWidthOfOneColumn * 25) && percentagePosition <= (percentagWidthOfOneColumn * 26)) { //blue
 			color = new Color32 (53, 188, 232, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 26) && percentagePosition <= (percentagWidthOfOneColumn * 27)) {
 			color = new Color32 (2, 172, 228, 1);
@@ -326,7 +369,7 @@ public class ColorTemperature : MonoBehaviour {
 			color = new Color32 (0, 166, 226, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 28) && percentagePosition <= (percentagWidthOfOneColumn * 29)) {
 			color = new Color32 (0, 160, 224, 1);
-		} else if (percentagePosition > (percentagWidthOfOneColumn * 29) && percentagePosition <= (percentagWidthOfOneColumn * 30)) {
+		}  else if (percentagePosition > (percentagWidthOfOneColumn * 29) && percentagePosition <= (percentagWidthOfOneColumn * 30)) {
 			color = new Color32 (0, 158, 224, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 30) && percentagePosition <= (percentagWidthOfOneColumn * 31)) {
 			color = new Color32 (0, 157, 223, 1);
@@ -334,7 +377,7 @@ public class ColorTemperature : MonoBehaviour {
 			color = new Color32 (0, 156, 222, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 32) && percentagePosition <= (percentagWidthOfOneColumn * 33)) {
 			color = new Color32 (0, 154, 220, 1);
-		} else if (percentagePosition > (percentagWidthOfOneColumn * 33) && percentagePosition <= (percentagWidthOfOneColumn * 34)) {
+		}  else if (percentagePosition > (percentagWidthOfOneColumn * 33) && percentagePosition <= (percentagWidthOfOneColumn * 34)) {
 			color = new Color32 (0, 150, 216, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 34) && percentagePosition <= (percentagWidthOfOneColumn * 35)) {
 			color = new Color32 (0, 147, 212, 1);
@@ -342,14 +385,59 @@ public class ColorTemperature : MonoBehaviour {
 			color = new Color32 (0, 142, 207, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 36) && percentagePosition <= (percentagWidthOfOneColumn * 37)) {
 			color = new Color32 (1, 135, 200, 1);
-		} else if (percentagePosition > (percentagWidthOfOneColumn * 37) && percentagePosition <= (percentagWidthOfOneColumn * 38)) {
+		}  else if (percentagePosition > (percentagWidthOfOneColumn * 37) && percentagePosition <= (percentagWidthOfOneColumn * 38)) {
 			color = new Color32 (6, 127, 193, 1);
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 38) && percentagePosition <= (percentagWidthOfOneColumn * 39)) { // 100%
 			color = new Color32 (12, 118, 185, 1);
-		}
+		}*/
 
 		return color;
 
+	}
+
+	void fillColorArray(Color[] temperatureColors){
+
+
+		temperatureColors[0] = new Color32 (227, 24, 23, 1);
+		temperatureColors[1] = new Color32 (233, 92, 14, 1);
+		temperatureColors[2] = new Color32 (239, 131, 1, 1);
+		temperatureColors[3] = new Color32 (246, 165, 0, 1);
+		temperatureColors[4] = new Color32 (251, 188, 0, 1);
+		temperatureColors[5] = new Color32 (253, 202, 0, 1);
+		temperatureColors[6] = new Color32 (255, 219, 0, 1);
+		temperatureColors[7] = new Color32 (255, 228, 0, 1);
+		temperatureColors[8] = new Color32 (255, 235, 0, 1);
+		temperatureColors[9] = new Color32 (255, 235, 10, 1);
+		temperatureColors[10] = new Color32 (254, 237, 20, 1);
+		temperatureColors[11] = new Color32 (254, 237, 27, 1);
+		temperatureColors[12] = new Color32 (252, 238, 69, 1);
+		temperatureColors[13] = new Color32 (252, 239, 108, 1);
+		temperatureColors[14] = new Color32 (251, 240, 149, 1);
+		temperatureColors[15] = new Color32 (250, 242, 178, 1);
+		temperatureColors[16] = new Color32 (248, 244, 210, 1);
+		temperatureColors[17] = new Color32 (247, 245, 229, 1);
+		temperatureColors[18] = new Color32 (246, 245, 242, 1);
+		temperatureColors[19] = new Color32 (245, 245, 246, 1);
+		temperatureColors[20] = new Color32 (255, 255, 255, 1); //white
+		temperatureColors[21] = new Color32 (225, 238, 244, 1);
+		temperatureColors[22] = new Color32 (201, 229, 241, 1);
+		temperatureColors[23] = new Color32 (168, 217, 239, 1);
+		temperatureColors[24] = new Color32 (105, 198, 234, 1);
+		temperatureColors[25] = new Color32 (53, 188, 232, 1);
+		temperatureColors[26] = new Color32 (2, 172, 228, 1);
+		temperatureColors[27] = new Color32 (0, 166, 226, 1);
+		temperatureColors[28] = new Color32 (0, 160, 224, 1);
+		temperatureColors[29] = new Color32 (0, 158, 224, 1);
+		temperatureColors[30] = new Color32 (0, 157, 223, 1);
+		temperatureColors[31] = new Color32 (0, 156, 222, 1);
+		temperatureColors[32] = new Color32 (0, 154, 220, 1);
+		temperatureColors[33] = new Color32 (0, 150, 216, 1);
+		temperatureColors[34] = new Color32 (0, 147, 212, 1);
+		temperatureColors[35] = new Color32 (0, 142, 207, 1);
+		temperatureColors[36] = new Color32 (1, 135, 200, 1);
+		temperatureColors[37] = new Color32 (6, 127, 193, 1);
+		temperatureColors[38] = new Color32 (12, 118, 185, 1);
+	
 	}
 
 }
