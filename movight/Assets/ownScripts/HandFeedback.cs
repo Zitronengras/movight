@@ -38,8 +38,8 @@ public class HandFeedback : MonoBehaviour {
 		//float newLength = (onePercentOfLength * 0.90f) * 
 
 		//get depth og handpalm
-		float palmDepth = 0.01f; //0.05f; ////0.13f;
-		float newLength = length -  palmDepth; //90%
+		float palmDepth = 0.001f; //0.05f; ////0.13f;
+		float newLength = length +  palmDepth; //90%
 
 		Vector3 labelPosition = (controlPoint.normalized) * newLength;
 		//Vector3 screenPosition = camera.WorldToScreenPoint(controlPoint);
