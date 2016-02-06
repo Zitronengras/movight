@@ -7,6 +7,8 @@ public class Gestures : MonoBehaviour {
 
 	public static Quaternion headRotation;
 
+	public Quaternion offSet;
+
 	int i = 0;
 
 	Frame frame;
@@ -54,10 +56,8 @@ public class Gestures : MonoBehaviour {
 	//checkForTemperatureGesture
 	public static bool isTemperatureGesture = false;
 
-
 	// Use this for initialization
 	void Start () {
-
 
 		handController = GameObject.Find ("HeadMountedHandController").transform;
 		handControllerPos = handController.position;	
@@ -67,6 +67,9 @@ public class Gestures : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		//TEST
+
+
 		if (controller.IsConnected) {
 			frame = controller.Frame ();
 		} else {
@@ -74,6 +77,8 @@ public class Gestures : MonoBehaviour {
 		}
 
 		checkForGesture ();
+
+
 
 
 	}
@@ -100,7 +105,7 @@ public class Gestures : MonoBehaviour {
 							checkForSelectGesture (rightHand);
 
 						} else if (SelectLight.isLightSelected == true) { //when light is selected
-
+							
 							if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
 
 								checkForIntensityGesture (rightHand);
@@ -165,7 +170,14 @@ public class Gestures : MonoBehaviour {
 					Vector3 pointBetweenIndexMiddle = rotHMDIndexFingerTip + (normalizedBetweenIndexMiddle * (indexToMiddle.magnitude / 2));
 					//get head rotation
 					headRotation = Cardboard.SDK.HeadRotation;
-					controlPoint = (headRotation * pointBetweenIndexMiddle);
+					Vector3 tmpControlPoint = (headRotation * pointBetweenIndexMiddle);
+
+					//offset
+					Quaternion offSet;
+
+					controlPoint = Quaternion.Euler (0, 2, 0) * tmpControlPoint; //transform.up;
+
+					//controlPoint = (headRotation * 0.2) * controlPoint;
 
 					Debug.DrawRay (handControllerPos, controlPoint, Color.red, 2.0f, true);
 
