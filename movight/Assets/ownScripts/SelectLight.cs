@@ -49,7 +49,7 @@ public class SelectLight : MonoBehaviour{
 		GameObject controllerObject = GameObject.Find ("HeadMountedHandController");
 
 		labelScriptObject = GameObject.Find("SelectionLabelObject");
-		//Debug.Log (" 46 labelScriptObject: " + labelScriptObject.ToString ());
+		//Debug.Log (" ###### labelScriptObject: " + labelScriptObject.ToString ());
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		//Debug.Log (" 50 labelScript: " + labelScript.ToString ());
 		labelScriptObject.SetActive(false);
@@ -57,7 +57,7 @@ public class SelectLight : MonoBehaviour{
 		//lightSelectedMaterial = new Material(Shader.Find("Standard"));
 
 		highlighter = GameObject.Find("LightHighlight");
-		Debug.Log("highlighter: " + highlighter.ToString());
+		//Debug.Log("highlighter: " + highlighter.ToString());
 		highlighter.SetActive(false);
 
 
