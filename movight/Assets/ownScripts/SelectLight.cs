@@ -19,6 +19,7 @@ public class SelectLight : MonoBehaviour{
 	LayerMask onlyLightLayer;
 	public static GameObject light;
 	public static Vector3 lightPosition;
+	Collider lightCollider;
 	//public static int castDistance;
 
 	//countdown
@@ -80,36 +81,17 @@ public class SelectLight : MonoBehaviour{
 			if (firstPassThrough == true) { //select light
 
 				if (isLightSelected == false) {
-					//Debug.Log ("bufferCounter" + bufferCounter.ToString ());
 
-					//highlighter.SetActive (false);
-
-					//if (bufferMax) {
-					if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
-
-						//highlighter.SetActive (true);
-
-						/*GameObject hitGameObject = hitObject.collider.gameObject;
-						Renderer objectRenderer = hitGameObject.GetComponent<Renderer> (); //.GetComponent<Renderer> ();
-						float hitObjectHeight = objectRenderer.bounds.extents.y; //* 2.0;
-						highlighter.transform.localScale = new Vector3 (0.0016f, 0f, hitObjectHeight);
-
-						float hitObjectWidthX = objectRenderer.bounds.extents.x; //* 2.0;
-						float hitObjectWidthY = objectRenderer.bounds.extents.x; //* 2.0;
-
-
-
-						Vector3 newPosition = hitObject.transform.position;
-						newPosition.y = (ConstructionDistance.ceilingDistance - (hitObjectHeight / 2));
-						highlighter.transform.position = newPosition;*/
+					if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {			
 
 						hitCounter += 1;
 						Progressbar.fillProgressbar (hitCounter);
 
-						Debug.Log ("hitCounter: " + hitCounter.ToString ());
+						//Debug.Log ("hitCounter: " + hitCounter.ToString ());
 
 						if (hitCounter == waitCountdown) {
 
+							lightCollider = hitObject.collider;
 							light = hitObject.collider.gameObject;
 							lightPosition = light.transform.position;
 
@@ -119,14 +101,15 @@ public class SelectLight : MonoBehaviour{
 							highlighterRenderer.material = highlighterMaterial;*/
 
 							highlighter.SetActive (true);
+							setHighlighterPosition (lightCollider);
+							Progressbar.progressbarObject.SetActive (false);
 
-							Debug.Log ("Licht Objekt ausgewählt*********************************: " + light.ToString ());
+							//Debug.Log ("Licht Objekt ausgewählt*********************************: " + light.ToString ());
 
 							//stop tmp elements of select sequence
 							hitCounter = 0;
 							isLightSelected = true;
 							firstPassThrough = false;						
-							Progressbar.progressbarObject.SetActive (false);
 
 						}
 					} else {
@@ -138,6 +121,7 @@ public class SelectLight : MonoBehaviour{
 
 					}
 				}
+
 			} else {
 				
 				bufferCounter += 1;
@@ -148,30 +132,34 @@ public class SelectLight : MonoBehaviour{
 					if (SelectLight.isLightSelected == false) {
 
 						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
-
-							/*highlighter.SetActive (true);
-							float height = highlighter.transform.h
-							Vector3 newPosition = hitObject.transform.position;
-							newPosition.y = newPosition.y - 0.1f;
-							highlighter.transform.position = newPosition;*/
-
+							
 							hitCounter += 1;
-							Debug.Log ("hitCounter: " + hitCounter.ToString ());
+							Progressbar.fillProgressbar (hitCounter);
+
+							//Debug.Log ("hitCounter: " + hitCounter.ToString ());
 
 							if (hitCounter == waitCountdown) {
 
+								lightCollider = hitObject.collider;
 								light = hitObject.collider.gameObject;
 								lightPosition = light.transform.position;
 
-								Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
+								//Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
 
-								//stop select sequence
+								highlighter.SetActive (true);
+								setHighlighterPosition (lightCollider);
+								Progressbar.progressbarObject.SetActive (false);
+
+								//stop tmp elements in select sequence
 								hitCounter = 0;
 								bufferCounter = 0;
 								isLightSelected = true;
 							}
 						} else {
+							
 							highlighter.SetActive (false);
+							Progressbar.progressbarObject.SetActive (false);
+
 						}
 					}
 					//
@@ -180,13 +168,16 @@ public class SelectLight : MonoBehaviour{
 						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
 							hitCounter += 1;
-							Debug.Log ("hitCounter: " + hitCounter.ToString ());
+							Progressbar.fillProgressbar (hitCounter);
+
+							//Debug.Log ("hitCounter: " + hitCounter.ToString ());
 
 							if (hitCounter == waitCountdown) {
 
-								Debug.Log ("Licht abgewählt ***************************************: " + light.ToString ());
+								//Debug.Log ("Licht abgewählt ***************************************: " + light.ToString ());
 
 								highlighter.SetActive (false);
+								Progressbar.progressbarObject.SetActive (false);
 
 								//stop select sequence
 								hitCounter = 0;
@@ -194,20 +185,48 @@ public class SelectLight : MonoBehaviour{
 								isLightSelected = false;
 							}
 						} else {
-
+							
+							Progressbar.progressbarObject.SetActive (false);
 							hitCounter = 0;
 
 						}
+					} else {
+						
+						highlighter.SetActive (false);
+
 					}
 				}			
 			}
 		} else {
 			
-			labelScriptObject.SetActive(false);
-
-			//Debug.Log ("should set labelScriptObject false*********************");
-				
+			labelScriptObject.SetActive(false);				
 
 		}
+	}		
+
+	void setHighlighterPosition(Collider lightCollider){
+
+		//GameObject hitGameObject = hitObject.collider.gameObject;
+		//Renderer lightRenderer = light.GetComponent<Renderer> (); //.GetComponent<Renderer> ();
+		//float hitObjectHeight = lightRenderer.bounds.extents.y; //* 2.0;
+
+		float hitObjectHeight = lightCollider.bounds.extents.y; //* 2.0;
+
+
+		//highlighter.transform.localScale = new Vector3 (0.0016f, 0f, hitObjectHeight);
+
+		/*float hitObjectWidthX = objectRenderer.bounds.extents.x; //* 2.0;
+		float hitObjectWidthY = objectRenderer.bounds.extents.x; //* 2.0;*/
+
+
+
+		Vector3 highlighterPosition = light.transform.position;
+		Debug.Log ("hitObjectHeight: " + hitObjectHeight.ToString ());
+		Debug.Log ("ConstructionDistance.ceilingDistance: " + ConstructionDistance.ceilingDistance.ToString ());
+
+		highlighterPosition.y = ((ConstructionDistance.ceilingDistance - (2 * hitObjectHeight)) - 0.07f);
+		highlighter.transform.position = highlighterPosition;
+
 	}
 }
+
