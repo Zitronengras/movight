@@ -40,6 +40,9 @@ public class ColorTemperature : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		Debug.Log("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+
+
 		camera = Camera.main; // GetComponent<Camera>;
 		Debug.Log ("Camera: " + camera.ToString ());
 		labelScriptObject = GameObject.Find("TemperatureLabelObject");

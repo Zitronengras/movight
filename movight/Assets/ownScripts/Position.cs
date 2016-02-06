@@ -5,6 +5,7 @@ public class Position : MonoBehaviour {
 
 	HandFeedback labelScript;
 	GameObject labelScriptObject;
+	Vector3 palmCenter;
 
 	float maxWallDistance;
 	float onePercentOfWallControllerDistance;
@@ -34,6 +35,8 @@ public class Position : MonoBehaviour {
 	float currentFingerControllerDistance;
 	float lastX;
 	float lastZ;
+	int beforeChangeBuffer = 30;
+	int buffer = 0;
 
 	//checkForMeaningfulChanges
 	float changeValue = 0.001f;
@@ -42,6 +45,9 @@ public class Position : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		Debug.Log("#########################################################");
+
 
 		onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
 
@@ -76,8 +82,9 @@ public class Position : MonoBehaviour {
 					//Debug.Log ("in position script and gesture == true");
 
 					controlPoint = Gestures.controlPoint;
+					palmCenter = Gestures.palmCenter;
 
-					labelScript.displayLabel (controlPoint, labelScriptObject);
+					labelScript.displayLabel (palmCenter, labelScriptObject);
 
 
 					if (lightShouldMove == false) {
@@ -88,7 +95,7 @@ public class Position : MonoBehaviour {
 
 							Debug.Log ("Licht getroffen");
 
-							if(Equals(hitLight.name, light.name)){
+							if (Equals (hitLight.name, light.name)) {
 
 								lightShouldMove = true;
 								//TODO do not look for other gesture when moving
@@ -97,12 +104,21 @@ public class Position : MonoBehaviour {
 
 						}
 					}
-					if(lightShouldMove == true) {
+					if (lightShouldMove == true) {
 
 						moveLight (light, lightPosition, controlPoint);
+						SelectLight.setHighlighterPosition (light);
 
 					}
+				} else {
+
+					labelScriptObject.SetActive(false);
+
 				}
+			} else {
+
+				labelScriptObject.SetActive(false);
+
 			}
 
 		} else {
@@ -160,45 +176,51 @@ public class Position : MonoBehaviour {
 
 		if (isDepthRangeCalculated == true) {
 
-			//get current distance between finger and controller for getPercentageFingerPosition(...)
-			currentFingerControllerDistance = Vector3.Distance (Gestures.handControllerPos, controlPoint); // ????????????????????????
-			//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());			
+			buffer += 1;
 
-			float percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
+			if (buffer >= beforeChangeBuffer) {
+				
+				//get current distance between finger and controller for getPercentageFingerPosition(...)
+				currentFingerControllerDistance = Vector3.Distance (Gestures.handControllerPos, controlPoint); // ????????????????????????
+				//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());			
 
-			float depth = (maxWallDistance / 100) * percentageFingerPosition;
-			//Debug.Log ("depth: " + depth.ToString ());
+				float percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
 
-			//get orthogonal vector to xz-plane, length = light.y
-			float lightY = SelectLight.light.transform.position.y ;
-			Vector3 onlyYVector = new Vector3(0, lightY, 0);
-			float onlyYVectorLength = onlyYVector.magnitude;
+				float depth = (maxWallDistance / 100) * percentageFingerPosition;
+				//Debug.Log ("depth: " + depth.ToString ());
 
-			//get length for vector to new light position
-			float aSquare = onlyYVectorLength * onlyYVectorLength;
-			//Debug.Log ("aSquare: " + aSquare.ToString());
+				//get orthogonal vector to xz-plane, length = light.y
+				float lightY = SelectLight.light.transform.position.y ;
+				Vector3 onlyYVector = new Vector3(0, lightY, 0);
+				float onlyYVectorLength = onlyYVector.magnitude;
 
-			float bSquare = depth * depth;
-			//Debug.Log ("bSquare: " + bSquare);
+				//get length for vector to new light position
+				float aSquare = onlyYVectorLength * onlyYVectorLength;
+				//Debug.Log ("aSquare: " + aSquare.ToString());
 
-			// c² = a² + b²
-			float newLightVectorLength = Mathf.Sqrt(aSquare + bSquare); 
-			//Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
+				float bSquare = depth * depth;
+				//Debug.Log ("bSquare: " + bSquare);
 
-			//get direction to fingerTip
-			Vector3 normalizedFingerDirection = controlPoint.normalized;
-			//direction multiply with new length
-			Vector3 newLightVector = normalizedFingerDirection * newLightVectorLength;
+				// c² = a² + b²
+				float newLightVectorLength = Mathf.Sqrt(aSquare + bSquare); 
+				//Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
 
-			SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
+				//get direction to fingerTip
+				Vector3 normalizedFingerDirection = controlPoint.normalized;
+				//direction multiply with new length
+				Vector3 newLightVector = normalizedFingerDirection * newLightVectorLength;
 
-			checkForMeaningfulChangesX (lastX, newLightVector.x);
-			checkForMeaningfulChangesZ (lastZ, newLightVector.z);
+				SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
 
-			//Debug.Log("new light position: " + light.transform.position.ToString());
+				checkForMeaningfulChangesX (lastX, newLightVector.x);
+				checkForMeaningfulChangesZ (lastZ, newLightVector.z);
 
-			lastX = newLightVector.x;
-			lastZ = newLightVector.z;
+				//Debug.Log("new light position: " + light.transform.position.ToString());
+
+				lastX = newLightVector.x;
+				lastZ = newLightVector.z;
+			}
+
 		}
 	}
 
@@ -253,6 +275,7 @@ public class Position : MonoBehaviour {
 
 				xCounter = 0;
 				zCounter = 0;
+				buffer = 0;
 			}
 		}
 	}
@@ -271,6 +294,7 @@ public class Position : MonoBehaviour {
 
 				zCounter = 0;
 				xCounter = 0;
+				buffer = 0;
 			}
 		}
 	}

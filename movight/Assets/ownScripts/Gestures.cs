@@ -183,7 +183,7 @@ public class Gestures : MonoBehaviour {
 					//offset
 					//Quaternion offSet;
 
-					controlPoint = Quaternion.Euler (0, 8, 0) * tmpControlPoint; //transform.up;
+					controlPoint = Quaternion.Euler (0, 4, 0) * tmpControlPoint; //transform.up;
 
 					//controlPoint = (headRotation * 0.2) * controlPoint;
 

@@ -9,7 +9,7 @@ public class SelectLight : MonoBehaviour{
 	Vector3 controlPoint;
 
 	//highlighter
-	GameObject highlighter;
+	static GameObject highlighter;
 	MeshRenderer highlighterRenderer;
 	Material highlighterMaterial;
 	float ceilingY = 0.02799769f; //TODO get dynamicly
@@ -19,7 +19,7 @@ public class SelectLight : MonoBehaviour{
 	LayerMask onlyLightLayer;
 	public static GameObject light;
 	public static Vector3 lightPosition;
-	Collider lightCollider;
+	static Collider lightCollider;
 	//public static int castDistance;
 
 	//countdown
@@ -43,6 +43,9 @@ public class SelectLight : MonoBehaviour{
 
 	// Use this for initialization
 	void Start () {
+
+		Debug.Log("----------------------------------------------------------------");
+
 
 		onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
 
@@ -101,7 +104,7 @@ public class SelectLight : MonoBehaviour{
 							highlighterRenderer.material = highlighterMaterial;*/
 
 							highlighter.SetActive (true);
-							setHighlighterPosition (lightCollider);
+							setHighlighterPosition (light);
 							Progressbar.progressbarObject.SetActive (false);
 
 							//Debug.Log ("Licht Objekt ausgewählt*********************************: " + light.ToString ());
@@ -147,7 +150,7 @@ public class SelectLight : MonoBehaviour{
 								//Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
 
 								highlighter.SetActive (true);
-								setHighlighterPosition (lightCollider);
+								setHighlighterPosition (light);
 								Progressbar.progressbarObject.SetActive (false);
 
 								//stop tmp elements in select sequence
@@ -204,7 +207,7 @@ public class SelectLight : MonoBehaviour{
 		}
 	}		
 
-	void setHighlighterPosition(Collider lightCollider){
+	public static void setHighlighterPosition(GameObject light){
 
 		//GameObject hitGameObject = hitObject.collider.gameObject;
 		//Renderer lightRenderer = light.GetComponent<Renderer> (); //.GetComponent<Renderer> ();
@@ -217,8 +220,6 @@ public class SelectLight : MonoBehaviour{
 
 		/*float hitObjectWidthX = objectRenderer.bounds.extents.x; //* 2.0;
 		float hitObjectWidthY = objectRenderer.bounds.extents.x; //* 2.0;*/
-
-
 
 		Vector3 highlighterPosition = light.transform.position;
 		Debug.Log ("hitObjectHeight: " + hitObjectHeight.ToString ());
