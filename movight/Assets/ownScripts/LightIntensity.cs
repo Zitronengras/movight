@@ -118,7 +118,7 @@ public class LightIntensity : MonoBehaviour {
 
 		//for check
 		//get value for range from percentageIntensity
-		float percentageRangeValueAtBeginning = onePercentOfIntensityRange * percentagePosOfFistAtBeginning;
+		//float percentageRangeValueAtBeginning = onePercentOfIntensityRange * percentagePosOfFistAtBeginning;
 		//Debug.Log ("sollte gleich sein wie anfangs Intensität: " + percentageRangeValueAtBeginning.ToString ());
 
 		//get start y value
@@ -154,7 +154,7 @@ public class LightIntensity : MonoBehaviour {
 
 			newIntensity = getPercentageFistPosition(currentY);
 			lightSource.intensity = newIntensity;
-
+			//TODO not correct??
 		}
 
 	}

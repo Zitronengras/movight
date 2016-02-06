@@ -33,9 +33,8 @@ public class ColorTemperature : MonoBehaviour {
 	float temperaturePositionRange = 40.0f;
 	Color color = new Color32();
 
-	Color[] temperatureColors = new Color[numberOfColumns];
-
-
+	Color[] temperatureColors = new Color[39];
+	float percentageTemperaturValue;
 
 
 	// Use this for initialization
@@ -50,7 +49,6 @@ public class ColorTemperature : MonoBehaviour {
 		percentagWidthOfOneColumn = 100 / numberOfColumns;
 
 		fillColorArray (temperatureColors);
-
 			
 	}
 	
@@ -70,12 +68,12 @@ public class ColorTemperature : MonoBehaviour {
 				controlPoint = Gestures.controlPoint;
 				currentColor = lightSource.color;
 
-				//checkForMeaningfulChanges (controlPoint);
+				checkForMeaningfulChanges (controlPoint);
 
-				//if (temperatureShouldChange) {
-					//changeTemperature (controlPoint, lightSource, currentColor);
-				//}
-				getPercentagePalmPosition(controlPoint);
+				if (temperatureShouldChange) {
+					changeTemperature (controlPoint, lightSource, currentColor);
+				}
+				//getPercentagePalmPosition(controlPoint);
 
 
 
@@ -89,15 +87,18 @@ public class ColorTemperature : MonoBehaviour {
 	
 	}
 
-	void calculateHorizontalRange(Vector3 currentPosition){
+	void calculateHorizontalRange(Vector3 currentPosition, Color currentColor){
 
 		//convert currentPosition into 2D (screen)
 		Vector3 onScreenPosition = camera.WorldToScreenPoint(currentPosition);
 		currentXOnScreen = onScreenPosition.x;
 
 		//get percentagColorValue
+		float currentPercentageColorPosition = getPercentageTemperatureValue(currentColor);
 
-		float percentagePosOnScreenAtBeginning = getPercentagePalmPosition (currentPosition);
+		float percentagePosOnScreenAtBeginning = currentPercentageColorPosition;
+			
+		//getPercentagePalmPosition (currentPosition);
 
 		//cone percent of range on screen
 		float onePercentOfScreenRange = screenXRange / 100;
@@ -115,37 +116,48 @@ public class ColorTemperature : MonoBehaviour {
 
 		if (isHorizontalRangeCalculated == false) {
 
-			calculateHorizontalRange ();
+			calculateHorizontalRange (controlPoint, currentColor);
 			isHorizontalRangeCalculated = true;
 
 		} else if (isHorizontalRangeCalculated == true) {
 
-			float percentagePosition = getPercentagePalmPosition (controlPoint);
-			lightSource.color = getColor (percentagePosition);
-			getPercentageTemperatureValue (currentColor);
+			Vector3 currentOnScreenPosition = camera.WorldToScreenPoint(controlPoint);
+			currentXOnScreen = currentOnScreenPosition.x;
+
+			Debug.Log ("currentX: " + currentXOnScreen);
+
+			float percentagePalmPosition = getPercentagePalmPosition (currentXOnScreen);
+			//get belonging percent for color
+			//float currentPercentageTemperatureValue = getPercentageTemperatureValue (currentColor);
+
+
+			Debug.Log ("neue Farbe: " + getColor (percentagePalmPosition, temperatureColors).ToString ());
+			lightSource.color = getColor (percentagePalmPosition, temperatureColors);
 
 		}
 			
 	}
 
-	void getPercentagePalmPosition(Vector3 currentPosition){
+	float getPercentagePalmPosition(float currentXOnScreen){
+
+		float currentPalmMinXDistance = currentXOnScreen - minScreenRange;
 
 		//convert currentPosition into 2D (screen)
-		Vector3 onScreenPosition = camera.WorldToScreenPoint(currentPosition);
-		float currentXOnScreen = onScreenPosition.x;
+		//Vector3 onScreenPosition = camera.WorldToScreenPoint(currentPosition);
+		//float currentXOnScreen = onScreenPosition.x;
 
-		float currentMinXOnScreen = currentXOnScreen - minScreenRange; //from range
-		
+		//float currentMinXOnScreen = currentXOnScreen - minScreenRange; //from range
+		//Debug.Log ("On screen x psotion" + currentXOnScreen.ToString ()); 
 
-		Debug.Log ("On screen x psotion" + currentXOnScreen.ToString ()); 
+		float currentPercentagePalmPosition = (100 / screenXRange) * currentPalmMinXDistance;
 
-		float percentageXPosition = (100 / screenXRange) * currentXOnScreen;
-		return percentageXPosition;
+		Debug.Log ("Percentage Palm Position " + currentPercentagePalmPosition.ToString());
+
+		return currentPercentagePalmPosition;
+
 	}
 
 	float getPercentageTemperatureValue(Color32 currentColor){
-
-		float percentageTemperaturValue;
 
 		for (int i = 0; i < temperatureColors.Length; i++) {
 
@@ -274,7 +286,7 @@ public class ColorTemperature : MonoBehaviour {
 
 	void checkForMeaningfulChanges(Vector3 controlPoint){
 
-		float changeValue = 0.0001f;
+		float changeValue = 0.001f; //0.0001f;
 		newPosition = controlPoint;
 
 		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
@@ -306,90 +318,89 @@ public class ColorTemperature : MonoBehaviour {
 
 	}
 
-	Color32 getColor(float percentagePosition){
+	Color32 getColor(float percentagePosition, Color[]temperatureColors){
 
 		float widthOfOneColumn = temperaturePositionRange / numberOfColumns; //39 columns in 0.40 positionRange	
 
 		if (percentagePosition >= 0 && percentagePosition <= percentagWidthOfOneColumn) {
-			color = new Color32 (227, 24, 23, 1);
-		} /* else if (percentagePosition >  percentagWidthOfOneColumn && percentagePosition <= (percentagWidthOfOneColumn * 2)) {
-			color = new Color32 (233, 92, 14, 1);
+			color = temperatureColors [0];
+		} else if (percentagePosition >  percentagWidthOfOneColumn && percentagePosition <= (percentagWidthOfOneColumn * 2)) {
+			color = temperatureColors [1];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 2) && percentagePosition <= (percentagWidthOfOneColumn * 3)) {
-			color = new Color32 (239, 131, 1, 1);
+			color = temperatureColors [2];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 3) && percentagePosition <= (percentagWidthOfOneColumn * 4)) {
-			color = new Color32 (246, 165, 0, 1);
+			color = temperatureColors [3];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 4) && percentagePosition <= (percentagWidthOfOneColumn * 5)) {
-			color = new Color32 (251, 188, 0, 1);
-		} 
-		else if (percentagePosition > (percentagWidthOfOneColumn * 5) && percentagePosition <= (percentagWidthOfOneColumn * 6)) {
-			color = new Color32 (253, 202, 0, 1);
+			color = temperatureColors [4];
+		} else if (percentagePosition > (percentagWidthOfOneColumn * 5) && percentagePosition <= (percentagWidthOfOneColumn * 6)) {
+			color = temperatureColors [5];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 6) && percentagePosition <= (percentagWidthOfOneColumn * 7)) {
-			color = new Color32 (255, 219, 0, 1);
+			color = temperatureColors [6];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 7) && percentagePosition <= (percentagWidthOfOneColumn * 8)) {
-			color = new Color32 (255, 228, 0, 1);
+			color = temperatureColors [7];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 8) && percentagePosition <= (percentagWidthOfOneColumn * 9)) {
-			color = new Color32 (255, 235, 0, 1);
+			color = temperatureColors [8];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 9) && percentagePosition <= (percentagWidthOfOneColumn * 10)) {
-			color = new Color32 (255, 235, 10, 1);
+			color = temperatureColors [9];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 10) && percentagePosition <= (percentagWidthOfOneColumn * 11)) {
-			color = new Color32 (254, 237, 20, 1);
+			color = temperatureColors [10];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 11) && percentagePosition <= (percentagWidthOfOneColumn * 12)) {
-			color = new Color32 (254, 237, 27, 1);
+			color = temperatureColors [11];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 12) && percentagePosition <= (percentagWidthOfOneColumn * 13)) {
-			color = new Color32 (252, 238, 69, 1);
+			color = temperatureColors [12];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 13) && percentagePosition <= (percentagWidthOfOneColumn * 14)) {
-			color = new Color32 (252, 239, 108, 1);
+			color = temperatureColors [13];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 14) && percentagePosition <= (percentagWidthOfOneColumn * 15)) {
-			color = new Color32 (251, 240, 149, 1);
+			color = temperatureColors [14];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 15) && percentagePosition <= (percentagWidthOfOneColumn * 16)) {
-			color = new Color32 (250, 242, 178, 1);
+			color = temperatureColors [15];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 16) && percentagePosition <= (percentagWidthOfOneColumn * 17)) {
-			color = new Color32 (248, 244, 210, 1);
+			color = temperatureColors [16];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 17) && percentagePosition <= (percentagWidthOfOneColumn * 18)) {
-			color = new Color32 (247, 245, 229, 1);
+			color = temperatureColors [17];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 18) && percentagePosition <= (percentagWidthOfOneColumn * 19)) {
-			color = new Color32 (246, 245, 242, 1);
+			color = temperatureColors [18];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 19) && percentagePosition <= (percentagWidthOfOneColumn * 20)) {
-			color = new Color32 (245, 245, 246, 1);
+			color = temperatureColors [19];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 20) && percentagePosition <= (percentagWidthOfOneColumn * 21)) { //white
-			color = new Color32 (255, 255, 255, 1);
+			color = temperatureColors [20];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 21) && percentagePosition <= (percentagWidthOfOneColumn * 22)) {
-			color = new Color32 (225, 238, 244, 1);
+			color = temperatureColors [21];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 22) && percentagePosition <= (percentagWidthOfOneColumn * 23)) {
-			color = new Color32 (201, 229, 241, 1);
+			color = temperatureColors [22];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 23) && percentagePosition <= (percentagWidthOfOneColumn * 24)) {
-			color = new Color32 (168, 217, 239, 1);
+			color = temperatureColors [23];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 24) && percentagePosition <= (percentagWidthOfOneColumn * 25)) {
-			color = new Color32 (105, 198, 234, 1);
+			color = temperatureColors [24];
 		}  else if (percentagePosition > (percentagWidthOfOneColumn * 25) && percentagePosition <= (percentagWidthOfOneColumn * 26)) { //blue
-			color = new Color32 (53, 188, 232, 1);
+			color = temperatureColors [25];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 26) && percentagePosition <= (percentagWidthOfOneColumn * 27)) {
-			color = new Color32 (2, 172, 228, 1);
+			color = temperatureColors [26];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 27) && percentagePosition <= (percentagWidthOfOneColumn * 28)) {
-			color = new Color32 (0, 166, 226, 1);
+			color = temperatureColors [27];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 28) && percentagePosition <= (percentagWidthOfOneColumn * 29)) {
-			color = new Color32 (0, 160, 224, 1);
+			color = temperatureColors [28];
 		}  else if (percentagePosition > (percentagWidthOfOneColumn * 29) && percentagePosition <= (percentagWidthOfOneColumn * 30)) {
-			color = new Color32 (0, 158, 224, 1);
+			color = temperatureColors [29];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 30) && percentagePosition <= (percentagWidthOfOneColumn * 31)) {
-			color = new Color32 (0, 157, 223, 1);
+			color = temperatureColors [30];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 31) && percentagePosition <= (percentagWidthOfOneColumn * 32)) {
-			color = new Color32 (0, 156, 222, 1);
+			color = temperatureColors [31];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 32) && percentagePosition <= (percentagWidthOfOneColumn * 33)) {
-			color = new Color32 (0, 154, 220, 1);
+			color = temperatureColors [32];
 		}  else if (percentagePosition > (percentagWidthOfOneColumn * 33) && percentagePosition <= (percentagWidthOfOneColumn * 34)) {
-			color = new Color32 (0, 150, 216, 1);
+			color = temperatureColors [33];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 34) && percentagePosition <= (percentagWidthOfOneColumn * 35)) {
-			color = new Color32 (0, 147, 212, 1);
+			color = temperatureColors [34];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 35) && percentagePosition <= (percentagWidthOfOneColumn * 36)) {
-			color = new Color32 (0, 142, 207, 1);
+			color = temperatureColors [35];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 36) && percentagePosition <= (percentagWidthOfOneColumn * 37)) {
-			color = new Color32 (1, 135, 200, 1);
+			color = temperatureColors [36];
 		}  else if (percentagePosition > (percentagWidthOfOneColumn * 37) && percentagePosition <= (percentagWidthOfOneColumn * 38)) {
-			color = new Color32 (6, 127, 193, 1);
+			color = temperatureColors [37];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 38) && percentagePosition <= (percentagWidthOfOneColumn * 39)) { // 100%
-			color = new Color32 (12, 118, 185, 1);
-		}*/
+			color = temperatureColors [38];
+		}
 
 		return color;
 
