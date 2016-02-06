@@ -148,6 +148,7 @@
      <Compile Include="Assets\LeapMotion\Widgets\Scripts\SliderActivationManager.cs" />
      <Compile Include="Assets\LeapMotion\Widgets\Scripts\Utils\ExponentialSmoothing.cs" />
      <Compile Include="Assets\LeapMotion\Widgets\Scripts\Utils\FrameRateControls.cs" />
+     <Compile Include="Assets\Progressbar.cs" />
      <Compile Include="Assets\ownScripts\ColorTemperature.cs" />
      <Compile Include="Assets\ownScripts\ConstructionDistance.cs" />
      <Compile Include="Assets\ownScripts\DetectIndexFinger.cs" />

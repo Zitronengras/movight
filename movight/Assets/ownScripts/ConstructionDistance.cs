@@ -6,13 +6,15 @@ public class ConstructionDistance : MonoBehaviour {
 	//TODO: distance to ground
 
 	float degreeCounter;
-	Vector3 scanVector;
+	Vector3 wallScanVector;
+	Vector3 ceilingScanVector;
+	public static float ceilingDistance;
 	public static float maxWallDistance;
 	public static bool isMaxDistanceDetermined; // = false;
 	//Vector3 rotatedDirection;
 
 	LayerMask onlyWallsLayer;
-	//LayerMask onlyGroundLayer;
+	LayerMask onlyCeilingLayer;
 
 	RaycastHit hitObject = new RaycastHit();
 
@@ -26,12 +28,13 @@ public class ConstructionDistance : MonoBehaviour {
 		isMaxDistanceDetermined = false;
 
 		degreeCounter = 0;
-		scanVector = Vector3.forward; //right; // (1,0,0)
+		wallScanVector = Vector3.forward; //right; // (1,0,0)
+		ceilingScanVector =  Vector3.up;
 		//Debug.Log("initiate scanVector" + scanVector.ToString());
 		maxWallDistance = 0;
 		onlyWallsLayer = 1 << LayerMask.NameToLayer ("wall");
 
-		//onlyGroundLayer = 1 << LayerMask.NameToLayer ("ground");
+		onlyCeilingLayer = 1 << LayerMask.NameToLayer ("ceiling");
 
 	}
 	
@@ -43,55 +46,18 @@ public class ConstructionDistance : MonoBehaviour {
 		// do once at the beginning
 		if (isMaxDistanceDetermined == false) {
 			
-			Debug.Log ("maxDistance at the end: " + determineMaxDistanceToWall ());
+			determineDistanceHeadCeiling ();
+			determineMaxDistanceToWall ();
+			//Debug.Log ("maxDistance at the end: " + determineMaxDistanceToWall ());
 
 		}
-
-
-		/*
-		//get distance to wall
-		if (Physics.Raycast (Gestures.handControllerPos, Gestures.fingerPos, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
-
-			//Debug.Log ("hitPoint:" + hitObject.point);
-
-			wallDistance = Vector3.Distance (Gestures.handControllerPos, hitObject.point);
-
-			Debug.Log ("Distance to wall:" + wallDistance.ToString());
-			//Debug.Log ("*************");
-
-		} else {
-
-			//Debug.Log ("hit nothing \n stop select sequence");
-
-		}
-		*/
-
-		//get distance to ground
-		//get distance to wall
-		/*
-		if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, Mathf.Infinity, onlyGroundLayer)) {
-
-			//Debug.Log ("hitPoint:" + hitObject.point);
-			//Debug.Log ("hit ground");
-			groundDistance = Vector3.Distance (Gestures.handControllerPos, hitObject.point);
-
-			//Debug.Log ("Distance to ground:" + groundDistance.ToString());
-
-		} else {
-
-			//Debug.Log ("hit nothing \n stop select sequence");
-
-		}
-		*/
-
-	
 	}
 
 	float determineMaxDistanceToWall(){
 
 		while (degreeCounter < 360) {
 
-			if (Physics.Raycast (Gestures.handControllerPos, scanVector, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
+			if (Physics.Raycast (Gestures.handControllerPos, wallScanVector, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
 				
 				//Debug.DrawRay (Gestures.handControllerPos, scanVector * 30, Color.red, 50.0f, true);
 
@@ -104,7 +70,7 @@ public class ConstructionDistance : MonoBehaviour {
 
 				}
 
-				scanVector = Quaternion.Euler (0, 1, 0) * scanVector; //rotate one degree
+				wallScanVector = Quaternion.Euler (0, 1, 0) * wallScanVector; //rotate one degree
 				//Debug.Log ("Scan Vector: " + scanVector.ToString ());
 
 				degreeCounter += 1;
@@ -114,6 +80,18 @@ public class ConstructionDistance : MonoBehaviour {
 
 		isMaxDistanceDetermined = true;
 		return maxWallDistance;
+
+	}
+
+	float determineDistanceHeadCeiling(){
+
+		if (Physics.Raycast (Gestures.handControllerPos, ceilingScanVector, out hitObject, Mathf.Infinity, onlyCeilingLayer)) {
+
+			ceilingDistance = Vector3.Distance (Gestures.handControllerPos, hitObject.point);
+
+		}
+
+		return ceilingDistance;
 
 	}
 

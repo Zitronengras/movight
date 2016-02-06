@@ -78,9 +78,6 @@ public class Gestures : MonoBehaviour {
 
 		checkForGesture ();
 
-
-
-
 	}
 
 	void checkForGesture(){
@@ -110,9 +107,13 @@ public class Gestures : MonoBehaviour {
 
 								checkForIntensityGesture (rightHand);
 
-							} else if (Position.lightShouldMove == true) {//if light is moving
+							} else if (Position.lightShouldMove == true) { //if light is moving
 
 								checkForPositionGesture (rightHand);
+
+							} else if (ColorTemperature.temperatureShouldChange == true) { //if color is changing
+								
+								checkForTemperatureGesture (rightHand);
 
 							} else {
 
@@ -159,6 +160,13 @@ public class Gestures : MonoBehaviour {
 					palmCenter = (headRotation * rotHMDPalmCenter);
 
 					leapIndexTipPosition = indexFinger.TipPosition;
+					Vector3 unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
+					Vector3 rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
+					headRotation = Cardboard.SDK.HeadRotation;
+					Vector3 tmpControlPoint = (headRotation * rotHMDIndexFingerTip);
+
+
+					/*leapIndexTipPosition = indexFinger.TipPosition;
 					leapMiddleTipPosition = middleFinger.TipPosition;
 					// work with tipPositon
 					Vector3 unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
@@ -170,12 +178,12 @@ public class Gestures : MonoBehaviour {
 					Vector3 pointBetweenIndexMiddle = rotHMDIndexFingerTip + (normalizedBetweenIndexMiddle * (indexToMiddle.magnitude / 2));
 					//get head rotation
 					headRotation = Cardboard.SDK.HeadRotation;
-					Vector3 tmpControlPoint = (headRotation * pointBetweenIndexMiddle);
+					Vector3 tmpControlPoint = (headRotation * pointBetweenIndexMiddle);*/
 
 					//offset
-					Quaternion offSet;
+					//Quaternion offSet;
 
-					controlPoint = Quaternion.Euler (0, 2, 0) * tmpControlPoint; //transform.up;
+					controlPoint = Quaternion.Euler (0, 8, 0) * tmpControlPoint; //transform.up;
 
 					//controlPoint = (headRotation * 0.2) * controlPoint;
 

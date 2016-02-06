@@ -3,9 +3,6 @@ using System.Collections;
 
 public class ColorTemperature : MonoBehaviour {
 
-	/*
-
-
 	HandFeedback labelScript;
 	GameObject labelScriptObject;
 
@@ -340,7 +337,5 @@ public class ColorTemperature : MonoBehaviour {
 		temperatureColors[38] = new Color32 (12, 118, 185, 1);
 	
 	}
-
-*/
 
 }
