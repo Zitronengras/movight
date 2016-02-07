@@ -227,7 +227,7 @@ public class ColorTemperature : MonoBehaviour {
 
 			float distanceToGoal = Vector3.Distance (hitTile.transform.position, controlPoint);
 			//Debug.Log ("Distance: " + distanceToGoal.ToString ());
-			if (distanceToGoal <= .5f) {
+			if (distanceToGoal <= 0.05f) {
 
 				changeTemperatureColor (hitTile, light);
 
