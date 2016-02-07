@@ -89,44 +89,49 @@ public class Position : MonoBehaviour {
 
 				if (Gestures.isPositionGesture == true) { //beeing in selectionsequence
 
-					bufferCounter += 1;
+					if (!ColorTemperature.isTemperatureModusActive) {
 
-					if (bufferCounter >= bufferMax) {
-						light = SelectLight.light; //selected light
-						lightPosition = light.transform.position; //position of selected light
+						bufferCounter += 1;
 
-						//Debug.Log ("in position script and gesture == true");
+						if (bufferCounter >= bufferMax) {
+							light = SelectLight.light; //selected light
+							lightPosition = light.transform.position; //position of selected light
 
-						controlPoint = Gestures.controlPoint;
-						palmCenter = Gestures.palmCenter;
+							//Debug.Log ("in position script and gesture == true");
 
-						labelScript.displayLabel (palmCenter, labelScriptObject);
+							controlPoint = Gestures.controlPoint;
+							palmCenter = Gestures.palmCenter;
+
+							labelScript.displayLabel (palmCenter, labelScriptObject);
 
 
-						if (lightShouldMove == false) {
+							if (lightShouldMove == false) {
 
-							if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+								if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-								hitLight = hitObject.collider.gameObject;
+									hitLight = hitObject.collider.gameObject;
 
-								//Debug.Log ("Licht getroffen");
+									//Debug.Log ("Licht getroffen");
 
-								if (Equals (hitLight.name, light.name)) {
+									if (Equals (hitLight.name, light.name)) {
 
-									lightShouldMove = true;
-									bufferCounter = 0;
+										lightShouldMove = true;
+										bufferCounter = 0;
 
+									}
 								}
 							}
-						}
-						if (lightShouldMove == true) {
+							if (lightShouldMove == true) {
 
-							moveLight (light, lightPosition, controlPoint);
-							SelectLight.setHighlighterPosition (light);
-							bufferCounter = 0;
+								moveLight (light, lightPosition, controlPoint);
+								SelectLight.setHighlighterPosition (light);
+								bufferCounter = 0;
 
+							}
 						}
+
 					}
+				
 				} else {
 
 					labelScriptObject.SetActive(false);

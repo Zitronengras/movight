@@ -15,7 +15,7 @@ public class ColorTemperature : MonoBehaviour {
 	Camera camera;
 
 	int bufferCounter = 0;
-	int bufferMax = 30;
+	//int bufferMax = 30;
 
 	//checkForMeaningfulChanges
 	Vector3 newPosition;
@@ -65,11 +65,14 @@ public class ColorTemperature : MonoBehaviour {
 	//new modus
 	public static bool isTemperatureModusActive = false;
 
+	int bufferMax = 40;
+
 
 	//Raycast
 	RaycastHit hitObject = new RaycastHit();
 	LayerMask onlyGUILayer;
 	GameObject hitTile;
+	GameObject temperatureMenu;
 
 
 
@@ -92,6 +95,9 @@ public class ColorTemperature : MonoBehaviour {
 		//////////////
 		onlyGUILayer = 1 << LayerMask.NameToLayer("temperatureMenu");
 		//Debug.Log("find layer" + onlyGUILayer.ToString());
+
+		temperatureMenu = GameObject.Find ("TemperatureMenu");
+		temperatureMenu.SetActive(false);
 			
 	}
 	
@@ -105,10 +111,8 @@ public class ColorTemperature : MonoBehaviour {
 
 			if (Gestures.isTemperatureGesture) {
 
-				Debug.Log ("TemperatureGesture ##########################");
-
-				labelScript.displayLabel (controlPoint, labelScriptObject);
-
+				//Debug.Log ("TemperatureGesture ##########################");
+		
 				bufferCounter += 1;
 
 				if (bufferCounter >= bufferMax) {
@@ -116,12 +120,18 @@ public class ColorTemperature : MonoBehaviour {
 					if (isTemperatureModusActive) {
 
 						isTemperatureModusActive = false;
-						Debug.Log ("isTemperatureModusActive = false");
+						temperatureMenu.SetActive(false);
+						labelScriptObject.SetActive(false);
+
+						//Debug.Log ("isTemperatureModusActive = false");
 						bufferCounter = 0;
 
 
 					} else if (!isTemperatureModusActive) {
+
 						isTemperatureModusActive = true;
+						temperatureMenu.SetActive(true);
+
 						Debug.Log ("isTemperatureModusActive = true");
 
 						labelScript.displayLabel (controlPoint, labelScriptObject);
@@ -159,8 +169,17 @@ public class ColorTemperature : MonoBehaviour {
 		if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyGUILayer)) {			
 
 			hitTile = hitObject.collider.gameObject;
+			Debug.Log ("hittile: " + hitTile.ToString ());
 
-			getDistance (hitTile, Gestures.controlPoint);
+			float distanceToGoal = Vector3.Distance (hitTile.transform.position, controlPoint);
+			Debug.Log ("Distance: " + distanceToGoal.ToString ());
+			if (distanceToGoal <= .5f) {
+
+				Debug.Log ("DISTANCE KLEIN");
+
+				changeTemperatureColor (hitTile, light);
+
+			}
 
 		}
 
@@ -168,23 +187,18 @@ public class ColorTemperature : MonoBehaviour {
 
 	}
 
-	void getDistance(GameObject hitTile, Vector3 controlPoint){
+	void changeTemperatureColor(GameObject hitTile, GameObject light){
 		
-		float distanceToGoal = Vector3.Distance (hitTile.transform.position, controlPoint);
-
-		if (distanceToGoal <= 5.0f) {
-
 			currentColor = hitTile.GetComponent<Renderer>().material.color;
 			Debug.Log ("color : " + currentColor.ToString ());
 
+			lightSource = light.GetComponentInChildren<Light> ();
+		lightSource.color = currentColor;
 
-		}
-			
 	}
 }
 
 	/*
-
 
 				labelScript.displayLabel (controlPoint, labelScriptObject);
 
