@@ -12,6 +12,9 @@ public class Position : MonoBehaviour {
 
 	LayerMask onlyLightLayer;
 
+	int bufferCounter = 0;
+	int bufferMax = 30;
+
 
 //	float selectedLightDistanceToController;
 	GameObject light;
@@ -35,13 +38,19 @@ public class Position : MonoBehaviour {
 	float currentFingerControllerDistance;
 	float lastX;
 	float lastZ;
-	int beforeChangeBuffer = 30;
-	int buffer = 0;
+	//int beforeChangeBuffer = 30;
+	//int buffer = 0;
 
 	//checkForMeaningfulChanges
 	float changeValue = 0.001f;
 	int xCounter = 0;
 	int zCounter = 0;
+
+	//checkForMeaningfulChangesEntrance
+	Vector3 newPosition;
+	Vector3 lastPosition;
+	int changeCounter = 0;
+
 
 	// Use this for initialization
 	void Start () {
@@ -74,47 +83,54 @@ public class Position : MonoBehaviour {
 
 			if (SelectLight.isLightSelected == true) {
 
-				light = SelectLight.light; //selected light
-				lightPosition = light.transform.position; //position of selected light
-
 				if (Gestures.isPositionGesture == true) { //beeing in selectionsequence
 
-					//Debug.Log ("in position script and gesture == true");
+					bufferCounter += 1;
 
-					controlPoint = Gestures.controlPoint;
-					palmCenter = Gestures.palmCenter;
+					if (bufferCounter >= bufferMax) {
+						light = SelectLight.light; //selected light
+						lightPosition = light.transform.position; //position of selected light
 
-					labelScript.displayLabel (palmCenter, labelScriptObject);
+						//Debug.Log ("in position script and gesture == true");
+
+						controlPoint = Gestures.controlPoint;
+						palmCenter = Gestures.palmCenter;
+
+						labelScript.displayLabel (palmCenter, labelScriptObject);
 
 
-					if (lightShouldMove == false) {
-						
-						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+						if (lightShouldMove == false) {
 
-							hitLight = hitObject.collider.gameObject;
+							if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-							Debug.Log ("Licht getroffen");
+								hitLight = hitObject.collider.gameObject;
 
-							if (Equals (hitLight.name, light.name)) {
+								Debug.Log ("Licht getroffen");
 
-								lightShouldMove = true;
-								//TODO do not look for other gesture when moving
+								if (Equals (hitLight.name, light.name)) {
+
+									lightShouldMove = true;
+									bufferCounter = 0;
+									//TODO do not look for other gesture when moving
+
+								}
 
 							}
+						}
+						if (lightShouldMove == true) {
+
+							moveLight (light, lightPosition, controlPoint);
+							SelectLight.setHighlighterPosition (light);
+							bufferCounter = 0;
 
 						}
-					}
-					if (lightShouldMove == true) {
+					} else {
 
-						moveLight (light, lightPosition, controlPoint);
-						SelectLight.setHighlighterPosition (light);
+						labelScriptObject.SetActive(false);
 
 					}
-				} else {
-
-					labelScriptObject.SetActive(false);
-
 				}
+
 			} else {
 
 				labelScriptObject.SetActive(false);
@@ -176,9 +192,9 @@ public class Position : MonoBehaviour {
 
 		if (isDepthRangeCalculated == true) {
 
-			buffer += 1;
+			//buffer += 1;
 
-			if (buffer >= beforeChangeBuffer) {
+			//if (buffer >= beforeChangeBuffer) {
 				
 				//get current distance between finger and controller for getPercentageFingerPosition(...)
 				currentFingerControllerDistance = Vector3.Distance (Gestures.handControllerPos, controlPoint); // ????????????????????????
@@ -219,7 +235,7 @@ public class Position : MonoBehaviour {
 
 				lastX = newLightVector.x;
 				lastZ = newLightVector.z;
-			}
+			//}
 
 		}
 	}
@@ -275,7 +291,7 @@ public class Position : MonoBehaviour {
 
 				xCounter = 0;
 				zCounter = 0;
-				buffer = 0;
+				//buffer = 0;
 			}
 		}
 	}
@@ -294,9 +310,45 @@ public class Position : MonoBehaviour {
 
 				zCounter = 0;
 				xCounter = 0;
-				buffer = 0;
+				//buffer = 0;
 			}
 		}
 	}
+
+	/*void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
+
+		float changeValue = 0.0015f; //0.001f;
+		newPosition = controlPoint;
+
+		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
+			&& newPosition.y <= (lastPosition.y + changeValue) && newPosition.y >= (lastPosition.y - changeValue)
+			&& newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
+
+			//Debug.Log ("no big change***********************");
+
+			if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {
+
+				//Debug.Log ("values " + newPosition.x.ToString () + newPosition.y.ToString () + newPosition.z.ToString ());
+
+				changeCounter += 1;
+				//Debug.Log ("changeCounter " + changeCounter.ToString());
+
+				if (changeCounter == SelectLight.waitCountdown) {
+
+					lightShouldMove = true;
+					//intensityUp.SetActive (true);
+
+					//Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
+					changeCounter = 0;
+
+				}
+			}
+		}
+
+		Debug.Log ("shouldPositionChange??????: " + lightShouldMove.ToString ());
+
+		lastPosition = controlPoint;
+
+	}*/
 
 }

@@ -91,7 +91,6 @@ public class LightIntensity : MonoBehaviour {
 				labelScript.displayLabel (controlPoint, labelScriptObject);
 				lightSource = light.GetComponentInChildren<Light> ();
 				intensity = lightSource.intensity;
-				//lightSource.color = color;
 
 				controlPoint = Gestures.controlPoint;
 
@@ -222,13 +221,13 @@ public class LightIntensity : MonoBehaviour {
 
 		//check for range
 		if (percentagFistY > 100) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
+			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentagFistY = 100;
 
 		}
 		if (percentagFistY < 0) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
+			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentagFistY = 0;
 
@@ -247,13 +246,13 @@ public class LightIntensity : MonoBehaviour {
 
 		//check for range
 		if (percentageIntensity > 100) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
+			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentageIntensity = 100;
 
 		}
 		if (percentageIntensity < 0) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
+			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentageIntensity = 0;
 
@@ -305,7 +304,7 @@ public class LightIntensity : MonoBehaviour {
 
 	void checkForMeaningfulYChanges(Vector3 controlPoint){
 
-		float changeValue = 3.0f; //0.001f;
+		float changeValue = 1.0f; //0.001f;
 
 		Vector3 onScreenPosition = camera.WorldToScreenPoint (controlPoint);
 		float currentYOnScreen = onScreenPosition.y;
@@ -317,18 +316,18 @@ public class LightIntensity : MonoBehaviour {
 			if (!(currentYOnScreen == lastYOnScreen)) { //if hand is out of controller
 
 
-				Progressbar.fillProgressbar ();
 
 				//Debug.Log ("values " + newPosition.x.ToString () + newPosition.y.ToString () + newPosition.z.ToString ());
 
 				changeCounter += 1;
+				Progressbar.fillProgressbar ();
 				Debug.Log ("changeCounter " + changeCounter.ToString ());
 
 				if (changeCounter == SelectLight.waitCountdown) {
 
+					Progressbar.progressbarObject.SetActive (false);
 					intensityShouldChange = false;
 					intensityUp.SetActive (false);
-					Progressbar.progressbarObject.SetActive (false);
 					//TODO
 					//isVerticalRangeCalculated = false;
 

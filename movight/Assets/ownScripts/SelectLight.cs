@@ -105,7 +105,8 @@ public class SelectLight : MonoBehaviour{
 
 							highlighter.SetActive (true);
 							setHighlighterPosition (light);
-							Progressbar.progressbarObject.SetActive (false);
+							Progressbar.resetProgressbar ();
+							Debug.Log ("Progressbar reset '''''''''''''''''''''''''''''''''''''''''''''''''''");
 
 							//Debug.Log ("Licht Objekt ausgewählt*********************************: " + light.ToString ());
 
@@ -120,7 +121,7 @@ public class SelectLight : MonoBehaviour{
 						highlighter.SetActive (false);
 						hitCounter = 0;
 						firstPassThrough = true;
-						Progressbar.progressbarObject.SetActive (false);
+						Progressbar.resetProgressbar ();
 
 					}
 				}
@@ -151,7 +152,7 @@ public class SelectLight : MonoBehaviour{
 
 								highlighter.SetActive (true);
 								setHighlighterPosition (light);
-								Progressbar.progressbarObject.SetActive (false);
+								Progressbar.resetProgressbar ();
 
 								//stop tmp elements in select sequence
 								hitCounter = 0;
@@ -161,7 +162,7 @@ public class SelectLight : MonoBehaviour{
 						} else {
 							
 							highlighter.SetActive (false);
-							Progressbar.progressbarObject.SetActive (false);
+							Progressbar.resetProgressbar ();
 
 						}
 					}
@@ -180,7 +181,7 @@ public class SelectLight : MonoBehaviour{
 								//Debug.Log ("Licht abgewählt ***************************************: " + light.ToString ());
 
 								highlighter.SetActive (false);
-								Progressbar.progressbarObject.SetActive (false);
+								Progressbar.resetProgressbar ();
 
 								//stop select sequence
 								hitCounter = 0;
@@ -189,7 +190,7 @@ public class SelectLight : MonoBehaviour{
 							}
 						} else {
 							
-							Progressbar.progressbarObject.SetActive (false);
+							Progressbar.resetProgressbar ();
 							hitCounter = 0;
 
 						}
