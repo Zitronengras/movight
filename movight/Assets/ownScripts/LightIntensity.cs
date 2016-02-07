@@ -17,6 +17,9 @@ public class LightIntensity : MonoBehaviour {
 	float intensity;
 	Vector3 controlPoint;
 
+	Vector3 onScreenPosition;
+	float currentYOnScreen;
+
 	//Test
 	GameObject cube;
 
@@ -28,50 +31,55 @@ public class LightIntensity : MonoBehaviour {
 	float minYIntensityRange;
 	float maxYIntensityRange;
 	float screenYRange = 300.0f;
+	float currentIntensity;
+	float percentageIntensityAtBeginning;
+	float percentagePosOnScreenAtBeginning;
+	float onePercentOfScreenRange;
+	float currentOnScreenY;
 
 	//changeIntensity
 	float newIntensity;
 	int beforeChangeBuffer = 30;
 	int buffer = 0;
+	float percentageOnScreenPalmPosition;
 
 	//getPercentageIntensity
 	float possibleMax = 8.0f;
 	float possibleMin = 0.0f;
 
+	//getPercentageFistPosition
+	float currentPositionDistance;
+	float percentagFistY;
+	float percentageIntensity;
+
 	bool isVerticalRangeCalculated = false;
 	bool isControlActive = false;
 
-	//checkForMeaningfulChanges
+	//checkForMeaningfulChangesEntrance
+	float changeValue;
 	Vector3 newPosition;
 	Vector3 lastPosition;
 	int changeCounter = 0;
 	public static bool intensityShouldChange = false;
 
 	//checkForMeaningfulYChanges
-	float lastYOnScreen;
-
-	//TODO for horizontal
+	float lastYOnScreen = 0;
+	float changeYValue;
 
 	// Use this for initialization
 	void Start () {
 
-		Debug.Log("*****************************************************************");
-
-		camera = Camera.main; // GetComponent<Camera>;
+		camera = Camera.main;
 
 		labelScriptObject = GameObject.Find ("IntensityLabelObjectNew");
-		Debug.Log ("*************labelScriptObject: " + labelScriptObject.ToString ());
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
 
 		intensityUpDown = GameObject.Find ("IntensityUpDown");
-		Debug.Log ("*************intensityUpDown: " + intensityUpDown.ToString ());
 		intensityUpDown.SetActive(false);
 	
 	}
-
-	//TODO buffer einbauen
-
+		
 	// Update is called once per frame
 	void Update () {
 
@@ -89,16 +97,10 @@ public class LightIntensity : MonoBehaviour {
 				intensity = lightSource.intensity;
 
 				controlPoint = Gestures.controlPoint;
-
-				/*Vector3 onScreenPosition = camera.WorldToScreenPoint(controlPoint);
-				float currentyOnScreen = onScreenPosition.y;
-				Debug.Log("#############################onScreenY " + currentyOnScreen.ToString());*/
-
 				checkForMeaningfulChangesEntrance (controlPoint);
 
 				if (intensityShouldChange) {
 
-					//Debug.Log ("now changeIntensity()");
 					intensityUpDown.SetActive (true);
 					changeIntensity (controlPoint, intensity, lightSource);
 
@@ -123,45 +125,29 @@ public class LightIntensity : MonoBehaviour {
 
 	void calculateVerticalRange(Vector3 currentPosition, float intensity){ 
 
-		float currentIntensity = intensity;
+		currentIntensity = intensity;
 
 		//convert currentPosition into 2D (screen)
-		Vector3 onScreenPosition = camera.WorldToScreenPoint(currentPosition);
-		float currentYOnScreen = onScreenPosition.y;
+		onScreenPosition = camera.WorldToScreenPoint(currentPosition);
+		currentYOnScreen = onScreenPosition.y;
 
-		Debug.Log ("current Y at start" + currentYOnScreen.ToString ());
+		//Debug.Log ("current Y at start" + currentYOnScreen.ToString ());
 		//get percentage intensity
 		//percentage position of fist between display left and display right
+		percentageIntensityAtBeginning = getPercentageIntensity(currentIntensity);
+		//Debug.Log ("percentageIntensityAtBeginning at the beginning: " + percentageIntensityAtBeginning.ToString());
 
-		float percentageIntensityAtBeginning = getPercentageIntensity(currentIntensity);
-		Debug.Log ("percentageIntensityAtBeginning at the beginning: " + percentageIntensityAtBeginning.ToString());
+		percentagePosOnScreenAtBeginning = percentageIntensityAtBeginning; //adapt percentage position of light on position of finger
+		//Debug.Log ("percentagePosOfFistAtBeginning at the beginning: " + percentagePosOnScreenAtBeginning.ToString());
 
-		float percentagePosOnScreenAtBeginning = percentageIntensityAtBeginning; //adapt percentage position of light on position of finger
-		Debug.Log ("percentagePosOfFistAtBeginning at the beginning: " + percentagePosOnScreenAtBeginning.ToString());
-
-		float onePercentOfScreenRange = screenYRange / 100;
-
-		//	float screenXRange = 280.0f;
-
-
-		//get one percent of 30cm range volume
-		//float onePercentOfIntensityRange = intensityRangeVolume / 100;
-		//Debug.Log ("onePercentOfFingerRange: " + onePercentOfFingerRange.ToString());
-
-		//for check
-		//get value for range from percentageIntensity
-		//float percentageRangeValueAtBeginning = onePercentOfIntensityRange * percentagePosOfFistAtBeginning;
-		//Debug.Log ("sollte gleich sein wie anfangs Intensität: " + percentageRangeValueAtBeginning.ToString ());
-
-		//get start y value
-		//float startY = currentY;
+		onePercentOfScreenRange = screenYRange / 100;
 
 		//
 		maxYIntensityRange = currentYOnScreen + ((100 - percentagePosOnScreenAtBeginning) * onePercentOfScreenRange);
-		Debug.Log ("maxYIntensityRange: " + maxYIntensityRange.ToString ());
+		//Debug.Log ("maxYIntensityRange: " + maxYIntensityRange.ToString ());
 
 		minYIntensityRange = currentYOnScreen - (percentagePosOnScreenAtBeginning * onePercentOfScreenRange);
-		Debug.Log ("minYIntensityRange: " + minYIntensityRange.ToString ());
+		//Debug.Log ("minYIntensityRange: " + minYIntensityRange.ToString ());
 
 
 		//TODO was wenn min in negativ bereich???
@@ -188,21 +174,21 @@ public class LightIntensity : MonoBehaviour {
 		if (isVerticalRangeCalculated == true) {
 
 
-			buffer += 1;
+			//buffer += 1;
 
-			Vector3 currentOnScreenPosition = camera.WorldToScreenPoint (controlPoint);
+			onScreenPosition = camera.WorldToScreenPoint (controlPoint);
 
-			float currentOnScreenY = currentOnScreenPosition.y;
+			currentOnScreenY = onScreenPosition.y;
 
-			float percentageOnScreenPalmPosition = getPercentageFistPosition (currentOnScreenY);
+			checkForMeaningfulYChanges (currentOnScreenY);
+
+			percentageOnScreenPalmPosition = getPercentageFistPosition (currentOnScreenY);
 			newIntensity = ((possibleMax / 100.0f) * percentageOnScreenPalmPosition); 
 			Debug.Log ("new intensity: " + newIntensity.ToString ());
 			lightSource.intensity = newIntensity;
 
-			if (buffer >= beforeChangeBuffer) {
-				checkForMeaningfulYChanges (controlPoint);
-				//TODO not correct??
-			}
+			//if (buffer >= beforeChangeBuffer) {
+			//}
 		}
 
 	}
@@ -210,20 +196,18 @@ public class LightIntensity : MonoBehaviour {
 	float getPercentageFistPosition(float currentOnScreenY){
 		
 		//Debug.Log ("currentY: " + currentY.ToString ());
-		float currentPositionDistance = currentOnScreenY - minYIntensityRange; 
+		currentPositionDistance = currentOnScreenY - minYIntensityRange; 
 		Debug.Log ("currentPositionDistance: " + currentPositionDistance.ToString ());
 
-		float percentagFistY = (100 / screenYRange) * currentPositionDistance;
+		percentagFistY = (100 / screenYRange) * currentPositionDistance;
 
 		//check for range
 		if (percentagFistY > 100) {
-			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentagFistY = 100;
 
 		}
 		if (percentagFistY < 0) {
-			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentagFistY = 0;
 
@@ -235,20 +219,15 @@ public class LightIntensity : MonoBehaviour {
 
 	float getPercentageIntensity(float intensity){
 
-		//float onePercentOfIntensityMax = possibleMax / 100;
-		//float percentageIntensity = onePercentOfIntensityMax * intensity;
-
-		float percentageIntensity = (100f / possibleMax) * intensity;
+		percentageIntensity = (100f / possibleMax) * intensity;
 
 		//check for range
 		if (percentageIntensity > 100) {
-			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentageIntensity = 100;
 
 		}
 		if (percentageIntensity < 0) {
-			//Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			percentageIntensity = 0;
 
@@ -264,7 +243,7 @@ public class LightIntensity : MonoBehaviour {
 	//TODO for x and z values as well???
 	void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
 
-		float changeValue = 0.0015f; //0.001f;
+		changeValue = 0.0015f; //0.001f;
 		newPosition = controlPoint;
 
 		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
@@ -275,49 +254,51 @@ public class LightIntensity : MonoBehaviour {
 
 			if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {
 
-				//Debug.Log ("values " + newPosition.x.ToString () + newPosition.y.ToString () + newPosition.z.ToString ());
-
 				changeCounter += 1;
-				//Debug.Log ("changeCounter " + changeCounter.ToString());
 
 				if (changeCounter == SelectLight.waitCountdown) {
 
 					intensityShouldChange = true;
 					intensityUpDown.SetActive (true);
 
-					//Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
 					changeCounter = 0;
 
 				}
 			}
 		}
 
-		Debug.Log ("shouldIntensityChange??????: " + intensityShouldChange.ToString ());
+		//Debug.Log ("shouldIntensityChange??????: " + intensityShouldChange.ToString ());
 
 		lastPosition = controlPoint;
 
 	}
 
-	void checkForMeaningfulYChanges(Vector3 controlPoint){
+	void checkForMeaningfulYChanges(float currentPosition){
 
-		float changeValue = 2.0f; //0.001f;
+		changeYValue = 2.0f; //0.001f;
 
-		Vector3 onScreenPosition = camera.WorldToScreenPoint (controlPoint);
-		float currentYOnScreen = onScreenPosition.y;
-
-		if (currentYOnScreen <= (lastYOnScreen + changeValue) && currentYOnScreen >= (lastYOnScreen - changeValue)) {
-
-			//Debug.Log ("no big change***********************");
-
-			if (!(currentYOnScreen == lastYOnScreen)) { //if hand is out of controller
+		float compareAddition = lastYOnScreen + changeYValue;
+		float compareSubstraction = lastYOnScreen - changeYValue;
 
 
 
-				//Debug.Log ("values " + newPosition.x.ToString () + newPosition.y.ToString () + newPosition.z.ToString ());
+		/*onScreenPosition = camera.WorldToScreenPoint (controlPoint);
+		currentYOnScreen = onScreenPosition.y;*/
+		Debug.Log ("lastY: " + lastYOnScreen.ToString ());
+		Debug.Log ("currentPosition: " + currentPosition.ToString ());
+		Debug.Log ("compareSubstraction: " + compareSubstraction.ToString ());
+
+		Debug.Log ("lastYOnScreen + changeValue: " + (lastYOnScreen + changeValue).ToString ());
+
+
+		if ((currentPosition <= compareAddition) && (currentPosition >= compareSubstraction)) {
+			Debug.Log ("####################################################");
+
+			//if (!(currentPosition == lastYOnScreen)) { //if hand is out of controller
 
 				changeCounter += 1;
 				Progressbar.fillProgressbar ();
-				Debug.Log ("changeCounter " + changeCounter.ToString ());
+				//Debug.Log ("changeCounter " + changeCounter.ToString ());
 
 				if (changeCounter == SelectLight.waitCountdown) {
 
@@ -332,13 +313,13 @@ public class LightIntensity : MonoBehaviour {
 					buffer = 0;
 
 				}
-			}
+			//}
 		} else {
 			changeCounter = 0;
 			Progressbar.resetProgressbar ();
 		}
 
-		lastYOnScreen = currentYOnScreen;
+		lastYOnScreen = currentPosition;
 
 	}
 }

@@ -150,7 +150,6 @@
      <Compile Include="Assets\LeapMotion\Widgets\Scripts\Utils\FrameRateControls.cs" />
      <Compile Include="Assets\ownScripts\ColorTemperature.cs" />
      <Compile Include="Assets\ownScripts\ConstructionDistance.cs" />
-     <Compile Include="Assets\ownScripts\DetectIndexFinger.cs" />
      <Compile Include="Assets\ownScripts\Gestures.cs" />
      <Compile Include="Assets\ownScripts\HandFeedback.cs" />
      <Compile Include="Assets\ownScripts\LightIntensity.cs" />

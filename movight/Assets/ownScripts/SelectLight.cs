@@ -12,7 +12,9 @@ public class SelectLight : MonoBehaviour{
 	static GameObject highlighter;
 	MeshRenderer highlighterRenderer;
 	Material highlighterMaterial;
-	float ceilingY = 0.02799769f; //TODO get dynamicly
+	float ceilingY = ConstructionDistance.ceilingDistance; //TODO get dynamicly
+	static float hitObjectHeight;
+	static Vector3 highlighterPosition;
 
 	//Raycast
 	RaycastHit hitObject = new RaycastHit();
@@ -33,41 +35,19 @@ public class SelectLight : MonoBehaviour{
 	int bufferCounter = 0;
 	int bufferMax = 50;
 
-	//public static int PositionCountdown = 15;
-
-	//TODO no other seletion possible when light selected
-
-
-	//GameObject selectedLight;
-
+	//TODO no other seletion possible when light selected????
 
 	// Use this for initialization
 	void Start () {
 
-		Debug.Log("----------------------------------------------------------------");
-
-
 		onlyLightLayer = 1 << LayerMask.NameToLayer ("light"); //only raycast layer 8 (light)
 
-		GameObject controllerObject = GameObject.Find ("HeadMountedHandController");
-
 		labelScriptObject = GameObject.Find("SelectionLabelObject");
-		//Debug.Log (" ###### labelScriptObject: " + labelScriptObject.ToString ());
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
-		//Debug.Log (" 50 labelScript: " + labelScript.ToString ());
 		labelScriptObject.SetActive(false);
 
-		//lightSelectedMaterial = new Material(Shader.Find("Standard"));
-
 		highlighter = GameObject.Find("LightHighlight");
-		//Debug.Log("highlighter: " + highlighter.ToString());
 		highlighter.SetActive(false);
-
-
-
-		//gestureScript = controllerObject.GetComponent<Gestures> ();
-
-		//castDistance = ConstructionDistance.maxWallDistance;
 
 	}
 
@@ -79,7 +59,6 @@ public class SelectLight : MonoBehaviour{
 			controlPoint = Gestures.controlPoint;
 
 			labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
-
 
 			if (firstPassThrough == true) { //select light
 
@@ -98,15 +77,9 @@ public class SelectLight : MonoBehaviour{
 							light = hitObject.collider.gameObject;
 							lightPosition = light.transform.position;
 
-							/*MeshRenderer highlighterRenderer = highlighter.GetComponent<MeshRenderer> (); //.material;
-							highlighterMaterial = highlighterRenderer.material;
-							highlighterMaterial.color = new Color32(255,255,255,1);
-							highlighterRenderer.material = highlighterMaterial;*/
-
 							highlighter.SetActive (true);
 							setHighlighterPosition (light);
 							Progressbar.resetProgressbar ();
-							Debug.Log ("Progressbar reset '''''''''''''''''''''''''''''''''''''''''''''''''''");
 
 							//Debug.Log ("Licht Objekt ausgewählt*********************************: " + light.ToString ());
 
@@ -210,22 +183,10 @@ public class SelectLight : MonoBehaviour{
 
 	public static void setHighlighterPosition(GameObject light){
 
-		//GameObject hitGameObject = hitObject.collider.gameObject;
-		//Renderer lightRenderer = light.GetComponent<Renderer> (); //.GetComponent<Renderer> ();
-		//float hitObjectHeight = lightRenderer.bounds.extents.y; //* 2.0;
-
-		float hitObjectHeight = lightCollider.bounds.extents.y; //* 2.0;
-
-
-		//highlighter.transform.localScale = new Vector3 (0.0016f, 0f, hitObjectHeight);
-
-		/*float hitObjectWidthX = objectRenderer.bounds.extents.x; //* 2.0;
-		float hitObjectWidthY = objectRenderer.bounds.extents.x; //* 2.0;*/
-
-		Vector3 highlighterPosition = light.transform.position;
-		Debug.Log ("hitObjectHeight: " + hitObjectHeight.ToString ());
-		Debug.Log ("ConstructionDistance.ceilingDistance: " + ConstructionDistance.ceilingDistance.ToString ());
-
+		hitObjectHeight = lightCollider.bounds.extents.y;
+		highlighterPosition = light.transform.position;
+		//Debug.Log ("hitObjectHeight: " + hitObjectHeight.ToString ());
+		//Debug.Log ("ConstructionDistance.ceilingDistance: " + ConstructionDistance.ceilingDistance.ToString ());
 		highlighterPosition.y = ((ConstructionDistance.ceilingDistance - (2 * hitObjectHeight)) - 0.07f);
 		highlighter.transform.position = highlighterPosition;
 

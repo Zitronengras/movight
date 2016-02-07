@@ -25,29 +25,44 @@ public class ColorTemperature : MonoBehaviour {
 
 	float percentagWidthOfOneColumn;
 
-	//range
+	//calculateHorizontalRange
+	Vector3 onScreenPosition;
+	float currentPercentageColorPosition;
+	float percentagePosOnScreenAtBeginning;
 	bool isHorizontalRangeCalculated = false;
 	float minScreenRange;
 	float maxScreenRange;
+	float onePercentOfScreenRange;
 
 	float numberOfColumns = 39.0f;
 	//checkForMeaningfulChangesX
 	float lastXOnScreen;
+	float compareAddition;
+	float compareSubstraction;
 	//
 	float currentXOnScreen;
 	float screenXRange = 280.0f;
 	float temperaturePositionRange = 40.0f;
 	Color color = new Color32();
 
+	//changeTemperature
+	Vector3 currentOnScreenPosition;
 	Color[] temperatureColors = new Color[39];
 	float percentageTemperaturValue;
+	float percentagePalmPosition;
 
+	//getPercentagePalmPosition
+	float currentPalmMinXDistance;
+	float currentPercentagePalmPosition;
+
+	//checkForMeaningfulChanges
+	float changeValue;
+
+	//getColor
+	float widthOfOneColumn;
 
 	// Use this for initialization
 	void Start () {
-
-		Debug.Log("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
-
 
 		camera = Camera.main; // GetComponent<Camera>;
 		Debug.Log ("Camera: " + camera.ToString ());
@@ -60,7 +75,6 @@ public class ColorTemperature : MonoBehaviour {
 		fillColorArray (temperatureColors);
 
 		temperatureUpDown = GameObject.Find ("TemperatureUpDown");
-		Debug.Log ("*************temperatureUpDown: " + temperatureUpDown.ToString ());
 		temperatureUpDown.SetActive(false);
 			
 	}
@@ -100,8 +114,6 @@ public class ColorTemperature : MonoBehaviour {
 						temperatureUpDown.SetActive (false);
 
 					}
-					//getPercentagePalmPosition(controlPoint);
-
 				}
 
 			} else {
@@ -117,18 +129,15 @@ public class ColorTemperature : MonoBehaviour {
 	void calculateHorizontalRange(Vector3 currentPosition, Color currentColor){
 
 		//convert currentPosition into 2D (screen)
-		Vector3 onScreenPosition = camera.WorldToScreenPoint(currentPosition);
+		onScreenPosition = camera.WorldToScreenPoint(currentPosition);
 		currentXOnScreen = onScreenPosition.x;
 
 		//get percentagColorValue
-		float currentPercentageColorPosition = getPercentageTemperatureValue(currentColor);
-
-		float percentagePosOnScreenAtBeginning = currentPercentageColorPosition;
+		currentPercentageColorPosition = getPercentageTemperatureValue(currentColor);
+		percentagePosOnScreenAtBeginning = currentPercentageColorPosition;
 			
-		//getPercentagePalmPosition (currentPosition);
-
 		//cone percent of range on screen
-		float onePercentOfScreenRange = screenXRange / 100;
+		onePercentOfScreenRange = screenXRange / 100;
 
 		//get startpoint of range
 		minScreenRange = currentXOnScreen - (percentagePosOnScreenAtBeginning * onePercentOfScreenRange); 
@@ -150,15 +159,12 @@ public class ColorTemperature : MonoBehaviour {
 
 			checkForMeaningfulChangesOnScreenX (controlPoint);
 
-			Vector3 currentOnScreenPosition = camera.WorldToScreenPoint(controlPoint);
+			currentOnScreenPosition = camera.WorldToScreenPoint(controlPoint);
 			currentXOnScreen = currentOnScreenPosition.x;
 
-			Debug.Log ("currentX: " + currentXOnScreen);
+			//Debug.Log ("currentX: " + currentXOnScreen);
 
-			float percentagePalmPosition = getPercentagePalmPosition (currentXOnScreen);
-			//get belonging percent for color
-			//float currentPercentageTemperatureValue = getPercentageTemperatureValue (currentColor);
-
+			percentagePalmPosition = getPercentagePalmPosition (currentXOnScreen);
 
 			Debug.Log ("neue Farbe: " + getColor (percentagePalmPosition, temperatureColors).ToString ());
 			lightSource.color = getColor (percentagePalmPosition, temperatureColors);
@@ -169,19 +175,9 @@ public class ColorTemperature : MonoBehaviour {
 
 	float getPercentagePalmPosition(float currentXOnScreen){
 
-		float currentPalmMinXDistance = currentXOnScreen - minScreenRange;
-
-		//convert currentPosition into 2D (screen)
-		//Vector3 onScreenPosition = camera.WorldToScreenPoint(currentPosition);
-		//float currentXOnScreen = onScreenPosition.x;
-
-		//float currentMinXOnScreen = currentXOnScreen - minScreenRange; //from range
-		//Debug.Log ("On screen x psotion" + currentXOnScreen.ToString ()); 
-
-		float currentPercentagePalmPosition = (100 / screenXRange) * currentPalmMinXDistance;
-
-		Debug.Log ("Percentage Palm Position " + currentPercentagePalmPosition.ToString());
-
+		currentPalmMinXDistance = currentXOnScreen - minScreenRange;
+		currentPercentagePalmPosition = (100 / screenXRange) * currentPalmMinXDistance;
+		//Debug.Log ("Percentage Palm Position " + currentPercentagePalmPosition.ToString());
 		return currentPercentagePalmPosition;
 
 	}
@@ -193,7 +189,6 @@ public class ColorTemperature : MonoBehaviour {
 			if (temperatureColors[i].r == currentColor.r && temperatureColors[i].g == currentColor.g && temperatureColors[i].b == currentColor.b) {
 				percentageTemperaturValue = (100 / numberOfColumns) * (i);
 			}
-
 		}
 
 		return percentageTemperaturValue;
@@ -202,7 +197,7 @@ public class ColorTemperature : MonoBehaviour {
 
 	void checkForMeaningfulChanges(Vector3 controlPoint){
 
-		float changeValue = 0.001f; //0.0001f;
+		changeValue = 0.001f; //0.0001f;
 		newPosition = controlPoint;
 
 		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
@@ -236,14 +231,17 @@ public class ColorTemperature : MonoBehaviour {
 
 	void checkForMeaningfulChangesOnScreenX(Vector3 controlPoint){
 
-		float changeValue = 20.0f;
+		changeValue = 20.0f;
 
-		Vector3 onScreenPosition = camera.WorldToScreenPoint (controlPoint);
-		float currentXOnScreen = onScreenPosition.x;
+		onScreenPosition = camera.WorldToScreenPoint (controlPoint);
+		currentXOnScreen = onScreenPosition.x;
 
-		if (currentXOnScreen <= (lastXOnScreen + changeValue) && currentXOnScreen >= (lastXOnScreen - changeValue)) {
+		compareAddition = lastXOnScreen + changeValue;
+		compareSubstraction = lastXOnScreen - changeValue;
 
-			if (!(currentXOnScreen == lastXOnScreen)) { //if hand is out of controller
+	
+
+		if (currentXOnScreen <= compareAddition && currentXOnScreen >= compareSubstraction) {
 
 				Debug.Log ("checkForMeaningfulChangesOnScreenX " + changeCounter.ToString ());
 
@@ -263,7 +261,6 @@ public class ColorTemperature : MonoBehaviour {
 					//buffer = 0;
 
 				}
-			}
 		} else {
 			changeCounter = 0;
 			Progressbar.resetProgressbar ();
@@ -275,7 +272,7 @@ public class ColorTemperature : MonoBehaviour {
 
 	Color32 getColor(float percentagePosition, Color[]temperatureColors){
 
-		float widthOfOneColumn = temperaturePositionRange / numberOfColumns; //39 columns in 0.40 positionRange	
+		widthOfOneColumn = temperaturePositionRange / numberOfColumns; //39 columns in 0.40 positionRange	
 
 		if (percentagePosition >= 0 && percentagePosition <= percentagWidthOfOneColumn) {
 			color = temperatureColors [0];

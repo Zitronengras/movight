@@ -3,15 +3,12 @@ using System.Collections;
 
 public class ConstructionDistance : MonoBehaviour {
 
-	//TODO: distance to ground
-
 	float degreeCounter;
 	Vector3 wallScanVector;
 	Vector3 ceilingScanVector;
 	public static float ceilingDistance;
 	public static float maxWallDistance;
-	public static bool isMaxDistanceDetermined; // = false;
-	//Vector3 rotatedDirection;
+	public static bool isMaxDistanceDetermined;
 
 	LayerMask onlyWallsLayer;
 	LayerMask onlyCeilingLayer;
@@ -19,8 +16,6 @@ public class ConstructionDistance : MonoBehaviour {
 	RaycastHit hitObject = new RaycastHit();
 
 	public static float wallDistance = Mathf.Infinity;
-	//public static float groundDistance = Mathf.Infinity;
-
 
 	// Use this for initialization
 	void Start () {
@@ -30,7 +25,6 @@ public class ConstructionDistance : MonoBehaviour {
 		degreeCounter = 0;
 		wallScanVector = Vector3.forward; //right; // (1,0,0)
 		ceilingScanVector =  Vector3.up;
-		//Debug.Log("initiate scanVector" + scanVector.ToString());
 		maxWallDistance = 0;
 		onlyWallsLayer = 1 << LayerMask.NameToLayer ("wall");
 
@@ -59,8 +53,6 @@ public class ConstructionDistance : MonoBehaviour {
 
 			if (Physics.Raycast (Gestures.handControllerPos, wallScanVector, out hitObject, Mathf.Infinity, onlyWallsLayer)) {
 				
-				//Debug.DrawRay (Gestures.handControllerPos, scanVector * 30, Color.red, 50.0f, true);
-
 				wallDistance = Vector3.Distance (Gestures.handControllerPos, hitObject.point);
 
 				if (wallDistance > maxWallDistance) {

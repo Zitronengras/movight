@@ -6,14 +6,14 @@ public class Progressbar : MonoBehaviour {
 
 	public static GameObject progressbarObject;
 	static Vector3 progressbarStartPosition;
+	static Vector3 currentPos;
+	static float currentX;
 
 	// Use this for initialization
 	void Start () {
 		
 		progressbarObject = GameObject.Find ("Progressbar");
 		progressbarStartPosition = progressbarObject.transform.position;
-		//Debug.Log ("progressbarObject found" + progressbarObject.ToString ());
-
 		progressbarObject.SetActive (false);
 
 	}
@@ -28,17 +28,13 @@ public class Progressbar : MonoBehaviour {
 
 		progressbarObject.SetActive (true);
 
-		Debug.Log ("PROGRESSBAR true  " + progressbarObject.activeSelf.ToString ());
-
 		progressbarObject.gameObject.transform.localScale += new Vector3((0.1f / SelectLight.waitCountdown), 0, 0);
-		Vector3 currentPos = progressbarObject.transform.position;
-		float currentX = currentPos.x;
-
+		currentPos = progressbarObject.transform.position;
+		currentX = currentPos.x;
 		currentX = (currentX + ((0.1f / SelectLight.waitCountdown)/2));
 		currentPos.x = currentX;
 		progressbarObject.transform.position = currentPos;
-
-		Debug.Log ("position.x" + progressbarObject.transform.position.x.ToString ());
+		//Debug.Log ("position.x" + progressbarObject.transform.position.x.ToString ());
 
 	}
 
@@ -46,12 +42,12 @@ public class Progressbar : MonoBehaviour {
 
 		progressbarObject.SetActive (false);
 
-		Debug.Log ("PROGRESSBAR ist false #######################################################");
+		//Debug.Log ("PROGRESSBAR ist false #######################################################");
 		progressbarObject.transform.position = progressbarStartPosition;
-		Debug.Log ("ausmaße progressbar lossyScale vorher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
+		//Debug.Log ("ausmaße progressbar lossyScale vorher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
 
 		progressbarObject.gameObject.transform.localScale = new Vector3 (0f, 0.003f, 0.001f); // 0.003f, 0.001f);
-		Debug.Log ("ausmaße progressbar lossyScale nacher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
+		//Debug.Log ("ausmaße progressbar lossyScale nacher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
 
 	}
 }

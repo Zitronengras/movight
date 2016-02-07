@@ -5,12 +5,18 @@ using System.Collections;
 public class HandFeedback : MonoBehaviour {
 
 	Camera camera;
-	Image labelImg;
+
+	Vector3 palmCenter;
+	float length;
+
+	float palmDepth;
+	float newLength;
+	Vector3 labelPosition;
 
 	// Use this for initialization
 	void Start () {
 
-		camera = Camera.main; // GetComponent<Camera>;
+		camera = Camera.main;
 		Debug.Log("Camera" + camera.ToString());
 			
 	}
@@ -21,41 +27,22 @@ public class HandFeedback : MonoBehaviour {
 	
 	}
 
-	//TODO feedback für Start- und Endpunkt
-
 	public void displayLabel(Vector3 controlPoint, GameObject label){
 
 		label.SetActive(true);
 
-		/*Debug.Log ("label object" + label.ToString ());
+		palmCenter = controlPoint;
+		length = controlPoint.magnitude;
 
-		labelImg = label.GetComponentInChildren<Image>();
-		Debug.Log ("labelImg: " + labelImg.ToString ());*/
-		Vector3 palmCenter = controlPoint;
+		//get depth of handpalm
+		palmDepth = 0.001f; //0.05f; ////0.13f;
+		newLength = length +  palmDepth;
 
-		float length = controlPoint.magnitude;
-		//float onePercentOfLength = length / 100.0f;
-		//float newLength = (onePercentOfLength * 0.90f) * 
-
-		//get depth og handpalm
-		float palmDepth = 0.001f; //0.05f; ////0.13f;
-		float newLength = length +  palmDepth; //90%
-
-		Vector3 labelPosition = (controlPoint.normalized) * newLength;
-		//Vector3 screenPosition = camera.WorldToScreenPoint(controlPoint);
-		//Debug.Log ("screenPosition labelPosition.x: " + screenPosition.x.ToString ());
-
-
-		//Debug.Log ("controlPosition.z: " + controlPoint.z.ToString ());
-
-		//float tmp = 300.0f;
-		//screenPosition.x = tmp; //Gestures.headRotation * labelPosition;
-		label.transform.position = labelPosition; //Gestures.headRotation * labelPosition;
+		labelPosition = (controlPoint.normalized) * newLength;
+		label.transform.position = labelPosition;
 		label.transform.LookAt(Gestures.handControllerPos);
 
 		//Debug.Log("labelImg.transform.position: " + label.transform.position.ToString());
-
-
 
 	}
 }
