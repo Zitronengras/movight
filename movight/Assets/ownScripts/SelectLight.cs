@@ -35,8 +35,6 @@ public class SelectLight : MonoBehaviour{
 	int bufferCounter = 0;
 	int bufferMax = 50;
 
-	//TODO no other seletion possible when light selected????
-
 	// Use this for initialization
 	void Start () {
 

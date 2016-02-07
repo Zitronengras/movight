@@ -89,49 +89,92 @@ public class Position : MonoBehaviour {
 
 				if (Gestures.isPositionGesture == true) { //beeing in selectionsequence
 
-					if (!ColorTemperature.isTemperatureModusActive) {
+					if (!MainMenu.isGroupAActive) {
+						
+						if (!ColorTemperature.isTemperatureModusActive) {
 
-						bufferCounter += 1;
+							bufferCounter += 1;
 
-						if (bufferCounter >= bufferMax) {
-							light = SelectLight.light; //selected light
-							lightPosition = light.transform.position; //position of selected light
+							if (bufferCounter >= bufferMax) {
+								light = SelectLight.light; //selected light
+								lightPosition = light.transform.position; //position of selected light
 
-							//Debug.Log ("in position script and gesture == true");
+								//Debug.Log ("in position script and gesture == true");
 
-							controlPoint = Gestures.controlPoint;
-							palmCenter = Gestures.palmCenter;
+								controlPoint = Gestures.controlPoint;
+								palmCenter = Gestures.palmCenter;
 
-							labelScript.displayLabel (palmCenter, labelScriptObject);
+								labelScript.displayLabel (palmCenter, labelScriptObject);
 
 
-							if (lightShouldMove == false) {
+								if (lightShouldMove == false) {
 
-								if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+									if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-									hitLight = hitObject.collider.gameObject;
+										hitLight = hitObject.collider.gameObject;
 
-									//Debug.Log ("Licht getroffen");
+										//Debug.Log ("Licht getroffen");
 
-									if (Equals (hitLight.name, light.name)) {
+										if (Equals (hitLight.name, light.name)) {
 
-										lightShouldMove = true;
-										bufferCounter = 0;
+											lightShouldMove = true;
+											bufferCounter = 0;
 
+										}
 									}
 								}
+								if (lightShouldMove == true) {
+
+									moveLight (light, lightPosition, controlPoint);
+									SelectLight.setHighlighterPosition (light);
+									bufferCounter = 0;
+
+								}
 							}
-							if (lightShouldMove == true) {
 
-								moveLight (light, lightPosition, controlPoint);
-								SelectLight.setHighlighterPosition (light);
-								bufferCounter = 0;
+						}
+					}
+					if (MainMenu.isGroupAActive) {
 
+						labelScript.displayLabel (palmCenter, labelScriptObject);
+												
+							bufferCounter += 1;
+
+							if (bufferCounter >= bufferMax) {
+								light = SelectLight.light; //selected light
+								lightPosition = light.transform.position; //position of selected light
+
+								//Debug.Log ("in position script and gesture == true");
+
+								controlPoint = Gestures.controlPoint;
+								palmCenter = Gestures.palmCenter;
+
+								if (lightShouldMove == false) {
+
+									if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+
+										hitLight = hitObject.collider.gameObject;
+
+										//Debug.Log ("Licht getroffen");
+
+										if (Equals (hitLight.name, light.name)) {
+
+											lightShouldMove = true;
+											bufferCounter = 0;
+
+										}
+									}
+								}
+								if (lightShouldMove == true) {
+
+									moveLight (light, lightPosition, controlPoint);
+									SelectLight.setHighlighterPosition (light);
+									bufferCounter = 0;
+
+								}
 							}
 						}
-
-					}
-				
+										
 				} else {
 
 					labelScriptObject.SetActive(false);
@@ -250,13 +293,11 @@ public class Position : MonoBehaviour {
 
 		//check for range
 		if (currentPercentageFingerPosInRange > 100) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			currentPercentageFingerPosInRange = 100;
 
 		}
 		if (currentPercentageFingerPosInRange < 0) {
-			Debug.Log ("++++++++++++++++ out of range +++++++++++++++++++++");
 
 			currentPercentageFingerPosInRange = 0;
 
@@ -294,7 +335,6 @@ public class Position : MonoBehaviour {
 
 				xCounter = 0;
 				zCounter = 0;
-				//buffer = 0;
 			}
 		}
 	}

@@ -119,108 +119,69 @@ public class Gestures : MonoBehaviour {
 						if (SelectLight.isLightSelected == false) { //when no light is selected
 
 							checkForSelectGesture (rightHand);
+							isPositionGesture = false;
+							isIntensityGesture = false;
+							isTemperatureGesture = false;
+
 
 						} else if (SelectLight.isLightSelected == true) { //when light is selected
 							
 							if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
 
-								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
+								isSelectGesture = false;
+								isTemperatureGesture = false;
+								isPositionGesture = false;
 								checkForIntensityGesture (rightHand);
 
 							} else if (Position.lightShouldMove == true) { //if light is moving
-								
-								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
+
+								isSelectGesture = false;
+								isTemperatureGesture = false;
+								isIntensityGesture = false;
 								checkForPositionGesture (rightHand);
-
-							} else if (ColorTemperature.isTemperatureModusActive) {
-
-								checkForTemperatureGesture (rightHand);
-								checkForPositionGesture (rightHand);
-
-								//ColorTemperature.temperatureShouldChange == true) { //if color is changing
-
-								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, true);
-								//checkForTemperatureGesture (rightHand);
-								//checkForScreenTapGesture ();
-
-							} else {
-								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
-
-								checkForSelectGesture (rightHand);
-								checkForPositionGesture (rightHand);
-								checkForIntensityGesture (rightHand);
-								checkForTemperatureGesture (rightHand);
 
 							}
+							if (!MainMenu.isGroupAActive) { //groupB
+								
+								if (ColorTemperature.isTemperatureModusActive) {
+
+									isSelectGesture = false;
+									isIntensityGesture = false;	
+									checkForTemperatureGesture (rightHand);
+									checkForPositionGesture (rightHand);
+
+								} else {
+
+									checkForSelectGesture (rightHand);
+									checkForPositionGesture (rightHand);
+									checkForIntensityGesture (rightHand);
+									checkForTemperatureGesture (rightHand);
+
+								}
+							}
+							if (MainMenu.isGroupAActive) {
+								if (ColorTemperature.temperatureShouldChange) {//if color is changing
+									
+									isSelectGesture = false;
+									isIntensityGesture = false;	
+									isPositionGesture = false;
+									checkForTemperatureGesture (rightHand);
+
+								} else {
+
+									checkForSelectGesture (rightHand);
+									checkForPositionGesture (rightHand);
+									checkForIntensityGesture (rightHand);
+									checkForTemperatureGesture (rightHand);
+
+								}
+							} 
 						}
 					}
 				}
 			}
 		}
 	}
-
-	/*
-	void checkForScreenTapGesture(){
-		Debug.Log ("checkForScreenTapGesture ");
-
-
-		if (firstRun) {
-			controller.Config.SetFloat ("Gesture.ScreenTap.MinForwardVelocity", 30.0f); //30.0
-			controller.Config.SetFloat ("Gesture.ScreenTap.HistorySeconds", .9f); //.5
-			controller.Config.SetFloat ("Gestures.ScreenTap.MinDistance", 1.0f);
-			controller.Config.Save ();
-			firstRun = false;
-		}
-
-		Debug.Log ("GESTURES   " + frame.Gestures().ToString());
-
-		if (!frame.Gestures().IsEmpty) {
-
-			GestureList gesturesInFrame = frame.Gestures ();
-			Debug.Log ("gesturesInFrame länge " + gesturesInFrame.Count.ToString ());
-
-			for (int i = 0; i < gesturesInFrame.Count; i++) {
-
-				Debug.Log ("****************durchlaufe gesten TYP " + gesturesInFrame[i].Type.ToString ());
-
-				
-				if (gesturesInFrame [i].Type == Gesture.GestureType.TYPE_SCREEN_TAP) {
-					
-					tapGesture = new ScreenTapGesture (gesturesInFrame [i]);
-					detectTapGesture = true;
-					Debug.Log ("############################################# " + tapGesture.ToString ());
-
-
-				} else {
-					
-					detectTapGesture = false;
-
-				}
-			}
-
-			if (detectTapGesture) {
-				
-				Pointable pointable = frame.Pointables.Frontmost;
-				Pointable.Zone zone = pointable.TouchZone;
-				float distance = pointable.TouchDistance;
-				Vector stabilizedPosition = pointable.StabilizedTipPosition;
-
-				InteractionBox iBox = controller.Frame ().InteractionBox;
-				Vector normalizedPosition = iBox.NormalizePoint (stabilizedPosition);
-				//float x = normalizedPosition.x * windowWidth;
-				//float y = windowHeight - normalizedPosition.y * windowHeight;
-
-
-			}
-				
-		}
-
-
-
-		firstRun = false;
-	}*/
-
-	//TODO correct controlPointValue
 
 	void checkForSelectGesture(Hand rightHand){
 
@@ -237,7 +198,7 @@ public class Gestures : MonoBehaviour {
 			if (indexFinger.IsValid && middleFinger.IsValid) {
 				if (!ringFinger.IsValid && !pinkyFinger.IsValid) {
 
-					Debug.Log ("now there should be the selectGesture##################");
+					//Debug.Log ("now there should be the selectGesture##################");
 
 					isSelectGesture = true;
 
@@ -293,7 +254,7 @@ public class Gestures : MonoBehaviour {
 			if(indexFinger.IsValid){
 				if (!middleFinger.IsValid && !ringFinger.IsValid && !pinkyFinger.IsValid) {
 
-					Debug.Log("############### positionGesture ######################");
+					//Debug.Log("############### positionGesture ######################");
 
 					isPositionGesture = true;
 
@@ -342,7 +303,7 @@ public class Gestures : MonoBehaviour {
 
 		if (extendedFingers.IsEmpty) {	
 
-			Debug.Log ("******FAUST**");
+			//Debug.Log ("******FAUST**");
 
 			isIntensityGesture = true;
 
@@ -383,7 +344,7 @@ public class Gestures : MonoBehaviour {
 
 			if (indexFinger.IsValid && middleFinger.IsValid && ringFinger.IsValid && pinkyFinger.IsValid) {
 
-				Debug.Log ("now there should be the TemperatureGesture##################");
+				//Debug.Log ("now there should be the TemperatureGesture##################");
 
 				isTemperatureGesture = true;
 
