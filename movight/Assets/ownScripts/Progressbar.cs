@@ -50,7 +50,7 @@ public class Progressbar : MonoBehaviour {
 		progressbarObject.transform.position = progressbarStartPosition;
 		Debug.Log ("ausmaße progressbar lossyScale vorher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
 
-		progressbarObject.gameObject.transform.localScale = new Vector3(0f, 0.003f, 0.001f);
+		progressbarObject.gameObject.transform.localScale = new Vector3 (0f, 0.003f, 0.001f); // 0.003f, 0.001f);
 		Debug.Log ("ausmaße progressbar lossyScale nacher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
 
 	}

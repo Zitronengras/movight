@@ -6,11 +6,16 @@ public class ColorTemperature : MonoBehaviour {
 	HandFeedback labelScript;
 	GameObject labelScriptObject;
 
+	GameObject temperatureUpDown;
+
 	GameObject light;
 	Light lightSource;
 	Color32 currentColor;
 	Vector3 controlPoint;
 	Camera camera;
+
+	int bufferCounter = 0;
+	int bufferMax = 30;
 
 	//checkForMeaningfulChanges
 	Vector3 newPosition;
@@ -26,7 +31,8 @@ public class ColorTemperature : MonoBehaviour {
 	float maxScreenRange;
 
 	float numberOfColumns = 39.0f;
-
+	//checkForMeaningfulChangesX
+	float lastXOnScreen;
 	//
 	float currentXOnScreen;
 	float screenXRange = 280.0f;
@@ -52,6 +58,10 @@ public class ColorTemperature : MonoBehaviour {
 		percentagWidthOfOneColumn = 100 / numberOfColumns;
 
 		fillColorArray (temperatureColors);
+
+		temperatureUpDown = GameObject.Find ("TemperatureUpDown");
+		Debug.Log ("*************temperatureUpDown: " + temperatureUpDown.ToString ());
+		temperatureUpDown.SetActive(false);
 			
 	}
 	
@@ -64,21 +74,35 @@ public class ColorTemperature : MonoBehaviour {
 
 			if (Gestures.isTemperatureGesture) {
 
-				Debug.Log ("im color temperature script********************");
-
 				labelScript.displayLabel (controlPoint, labelScriptObject);
-				lightSource = light.GetComponentInChildren<Light> ();
-				controlPoint = Gestures.controlPoint;
-				currentColor = lightSource.color;
 
-				checkForMeaningfulChanges (controlPoint);
+				bufferCounter += 1;
 
-				if (temperatureShouldChange) {
-					changeTemperature (controlPoint, lightSource, currentColor);
+				if (bufferCounter >= bufferMax) {
+					
+					Debug.Log ("im color temperature script********************");
+
+					lightSource = light.GetComponentInChildren<Light> ();
+					controlPoint = Gestures.controlPoint;
+					currentColor = lightSource.color;
+
+					checkForMeaningfulChanges (controlPoint);
+
+					if (temperatureShouldChange) {
+
+						temperatureUpDown.SetActive (true);
+						changeTemperature (controlPoint, lightSource, currentColor);
+						bufferCounter = 0;
+						//TODO bool
+
+					} else {
+
+						temperatureUpDown.SetActive (false);
+
+					}
+					//getPercentagePalmPosition(controlPoint);
+
 				}
-				//getPercentagePalmPosition(controlPoint);
-
-
 
 			} else {
 				labelScriptObject.SetActive(false);
@@ -123,6 +147,8 @@ public class ColorTemperature : MonoBehaviour {
 			isHorizontalRangeCalculated = true;
 
 		} else if (isHorizontalRangeCalculated == true) {
+
+			checkForMeaningfulChangesOnScreenX (controlPoint);
 
 			Vector3 currentOnScreenPosition = camera.WorldToScreenPoint(controlPoint);
 			currentXOnScreen = currentOnScreenPosition.x;
@@ -205,6 +231,45 @@ public class ColorTemperature : MonoBehaviour {
 		Debug.Log ("shouldTemperatureChange??: " + temperatureShouldChange.ToString ());
 
 		lastPosition = controlPoint;
+
+	}
+
+	void checkForMeaningfulChangesOnScreenX(Vector3 controlPoint){
+
+		float changeValue = 20.0f;
+
+		Vector3 onScreenPosition = camera.WorldToScreenPoint (controlPoint);
+		float currentXOnScreen = onScreenPosition.x;
+
+		if (currentXOnScreen <= (lastXOnScreen + changeValue) && currentXOnScreen >= (lastXOnScreen - changeValue)) {
+
+			if (!(currentXOnScreen == lastXOnScreen)) { //if hand is out of controller
+
+				Debug.Log ("checkForMeaningfulChangesOnScreenX " + changeCounter.ToString ());
+
+				changeCounter += 1;
+				Progressbar.fillProgressbar ();
+				//Debug.Log ("changeCounter " + changeCounter.ToString ());
+				if (changeCounter == SelectLight.waitCountdown) {
+
+					Progressbar.resetProgressbar ();
+					temperatureUpDown.SetActive (false);
+					temperatureShouldChange = false;
+					//TODO
+					//isVerticalRangeCalculated = false;
+
+					//Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
+					changeCounter = 0;
+					//buffer = 0;
+
+				}
+			}
+		} else {
+			changeCounter = 0;
+			Progressbar.resetProgressbar ();
+		}
+
+		lastXOnScreen = currentXOnScreen;
 
 	}
 

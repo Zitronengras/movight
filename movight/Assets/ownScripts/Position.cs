@@ -124,11 +124,11 @@ public class Position : MonoBehaviour {
 							bufferCounter = 0;
 
 						}
-					} else {
-
-						labelScriptObject.SetActive(false);
-
 					}
+				} else {
+
+					labelScriptObject.SetActive(false);
+
 				}
 
 			} else {

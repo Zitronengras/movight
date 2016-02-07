@@ -10,7 +10,7 @@ public class LightIntensity : MonoBehaviour {
 	HandFeedback labelScript;
 	GameObject labelScriptObject;
 
-	GameObject intensityUp;
+	GameObject intensityUpDown;
 
 	GameObject light;
 	Light lightSource;
@@ -28,10 +28,6 @@ public class LightIntensity : MonoBehaviour {
 	float minYIntensityRange;
 	float maxYIntensityRange;
 	float screenYRange = 300.0f;
-
-
-	//Vector3 upIntensityRange = new Vector3(0,0,1);
-	//Vector3 downIntensityRange = new Vector3(0,0,1);
 
 	//changeIntensity
 	float newIntensity;
@@ -68,9 +64,9 @@ public class LightIntensity : MonoBehaviour {
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
 
-		intensityUp = GameObject.Find ("IntensityUp");
-		Debug.Log ("*************labelScriptObject: " + intensityUp.ToString ());
-		intensityUp.SetActive(false);
+		intensityUpDown = GameObject.Find ("IntensityUpDown");
+		Debug.Log ("*************intensityUpDown: " + intensityUpDown.ToString ());
+		intensityUpDown.SetActive(false);
 	
 	}
 
@@ -103,17 +99,17 @@ public class LightIntensity : MonoBehaviour {
 				if (intensityShouldChange) {
 
 					//Debug.Log ("now changeIntensity()");
-					intensityUp.SetActive (true);
+					intensityUpDown.SetActive (true);
 					changeIntensity (controlPoint, intensity, lightSource);
 
 				} else {
 
-					intensityUp.SetActive(false);
+					intensityUpDown.SetActive(false);
 
 				}
 			} else {
 
-				//labelScriptObject.SetActive(false);
+				labelScriptObject.SetActive(false);
 				//intensityUp.SetActive(false);
 
 			}
@@ -287,7 +283,7 @@ public class LightIntensity : MonoBehaviour {
 				if (changeCounter == SelectLight.waitCountdown) {
 
 					intensityShouldChange = true;
-					intensityUp.SetActive (true);
+					intensityUpDown.SetActive (true);
 
 					//Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
 					changeCounter = 0;
@@ -304,7 +300,7 @@ public class LightIntensity : MonoBehaviour {
 
 	void checkForMeaningfulYChanges(Vector3 controlPoint){
 
-		float changeValue = 1.0f; //0.001f;
+		float changeValue = 2.0f; //0.001f;
 
 		Vector3 onScreenPosition = camera.WorldToScreenPoint (controlPoint);
 		float currentYOnScreen = onScreenPosition.y;
@@ -325,9 +321,9 @@ public class LightIntensity : MonoBehaviour {
 
 				if (changeCounter == SelectLight.waitCountdown) {
 
-					Progressbar.progressbarObject.SetActive (false);
+					Progressbar.resetProgressbar ();
 					intensityShouldChange = false;
-					intensityUp.SetActive (false);
+					intensityUpDown.SetActive (false);
 					//TODO
 					//isVerticalRangeCalculated = false;
 
@@ -339,7 +335,7 @@ public class LightIntensity : MonoBehaviour {
 			}
 		} else {
 			changeCounter = 0;
-			Progressbar.progressbarObject.SetActive (false);
+			Progressbar.resetProgressbar ();
 		}
 
 		lastYOnScreen = currentYOnScreen;
