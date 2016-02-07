@@ -46,6 +46,10 @@ public class Gestures : MonoBehaviour {
 	Leap.Vector leapPalmCenter;
 	public static Vector3 palmCenter;
 
+	//checkForScreenTapGesture
+	bool firstRun = true;
+	ScreenTapGesture tapGesture; //= new ScreenTapGesture();
+	bool detectTapGesture;
 
 
 	public static Vector3 controlPoint;
@@ -66,6 +70,7 @@ public class Gestures : MonoBehaviour {
 
 		handController = GameObject.Find ("HeadMountedHandController").transform;
 		handControllerPos = handController.position;	
+
 
 	}
 
@@ -110,17 +115,22 @@ public class Gestures : MonoBehaviour {
 							
 							if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
 
+								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
 								checkForIntensityGesture (rightHand);
 
 							} else if (Position.lightShouldMove == true) { //if light is moving
-
+								
+								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
 								checkForPositionGesture (rightHand);
 
 							} else if (ColorTemperature.temperatureShouldChange == true) { //if color is changing
-								
+
+								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, true);
 								checkForTemperatureGesture (rightHand);
+								checkForScreenTapGesture ();
 
 							} else {
+								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
 
 								checkForSelectGesture (rightHand);
 								checkForPositionGesture (rightHand);
@@ -133,6 +143,55 @@ public class Gestures : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void checkForScreenTapGesture(){
+
+		if (firstRun) {
+			controller.Config.SetFloat ("Gesture.ScreenTap.MinForwardVelocity", 30.0f);
+			controller.Config.SetFloat ("Gesture.ScreenTap.HistorySeconds", .5f);
+			controller.Config.SetFloat ("Gestures.ScreenTap.MinDistance", 1.0f);
+			controller.Config.Save ();
+		}
+
+		if (!frame.Gestures().IsEmpty) {
+
+			GestureList gesturesInFrame = frame.Gestures ();
+
+			for (int i = 0; i < gesturesInFrame.Count; i++) {
+				
+				if (gesturesInFrame [i].Type == Gesture.GestureType.TYPE_SCREEN_TAP) {
+					
+					tapGesture = new ScreenTapGesture (gesturesInFrame [i]);
+					detectTapGesture = true;
+
+				} else {
+					
+					detectTapGesture = false;
+
+				}
+			}
+
+			if (detectTapGesture) {
+				
+				Pointable pointable = frame.Pointables.Frontmost;
+				Pointable.Zone zone = pointable.TouchZone;
+				float distance = pointable.TouchDistance;
+				Vector stabilizedPosition = pointable.StabilizedTipPosition;
+
+				InteractionBox iBox = controller.Frame ().InteractionBox;
+				Vector normalizedPosition = iBox.NormalizePoint (stabilizedPosition);
+				//float x = normalizedPosition.x * windowWidth;
+				//float y = windowHeight - normalizedPosition.y * windowHeight;
+
+
+			}
+				
+		}
+
+
+
+		firstRun = false;
 	}
 
 	//TODO correct controlPointValue

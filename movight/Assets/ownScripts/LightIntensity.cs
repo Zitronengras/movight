@@ -65,6 +65,8 @@ public class LightIntensity : MonoBehaviour {
 	//checkForMeaningfulYChanges
 	float lastYOnScreen = 0;
 	float changeYValue;
+	float compareAddition;
+	float compareSubstraction;
 
 	// Use this for initialization
 	void Start () {
@@ -277,10 +279,8 @@ public class LightIntensity : MonoBehaviour {
 
 		changeYValue = 2.0f; //0.001f;
 
-		float compareAddition = lastYOnScreen + changeYValue;
-		float compareSubstraction = lastYOnScreen - changeYValue;
-
-
+		compareAddition = lastYOnScreen + changeYValue;
+		compareSubstraction = lastYOnScreen - changeYValue;
 
 		/*onScreenPosition = camera.WorldToScreenPoint (controlPoint);
 		currentYOnScreen = onScreenPosition.y;*/
