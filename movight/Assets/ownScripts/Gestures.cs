@@ -107,6 +107,15 @@ public class Gestures : MonoBehaviour {
 						rightHand = currentHand;
 						//Debug.Log ("Found right hand" + rightHand);
 
+						/*
+						controller.EnableGesture (Gesture.GestureType.TYPE_CIRCLE);
+						controller.EnableGesture (Gesture.GestureType.TYPE_KEY_TAP);
+						controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP);
+						controller.EnableGesture (Gesture.GestureType.TYPE_SWIPE);
+
+						checkForScreenTapGesture ();*/
+
+
 						if (SelectLight.isLightSelected == false) { //when no light is selected
 
 							checkForSelectGesture (rightHand);
@@ -115,22 +124,27 @@ public class Gestures : MonoBehaviour {
 							
 							if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
 
-								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
+								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
 								checkForIntensityGesture (rightHand);
 
 							} else if (Position.lightShouldMove == true) { //if light is moving
 								
-								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
+								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
 								checkForPositionGesture (rightHand);
 
-							} else if (ColorTemperature.temperatureShouldChange == true) { //if color is changing
+							} else if (ColorTemperature.isTemperatureModusActive) {
 
-								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, true);
 								checkForTemperatureGesture (rightHand);
-								checkForScreenTapGesture ();
+								checkForPositionGesture (rightHand);
+
+								//ColorTemperature.temperatureShouldChange == true) { //if color is changing
+
+								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, true);
+								//checkForTemperatureGesture (rightHand);
+								//checkForScreenTapGesture ();
 
 							} else {
-								controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
+								//controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP, false);
 
 								checkForSelectGesture (rightHand);
 								checkForPositionGesture (rightHand);
@@ -145,25 +159,37 @@ public class Gestures : MonoBehaviour {
 		}
 	}
 
+	/*
 	void checkForScreenTapGesture(){
+		Debug.Log ("checkForScreenTapGesture ");
+
 
 		if (firstRun) {
-			controller.Config.SetFloat ("Gesture.ScreenTap.MinForwardVelocity", 30.0f);
-			controller.Config.SetFloat ("Gesture.ScreenTap.HistorySeconds", .5f);
+			controller.Config.SetFloat ("Gesture.ScreenTap.MinForwardVelocity", 30.0f); //30.0
+			controller.Config.SetFloat ("Gesture.ScreenTap.HistorySeconds", .9f); //.5
 			controller.Config.SetFloat ("Gestures.ScreenTap.MinDistance", 1.0f);
 			controller.Config.Save ();
+			firstRun = false;
 		}
+
+		Debug.Log ("GESTURES   " + frame.Gestures().ToString());
 
 		if (!frame.Gestures().IsEmpty) {
 
 			GestureList gesturesInFrame = frame.Gestures ();
+			Debug.Log ("gesturesInFrame länge " + gesturesInFrame.Count.ToString ());
 
 			for (int i = 0; i < gesturesInFrame.Count; i++) {
+
+				Debug.Log ("****************durchlaufe gesten TYP " + gesturesInFrame[i].Type.ToString ());
+
 				
 				if (gesturesInFrame [i].Type == Gesture.GestureType.TYPE_SCREEN_TAP) {
 					
 					tapGesture = new ScreenTapGesture (gesturesInFrame [i]);
 					detectTapGesture = true;
+					Debug.Log ("############################################# " + tapGesture.ToString ());
+
 
 				} else {
 					
@@ -192,7 +218,7 @@ public class Gestures : MonoBehaviour {
 
 
 		firstRun = false;
-	}
+	}*/
 
 	//TODO correct controlPointValue
 
