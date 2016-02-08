@@ -38,8 +38,8 @@ public class Position : MonoBehaviour {
 	float selectedLightDistanceToController;
 	float currentLightControllerDistance;
 	float currentFingerControllerDistance;
-	float lastX;
-	float lastZ;
+	float lastX = 0;
+	float lastZ = 0;
 	float percentageFingerPosition;
 	float depth;
 	float lightY;
@@ -51,8 +51,10 @@ public class Position : MonoBehaviour {
 	Vector3 normalizedFingerDirection;
 	Vector3 newLightVector;
 
+	int startBufferMax = 20;
+	int startBuffer;
 	//checkForMeaningfulChanges
-	float changeValue = 0.001f;
+	//float changeValue = 0.001f;
 	int xCounter = 0;
 	int zCounter = 0;
 
@@ -73,6 +75,9 @@ public class Position : MonoBehaviour {
 		labelScriptObject = GameObject.Find("PositionLabelObject");
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
+
+		int startBuffer = startBufferMax;
+
 
 	}
 	
@@ -118,7 +123,7 @@ public class Position : MonoBehaviour {
 										if (Equals (hitLight.name, light.name)) {
 
 											lightShouldMove = true;
-											bufferCounter = 0;
+											//bufferCounter = 0;
 
 										}
 									}
@@ -127,7 +132,7 @@ public class Position : MonoBehaviour {
 
 									moveLight (light, lightPosition, controlPoint);
 									SelectLight.setHighlighterPosition (light);
-									bufferCounter = 0;
+									//bufferCounter = 0;
 
 								}
 							}
@@ -160,16 +165,18 @@ public class Position : MonoBehaviour {
 										if (Equals (hitLight.name, light.name)) {
 
 											lightShouldMove = true;
-											bufferCounter = 0;
+											//bufferCounter = 0;
 
 										}
 									}
 								}
 								if (lightShouldMove == true) {
 
+									labelScript.displayLabel (palmCenter, labelScriptObject);
+
 									moveLight (light, lightPosition, controlPoint);
 									SelectLight.setHighlighterPosition (light);
-									bufferCounter = 0;
+									//bufferCounter = 0;
 
 								}
 							}
@@ -240,45 +247,59 @@ public class Position : MonoBehaviour {
 
 		if (isDepthRangeCalculated == true) {
 
-			checkForMeaningfulChangesX (lastX, newLightVector.x);
-			checkForMeaningfulChangesZ (lastZ, newLightVector.z);
-							
-			//get current distance between finger and controller for getPercentageFingerPosition(...)
-			currentFingerControllerDistance = Vector3.Distance (Gestures.handControllerPos, controlPoint);
-			//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());			
+			Debug.Log ("startBuffer: " + startBuffer.ToString ());
 
-			percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
+			if (startBuffer > 0) {
+				
+				startBuffer -= 1;
 
-			depth = (maxWallDistance / 100) * percentageFingerPosition;
-			//Debug.Log ("depth: " + depth.ToString ());
+			} else {
 
-			//get orthogonal vector to xz-plane, length = light.y
-			lightY = SelectLight.light.transform.position.y ;
-			onlyYVector = new Vector3(0, lightY, 0);
-			onlyYVectorLength = onlyYVector.magnitude;
+				checkForMeaningfulChangesZX (lightPosition.x, lightPosition.z);//lastX, lightPosition.x, lastZ, lightPosition.z);
 
-			//get length for vector to new light position
-			aSquare = onlyYVectorLength * onlyYVectorLength;
-			//Debug.Log ("aSquare: " + aSquare.ToString());
+				//checkForMeaningfulChangesZ (lastZ, newLightVector.z);
 
-			bSquare = depth * depth;
-			//Debug.Log ("bSquare: " + bSquare);
+				//get current distance between finger and controller for getPercentageFingerPosition(...)
+				currentFingerControllerDistance = Vector3.Distance (Gestures.handControllerPos, controlPoint);
+				//Debug.Log ("currentFingerControllerDistance" + currentFingerControllerDistance.ToString());			
 
-			// c² = a² + b²
-			newLightVectorLength = Mathf.Sqrt(aSquare + bSquare); 
-			//Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
+				percentageFingerPosition = getPercentageFingerPosition (currentFingerControllerDistance);
 
-			//get direction to fingerTip
-			normalizedFingerDirection = controlPoint.normalized;
-			//direction multiply with new length
-			newLightVector = normalizedFingerDirection * newLightVectorLength;
+				depth = (maxWallDistance / 100) * percentageFingerPosition;
+				//Debug.Log ("depth: " + depth.ToString ());
 
-			SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
+				//get orthogonal vector to xz-plane, length = light.y
+				lightY = SelectLight.light.transform.position.y ;
+				onlyYVector = new Vector3(0, lightY, 0);
+				onlyYVectorLength = onlyYVector.magnitude;
 
-			//Debug.Log("new light position: " + light.transform.position.ToString());
+				//get length for vector to new light position
+				aSquare = onlyYVectorLength * onlyYVectorLength;
+				//Debug.Log ("aSquare: " + aSquare.ToString());
 
-			lastX = newLightVector.x;
-			lastZ = newLightVector.z;
+				bSquare = depth * depth;
+				//Debug.Log ("bSquare: " + bSquare);
+
+				// c² = a² + b²
+				newLightVectorLength = Mathf.Sqrt(aSquare + bSquare); 
+				//Debug.Log ("newLightVectorLength: " + newLightVectorLength.ToString());
+
+				//get direction to fingerTip
+				normalizedFingerDirection = controlPoint.normalized;
+				//direction multiply with new length
+				newLightVector = normalizedFingerDirection * newLightVectorLength;
+
+				SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
+
+				//Debug.Log("new light position: " + light.transform.position.ToString());
+
+				//lastX = newLightVector.x;
+				//lastZ = newLightVector.z;
+
+			}
+
+
+
 		
 		}
 	}
@@ -317,7 +338,7 @@ public class Position : MonoBehaviour {
 
 	}
 
-	void checkForMeaningfulChangesX(float lastValue, float newValue){
+	/*void checkForMeaningfulChangesX(float lastValue, float newValue){
 
 		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
 
@@ -337,10 +358,19 @@ public class Position : MonoBehaviour {
 				zCounter = 0;
 			}
 		}
-	}
-	void checkForMeaningfulChangesZ(float lastValue, float newValue){
+	}*/
 
-		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
+	void checkForMeaningfulChangesZX (float newX, float newZ){//float lastX, float newX, float lastZ, float newZ){
+
+		float changeValue = 0.01f;
+
+		Debug.Log ("lastX: " + lastX.ToString ());
+		Debug.Log ("newX " + newX.ToString ());
+		Debug.Log ("lastZ " + lastZ.ToString ());
+		Debug.Log ("newZ " + newZ.ToString ());
+
+		if (((newX <= (lastX + changeValue)) && (newX >= (lastX - changeValue)))
+		   && ((newZ <= (lastZ + changeValue)) && (newZ >= (lastZ - changeValue)))) {
 
 
 			Progressbar.fillProgressbar (zCounter);
@@ -356,9 +386,16 @@ public class Position : MonoBehaviour {
 				//Debug.Log ("lampe positioniert");
 
 				zCounter = 0;
-				xCounter = 0;
+				startBuffer = startBufferMax;
+				//xCounter = 0;
 			}
+		} else {
+			zCounter = 0;
+			Progressbar.resetProgressbar ();
+
 		}
+		lastX = newX;
+		lastZ = newZ;
 	}
 
 	/*void checkForMeaningfulChangesEntrance(Vector3 controlPoint){

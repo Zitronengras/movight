@@ -61,15 +61,7 @@ public class Progressbar : MonoBehaviour {
 
 	public static void resetProgressbar(){
 
-		Debug.Log ("reset progressbar");
-
 		progressbarObject.SetActive (false);
-
-		//currentPos = progressbarObject.transform.position;
-		//Debug.Log ("PROGRESSBAR ist false #######################################################");
-		//currentY = currentPos.y;
-		//currentY = currentY - (((0.042f / SelectLight.waitCountdown)/2) * SelectLight.waitCountdown);
-		//currentPos.y = currentY;
 
 		if (runThrough == true) {
 			
@@ -82,10 +74,5 @@ public class Progressbar : MonoBehaviour {
 			progressbarObject.gameObject.transform.localScale = new Vector3 (0.003f, 0f, 0.001f); // 0.003f, 0.001f);
 
 		}
-		//Debug.Log ("ausmaße progressbar lossyScale vorher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
-
-		//justStarted = true;
-		//Debug.Log ("ausmaße progressbar lossyScale nacher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
-
 	}
 }

@@ -159,6 +159,7 @@ public class Gestures : MonoBehaviour {
 								}
 							}
 							if (MainMenu.isGroupAActive == true) {
+								
 								if (ColorTemperature.temperatureShouldChange == true) {//if color is changing
 									
 									isSelectGesture = false;

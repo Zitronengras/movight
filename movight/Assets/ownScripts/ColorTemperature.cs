@@ -69,7 +69,7 @@ public class ColorTemperature : MonoBehaviour {
 	//groupA
 	public static bool isTemperatureModusActive = false;
 
-	int bufferMax = 30; //SelectLight.waitCountdown;
+	int bufferMax = SelectLight.waitCountdown;
 
 
 	//Raycast
@@ -97,9 +97,9 @@ public class ColorTemperature : MonoBehaviour {
 		temperatureUpDown = GameObject.Find ("TemperatureUpDown");
 		temperatureUpDown.SetActive(false);
 
-		onlyGUILayer = 1 << LayerMask.NameToLayer("temperatureMenu");
 
 		if (MainMenu.isGroupAActive == false) {
+			onlyGUILayer = 1 << LayerMask.NameToLayer("temperatureMenu");
 			temperatureMenu = GameObject.Find ("TemperatureMenu");
 			temperatureMenu.SetActive(false);
 		}			
@@ -113,6 +113,7 @@ public class ColorTemperature : MonoBehaviour {
 
 			light = SelectLight.light; //selected light	
 
+			//groupB
 			if (MainMenu.isGroupAActive == false) {
 				
 				if (Gestures.isTemperatureGesture == true) {
@@ -125,44 +126,49 @@ public class ColorTemperature : MonoBehaviour {
 
 						if (isTemperatureModusActive == true) {
 
+							labelScriptObject.SetActive(false);
 							isTemperatureModusActive = false;
 							temperatureMenu.SetActive(false);
-							labelScriptObject.SetActive(false);
 
-							//Debug.Log ("isTemperatureModusActive = false");
+							Debug.Log ("isTemperatureModusActive = false");
 							bufferCounter = 0;
 
 
 						} else if (isTemperatureModusActive == false) {
 
+							labelScript.displayLabel (controlPoint, labelScriptObject);
 							isTemperatureModusActive = true;
 							temperatureMenu.SetActive(true);
 
-							//Debug.Log ("isTemperatureModusActive = true");
+							Debug.Log ("isTemperatureModusActive = true");
 
-							labelScript.displayLabel (controlPoint, labelScriptObject);
 							bufferCounter = 0;
-
 
 						}
 					}
 
 				} else {
-
+					
 					bufferCounter = 0;
 
 					if (isTemperatureModusActive == true) {
 
 						if (Gestures.isPositionGesture == true) {
 
+							labelScriptObject.SetActive (true);
 							controlPoint = Gestures.controlPoint;
 
 							checkForTouchEvents ();
 						}
-					}
+					} else {
+						
+						labelScriptObject.SetActive (false);
 
+					}
 				}
 			}
+
+			//GroupA
 			if (MainMenu.isGroupAActive == true) {
 
 				if (Gestures.isTemperatureGesture == true) {
@@ -201,33 +207,45 @@ public class ColorTemperature : MonoBehaviour {
 	//for groupB
 	void checkForTouchEvents(){
 
+		//Debug.Log ("checkForTouchEvents");
+
 		if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyGUILayer)) {			
 
 			hitTile = hitObject.collider.gameObject;
+			Vector3 hitTilePos = hitTile.transform.position;
 			//Debug.Log ("hittile: " + hitTile.ToString ());
 
-			float distanceToGoal = Vector3.Distance (hitTile.transform.position, controlPoint);
-			//Debug.Log ("Distance: " + distanceToGoal.ToString ());
-			if (distanceToGoal <= 0.05f) {
+			float distanceToGoal = Vector3.Distance (hitTilePos, controlPoint);
+			Debug.Log ("Distance: " + distanceToGoal.ToString ());
 
-				changeTemperatureColor (hitTile, light);
+			if (distanceToGoal <= .1f) {
 
+				currentColor = hitTile.GetComponent<Renderer>().material.color;
+
+				if(((currentColor.r != newColor.r) && (currentColor.r != newColor.r))
+					&& ((currentColor.g != newColor.g) && (currentColor.g != newColor.g))
+					|| ((currentColor.g != newColor.g) && (currentColor.g != newColor.g))
+					&& ((currentColor.b != newColor.b) && (currentColor.b != newColor.b))
+					|| ((currentColor.r != newColor.r) && (currentColor.r != newColor.r))
+					&& ((currentColor.b != newColor.b) && (currentColor.b != newColor.b)) ){
+
+					changeTemperatureColor (currentColor, light);
+
+				}
 			}
 		}
 	}
 
 	//for groupB
-	void changeTemperatureColor(GameObject hitTile, GameObject light){
+	void changeTemperatureColor(Color32 currentColor, GameObject light){
 		
-		currentColor = hitTile.GetComponent<Renderer>().material.color;
+		//currentColor = hitTile.GetComponent<Renderer>().material.color;
 		//Debug.Log ("color : " + currentColor.ToString ());
 
 		lightSource = light.GetComponentInChildren<Light> ();
 		lightSource.color = currentColor;
 
 	}
-
-
 	
 	//for groupA
 	void calculateHorizontalRange(Vector3 currentPosition, Color32 currentColor){
