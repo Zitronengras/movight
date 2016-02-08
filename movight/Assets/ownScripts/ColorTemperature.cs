@@ -118,6 +118,11 @@ public class ColorTemperature : MonoBehaviour {
 				
 				if (Gestures.isTemperatureGesture == true) {
 
+					controlPoint = Gestures.controlPoint;
+
+					//labelScriptObject.SetActive (true);
+					labelScript.displayLabel (controlPoint, labelScriptObject);
+
 					//Debug.Log ("TemperatureGesture ##########################");
 
 					bufferCounter += 1;
@@ -126,7 +131,7 @@ public class ColorTemperature : MonoBehaviour {
 
 						if (isTemperatureModusActive == true) {
 
-							labelScriptObject.SetActive(false);
+							//labelScriptObject.SetActive(false);
 							isTemperatureModusActive = false;
 							temperatureMenu.SetActive(false);
 
@@ -153,12 +158,19 @@ public class ColorTemperature : MonoBehaviour {
 
 					if (isTemperatureModusActive == true) {
 
+						labelScript.displayLabel (controlPoint, labelScriptObject);
+
 						if (Gestures.isPositionGesture == true) {
 
-							labelScriptObject.SetActive (true);
+							//labelScriptObject.SetActive (true);
+							labelScript.displayLabel (controlPoint, labelScriptObject);
 							controlPoint = Gestures.controlPoint;
 
 							checkForTouchEvents ();
+						} else {
+
+							labelScriptObject.SetActive (false);
+
 						}
 					} else {
 						
@@ -368,7 +380,7 @@ public class ColorTemperature : MonoBehaviour {
 	//for groupA
 	void checkForMeaningfulChangesOnScreenX(float currentXOnScreen){
 
-		changeValue = 1.0f; // 20
+		changeValue = 20.0f; // 20
 
 		compareAddition = lastXOnScreen + changeValue;
 		compareSubstraction = lastXOnScreen - changeValue;	

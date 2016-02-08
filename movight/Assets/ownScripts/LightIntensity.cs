@@ -72,9 +72,9 @@ public class LightIntensity : MonoBehaviour {
 
 		camera = Camera.main;
 
-		labelScriptObject = GameObject.Find ("IntensityLabelObjectNew");
+		labelScriptObject = GameObject.Find ("IntensityLabelObject");
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
-		labelScriptObject.SetActive(false);
+		//labelScriptObject.SetActive(false);
 
 		intensityUpDown = GameObject.Find ("IntensityUpDown");
 		intensityUpDown.SetActive(false);
@@ -92,27 +92,33 @@ public class LightIntensity : MonoBehaviour {
 				
 				//Debug.Log ("im intensity script******************************************************");
 
-				labelScriptObject.SetActive(true);
-				labelScript.displayLabel (controlPoint, labelScriptObject);
-				lightSource = light.GetComponentInChildren<Light> ();
-				intensity = lightSource.intensity;
-
 				controlPoint = Gestures.controlPoint;
+
+				//labelScriptObject.SetActive(true);
+				labelScript.displayLabel (controlPoint, labelScriptObject);
+
+				//lightSource = light.GetComponentInChildren<Light> ();
+				//intensity = lightSource.intensity;
 				checkForMeaningfulChangesEntrance (controlPoint);
 
 				if (intensityShouldChange == true) {
 
+					lightSource = light.GetComponentInChildren<Light> ();
+					intensity = lightSource.intensity;
+
 					intensityUpDown.SetActive (true);
 					changeIntensity (controlPoint, intensity, lightSource);
 
-				} else {
+				} /* else {
 
 					intensityUpDown.SetActive(false);
 
-				}
+				}*/
 			} else {
 
-				labelScriptObject.SetActive(false);
+				//TODO
+				//labelScriptObject.SetActive(false);
+
 				//intensityUp.SetActive(false);
 
 			}

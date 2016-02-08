@@ -31,6 +31,8 @@ public class HandFeedback : MonoBehaviour {
 
 		label.SetActive(true);
 
+		Debug.Log ("LABEL : " + label.ToString ());
+
 		palmCenter = controlPoint;
 		length = controlPoint.magnitude;
 
