@@ -65,10 +65,8 @@ public class ColorTemperature : MonoBehaviour {
 	//getColor
 	float widthOfOneColumn;
 
-	//Color32 colorNew = new Color32 (0, 0, 0, 1);
-
 	/////////////////////////////////////////////
-	//new modus
+	//groupA
 	public static bool isTemperatureModusActive = false;
 
 	int bufferMax = 30; //SelectLight.waitCountdown;
@@ -83,12 +81,10 @@ public class ColorTemperature : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		camera = Camera.main; // GetComponent<Camera>;
-		//Debug.Log ("Camera: " + camera.ToString ());
+		camera = Camera.main;
 		labelScriptObject = GameObject.Find("TemperatureLabelObject");
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
-
 
 		if (MainMenu.isGroupAActive == true) {
 			
@@ -96,22 +92,17 @@ public class ColorTemperature : MonoBehaviour {
 			numberOfColumns = temperatureColors.Length;
 			percentagWidthOfOneColumn = 100 / numberOfColumns;
 
-
 		}
 
 		temperatureUpDown = GameObject.Find ("TemperatureUpDown");
 		temperatureUpDown.SetActive(false);
 
-		//////////////
 		onlyGUILayer = 1 << LayerMask.NameToLayer("temperatureMenu");
-		//Debug.Log("find layer" + onlyGUILayer.ToString());
 
 		if (MainMenu.isGroupAActive == false) {
 			temperatureMenu = GameObject.Find ("TemperatureMenu");
 			temperatureMenu.SetActive(false);
-		}
-
-			
+		}			
 	}
 	
 	// Update is called once per frame
@@ -182,16 +173,13 @@ public class ColorTemperature : MonoBehaviour {
 
 						if (temperatureShouldChange == true) {
 							
-							Debug.Log ("temperature should change*****************");
 							lightSource = light.GetComponentInChildren<Light> ();
 							currentColor = lightSource.color;
-							Debug.Log ("lightSource color: " + currentColor.ToString ());
 
 							temperatureUpDown.SetActive (true);
 							changeTemperature (controlPoint, lightSource, currentColor);
 
 						} else {
-							Debug.Log ("temperature should NOT change#########");
 
 							temperatureUpDown.SetActive (false);
 							Progressbar.resetProgressbar ();
@@ -387,7 +375,6 @@ public class ColorTemperature : MonoBehaviour {
 			}
 		} else {
 			progressbarInAction = false;
-			Debug.Log ("weg vom counter");
 			Progressbar.resetProgressbar ();
 			changeXCounter = 0;
 		}
