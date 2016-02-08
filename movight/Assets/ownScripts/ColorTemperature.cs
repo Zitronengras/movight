@@ -35,7 +35,7 @@ public class ColorTemperature : MonoBehaviour {
 	float maxScreenRange;
 	float onePercentOfScreenRange;
 
-	float numberOfColumns = 39.0f;
+	float numberOfColumns; // = 39.0f;
 	//checkForMeaningfulChangesX
 	float lastXOnScreen = 0;
 	float compareAddition;
@@ -64,6 +64,8 @@ public class ColorTemperature : MonoBehaviour {
 	//getColor
 	float widthOfOneColumn;
 
+	Color32 colorNew = new Color (0, 0, 0, 1);
+
 	/////////////////////////////////////////////
 	//new modus
 	public static bool isTemperatureModusActive = false;
@@ -91,6 +93,7 @@ public class ColorTemperature : MonoBehaviour {
 		if (MainMenu.isGroupAActive == true) {
 			
 			fillColorArray (temperatureColors);
+			numberOfColumns = temperatureColors.Length;
 
 		}
 
@@ -187,6 +190,7 @@ public class ColorTemperature : MonoBehaviour {
 
 
 						if (temperatureShouldChange == true) {
+							
 							Debug.Log ("temperature should change*****************");
 							lightSource = light.GetComponentInChildren<Light> ();
 							currentColor = lightSource.color;
@@ -194,7 +198,7 @@ public class ColorTemperature : MonoBehaviour {
 
 							temperatureUpDown.SetActive (true);
 							changeTemperature (controlPoint, lightSource, currentColor);
-							bufferCounter = 0;
+							//bufferCounter = 0;
 							//TODO bool
 
 						} else {
@@ -296,16 +300,19 @@ public class ColorTemperature : MonoBehaviour {
 
 		} else if (isHorizontalRangeCalculated == true) {
 			
-			currentOnScreenPosition = camera.WorldToScreenPoint(controlPoint);
-			currentXOnScreen = currentOnScreenPosition.x;
+			//currentOnScreenPosition = camera.WorldToScreenPoint(controlPoint);
+			//currentXOnScreen = currentOnScreenPosition.x;
 
-			checkForMeaningfulChangesOnScreenX (currentXOnScreen);
+			//checkForMeaningfulChangesOnScreenX (currentXOnScreen);
 
 			if (progressbarInAction == false) {
 				Debug.Log ("LOOKING FOR NEW COLOR");
+
+				//Debug.Log ("currentXOnScreen" + currentXOnScreen.ToString());
+
 				
-				percentagePalmPosition = getPercentagePalmPosition (currentXOnScreen);
-				lightSource.color = getColor (percentagePalmPosition, temperatureColors);
+				//percentagePalmPosition = getPercentagePalmPosition (currentXOnScreen);
+				//lightSource.color = getColor (percentagePalmPosition, temperatureColors);
 
 			}
 
@@ -322,16 +329,16 @@ public class ColorTemperature : MonoBehaviour {
 	float getPercentagePalmPosition(float currentXOnScreen){
 		Debug.Log ("getPercentagePalmPosition()");
 
-		currentPalmMinXDistance = currentXOnScreen - minScreenRange;
-		currentPercentagePalmPosition = (100 / screenXRange) * currentPalmMinXDistance;
+		/*currentPalmMinXDistance = currentXOnScreen - minScreenRange;
+		currentPercentagePalmPosition = ((100.0f / screenXRange) * currentPalmMinXDistance);
 
-		if (currentPercentagePalmPosition > 100) {
-			currentPercentagePalmPosition = 100;
-		} else if (currentPercentagePalmPosition < 0) {
-			currentPercentagePalmPosition = 0;
-		}
+		if (currentPercentagePalmPosition > 100.0f) {
+			currentPercentagePalmPosition = 100.0f;
+		} else if (currentPercentagePalmPosition < 0.0f) {
+			currentPercentagePalmPosition = 0.0f;
+		}*/
 
-		return currentPercentagePalmPosition;
+		return 50.0f; //currentPercentagePalmPosition;
 
 	}
 	//for groupA
@@ -387,7 +394,7 @@ public class ColorTemperature : MonoBehaviour {
 		Debug.Log ("checkForMeaningfulChangesOnScreenX()");
 
 
-		changeValue = 20.0f; // 20
+		changeValue = .000001f; // 20
 
 		compareAddition = lastXOnScreen + changeValue;
 		compareSubstraction = lastXOnScreen - changeValue;	
@@ -415,6 +422,7 @@ public class ColorTemperature : MonoBehaviour {
 				isHorizontalRangeCalculated = false;
 
 				changeXCounter = 0;
+				bufferCounter = 0;
 
 			}
 		} else {
@@ -431,9 +439,23 @@ public class ColorTemperature : MonoBehaviour {
 	Color32 getColor(float percentagePosition, Color[]temperatureColors){
 		Debug.Log ("getColor()");
 
-		widthOfOneColumn = temperaturePositionRange / numberOfColumns; //39 columns in 0.40 positionRange	
+		//widthOfOneColumn = temperaturePositionRange / numberOfColumns; //39 columns in 0.40 positionRange	
 
-		if (percentagePosition >= 0 && percentagePosition <= percentagWidthOfOneColumn) {
+
+		//if (percentagePosition >= 0 && percentagePosition <= percentagWidthOfOneColumn) {
+			//color = temperatureColors [0];
+		/* } else if (percentagePosition >  percentagWidthOfOneColumn && percentagePosition <= (percentagWidthOfOneColumn * 2)) {
+			color = temperatureColors [1];
+		} else if (percentagePosition > (percentagWidthOfOneColumn * 2) && percentagePosition <= (percentagWidthOfOneColumn * 3)) {
+			color = temperatureColors [2];
+		} else if (percentagePosition > (percentagWidthOfOneColumn * 3) && percentagePosition <= (percentagWidthOfOneColumn * 4)) {
+			color = temperatureColors [3];
+		} else if (percentagePosition > (percentagWidthOfOneColumn * 4) && percentagePosition <= (percentagWidthOfOneColumn * 5)) {
+			color = temperatureColors [4];
+		}
+
+
+		/* if (percentagePosition >= 0 && percentagePosition <= percentagWidthOfOneColumn) {
 			color = temperatureColors [0];
 		} else if (percentagePosition >  percentagWidthOfOneColumn && percentagePosition <= (percentagWidthOfOneColumn * 2)) {
 			color = temperatureColors [1];
@@ -511,16 +533,36 @@ public class ColorTemperature : MonoBehaviour {
 			color = temperatureColors [37];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 38) && percentagePosition <= (percentagWidthOfOneColumn * 39)) { // 100%
 			color = temperatureColors [38];
-		}
+		} */
 
-		return color;
+		return colorNew; //color;
 
 	}
 	//for groupA
 	void fillColorArray(Color[] temperatureColors){
 
-
 		temperatureColors[0] = new Color32 (227, 24, 23, 1);
+
+
+		//temperatureColors[1] = new Color32 (255, 219, 0, 1);
+
+	
+		//temperatureColors[12] = new Color32 (252, 238, 69, 1);
+	
+	
+		//temperatureColors[2] = new Color32 (255, 255, 255, 1); //white
+	
+
+		//temperatureColors[26] = new Color32 (2, 172, 228, 1);
+
+
+		//temperatureColors[3] = new Color32 (0, 154, 220, 1);
+
+	
+		//temperatureColors[4] = new Color32 (12, 118, 185, 1);
+
+
+		/* temperatureColors[0] = new Color32 (227, 24, 23, 1);
 		temperatureColors[1] = new Color32 (233, 92, 14, 1);
 		temperatureColors[2] = new Color32 (239, 131, 1, 1);
 		temperatureColors[3] = new Color32 (246, 165, 0, 1);
@@ -559,6 +601,7 @@ public class ColorTemperature : MonoBehaviour {
 		temperatureColors[36] = new Color32 (1, 135, 200, 1);
 		temperatureColors[37] = new Color32 (6, 127, 193, 1);
 		temperatureColors[38] = new Color32 (12, 118, 185, 1);
+		*/
 	
 	}
 
