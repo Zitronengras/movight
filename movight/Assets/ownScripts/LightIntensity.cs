@@ -87,7 +87,7 @@ public class LightIntensity : MonoBehaviour {
 
 			light = SelectLight.light; //selected light		
 
-			if (Gestures.isIntensityGesture) {
+			if (Gestures.isIntensityGesture == true) {
 				
 				//Debug.Log ("im intensity script******************************************************");
 
@@ -99,7 +99,7 @@ public class LightIntensity : MonoBehaviour {
 				controlPoint = Gestures.controlPoint;
 				checkForMeaningfulChangesEntrance (controlPoint);
 
-				if (intensityShouldChange) {
+				if (intensityShouldChange == true) {
 
 					intensityUpDown.SetActive (true);
 					changeIntensity (controlPoint, intensity, lightSource);

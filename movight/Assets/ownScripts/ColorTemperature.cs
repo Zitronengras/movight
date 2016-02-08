@@ -65,7 +65,7 @@ public class ColorTemperature : MonoBehaviour {
 	//new modus
 	public static bool isTemperatureModusActive = false;
 
-	int bufferMax = 40;
+	int bufferMax = 40; //SelectLight.waitCountdown;
 
 
 	//Raycast
@@ -87,7 +87,7 @@ public class ColorTemperature : MonoBehaviour {
 
 		percentagWidthOfOneColumn = 100 / numberOfColumns;
 
-		if (MainMenu.isGroupAActive) {
+		if (MainMenu.isGroupAActive == true) {
 			
 			fillColorArray (temperatureColors);
 
@@ -100,7 +100,7 @@ public class ColorTemperature : MonoBehaviour {
 		onlyGUILayer = 1 << LayerMask.NameToLayer("temperatureMenu");
 		//Debug.Log("find layer" + onlyGUILayer.ToString());
 
-		if (!MainMenu.isGroupAActive) {
+		if (MainMenu.isGroupAActive == false) {
 			temperatureMenu = GameObject.Find ("TemperatureMenu");
 			temperatureMenu.SetActive(false);
 		}
@@ -112,24 +112,21 @@ public class ColorTemperature : MonoBehaviour {
 	void Update ()
 	{
 
-		if (SelectLight.isLightSelected) {
+		if (SelectLight.isLightSelected == true) {
 
 			light = SelectLight.light; //selected light	
 
-			if (!MainMenu.isGroupAActive) {
-				if (Gestures.isTemperatureGesture) {
+			if (MainMenu.isGroupAActive == false) {
+				
+				if (Gestures.isTemperatureGesture == true) {
 
 					//Debug.Log ("TemperatureGesture ##########################");
-
-					if (!MainMenu.isGroupAActive) {
-
-					}
 
 					bufferCounter += 1;
 
 					if (bufferCounter >= bufferMax) {
 
-						if (isTemperatureModusActive) {
+						if (isTemperatureModusActive == true) {
 
 							isTemperatureModusActive = false;
 							temperatureMenu.SetActive(false);
@@ -139,7 +136,7 @@ public class ColorTemperature : MonoBehaviour {
 							bufferCounter = 0;
 
 
-						} else if (!isTemperatureModusActive) {
+						} else if (isTemperatureModusActive == false) {
 
 							isTemperatureModusActive = true;
 							temperatureMenu.SetActive(true);
@@ -157,9 +154,9 @@ public class ColorTemperature : MonoBehaviour {
 
 					bufferCounter = 0;
 
-					if (isTemperatureModusActive) {
+					if (isTemperatureModusActive == true) {
 
-						if (Gestures.isPositionGesture) {
+						if (Gestures.isPositionGesture == true) {
 
 							controlPoint = Gestures.controlPoint;
 
@@ -169,10 +166,12 @@ public class ColorTemperature : MonoBehaviour {
 
 				}
 			}
-			if (MainMenu.isGroupAActive) {
+			if (MainMenu.isGroupAActive == true) {
 
-				if (Gestures.isTemperatureGesture) {
-					
+				if (Gestures.isTemperatureGesture == true) {
+
+					Debug.Log ("Gesture is true ***************");
+
 					labelScript.displayLabel (controlPoint, labelScriptObject);
 
 					bufferCounter += 1;
@@ -187,7 +186,7 @@ public class ColorTemperature : MonoBehaviour {
 
 						checkForMeaningfulChanges (controlPoint);
 
-						if (temperatureShouldChange) {
+						if (temperatureShouldChange == true) {
 
 							temperatureUpDown.SetActive (true);
 							changeTemperature (controlPoint, lightSource, currentColor);

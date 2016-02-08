@@ -29,8 +29,8 @@ public class SelectLight : MonoBehaviour{
 	public static bool isLightHit = false;
 	public static bool isLightSelected = false;
 	int hitCounter = 0;
-	public static int deselectCountdown = 20;
-	public static int waitCountdown = 30; //15;
+	public static int deselectCountdown = 40;
+	public static int waitCountdown = 40; //15;
 
 	int bufferCounter = 0;
 	int bufferMax = 50;

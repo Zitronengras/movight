@@ -77,17 +77,25 @@ public class Gestures : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		//TEST
-
-
-		if (controller.IsConnected) {
+		if (controller.IsConnected == true) {
 			frame = controller.Frame ();
 		} else {
 			Debug.Log("no controller found");
+		}		
+
+		if (frame.IsValid) {
+
+			checkForGesture ();
+
+		} else {
+
+			Progressbar.resetProgressbar ();
+			isSelectGesture = false;
+			isIntensityGesture = false;	
+			isPositionGesture = false;
+			isTemperatureGesture = false;
+
 		}
-
-		checkForGesture ();
-
 	}
 
 	void checkForGesture(){
@@ -97,24 +105,15 @@ public class Gestures : MonoBehaviour {
 
 		//iterate detected hands
 		if (!frame.Hands.IsEmpty) {
-			for(int i = 0; i < frame.Hands.Count; i++){
+			for (int i = 0; i < frame.Hands.Count; i++) {
 
-				currentHand = allHandsInFrame[i];
+				currentHand = allHandsInFrame [i];
 
 				//check for valid data
 				if (currentHand.IsValid) {
 					if (currentHand.IsRight) {
 						rightHand = currentHand;
 						//Debug.Log ("Found right hand" + rightHand);
-
-						/*
-						controller.EnableGesture (Gesture.GestureType.TYPE_CIRCLE);
-						controller.EnableGesture (Gesture.GestureType.TYPE_KEY_TAP);
-						controller.EnableGesture (Gesture.GestureType.TYPE_SCREEN_TAP);
-						controller.EnableGesture (Gesture.GestureType.TYPE_SWIPE);
-
-						checkForScreenTapGesture ();*/
-
 
 						if (SelectLight.isLightSelected == false) { //when no light is selected
 
@@ -141,7 +140,7 @@ public class Gestures : MonoBehaviour {
 								checkForPositionGesture (rightHand);
 
 							}
-							if (!MainMenu.isGroupAActive) { //groupB
+							if (MainMenu.isGroupAActive == false) { //groupB
 								
 								if (ColorTemperature.isTemperatureModusActive) {
 
@@ -159,8 +158,8 @@ public class Gestures : MonoBehaviour {
 
 								}
 							}
-							if (MainMenu.isGroupAActive) {
-								if (ColorTemperature.temperatureShouldChange) {//if color is changing
+							if (MainMenu.isGroupAActive == true) {
+								if (ColorTemperature.temperatureShouldChange == true) {//if color is changing
 									
 									isSelectGesture = false;
 									isIntensityGesture = false;	
@@ -177,10 +176,36 @@ public class Gestures : MonoBehaviour {
 								}
 							} 
 						}
+					} else{
+						Progressbar.resetProgressbar ();
+
+						isSelectGesture = false;
+						isIntensityGesture = false;	
+						isPositionGesture = false;
+						isTemperatureGesture = false;
+
 					}
+				} else{
+					Progressbar.resetProgressbar ();
+
+					isSelectGesture = false;
+					isIntensityGesture = false;	
+					isPositionGesture = false;
+					isTemperatureGesture = false;
+
 				}
 			}
+		} else{
+
+			Progressbar.resetProgressbar ();
+
+			isSelectGesture = false;
+			isIntensityGesture = false;	
+			isPositionGesture = false;
+			isTemperatureGesture = false;
+
 		}
+
 	}
 
 	void checkForSelectGesture(Hand rightHand){
@@ -216,7 +241,7 @@ public class Gestures : MonoBehaviour {
 					headRotation = Cardboard.SDK.HeadRotation;
 					tmpControlPoint = (headRotation * rotHMDIndexFingerTip);
 
-					controlPoint = Quaternion.Euler (0, 4, 0) * tmpControlPoint;
+					controlPoint = Quaternion.Euler (0, 3, 0) * tmpControlPoint;
 
 
 					Debug.DrawRay (handControllerPos, controlPoint, Color.red, 2.0f, true);
@@ -276,7 +301,7 @@ public class Gestures : MonoBehaviour {
 
 
 					tmpControlPoint = (headRotation * rotHMDIndexFingerTip);
-					controlPoint = Quaternion.Euler (0, 4, 0) * tmpControlPoint;
+					controlPoint = Quaternion.Euler (0, 3, 0) * tmpControlPoint;
 
 					Debug.DrawRay (handControllerPos, controlPoint, Color.cyan, 2.0f, true);
 

@@ -28,12 +28,13 @@ public class Progressbar : MonoBehaviour {
 
 		progressbarObject.SetActive (true);
 
-		progressbarObject.gameObject.transform.localScale += new Vector3((0.1f / SelectLight.waitCountdown), 0, 0);
+		progressbarObject.gameObject.transform.localScale += new Vector3((1f / SelectLight.waitCountdown), 0, 0); //TODO change 0.1 ; 0,0
 		currentPos = progressbarObject.transform.position;
 		currentX = currentPos.x;
-		currentX = (currentX + ((0.1f / SelectLight.waitCountdown)/2));
+		currentX = (currentX + ((0.3f / SelectLight.waitCountdown)/2)); //TODO change 0.1
 		currentPos.x = currentX;
-		progressbarObject.transform.position = currentPos;
+		//Debug.Log ("current X position" + currentX.ToString ());
+		//progressbarObject.transform.position = currentPos;
 		//Debug.Log ("position.x" + progressbarObject.transform.position.x.ToString ());
 
 	}
@@ -46,7 +47,7 @@ public class Progressbar : MonoBehaviour {
 		progressbarObject.transform.position = progressbarStartPosition;
 		//Debug.Log ("ausmaße progressbar lossyScale vorher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
 
-		progressbarObject.gameObject.transform.localScale = new Vector3 (0f, 0.003f, 0.001f); // 0.003f, 0.001f);
+		progressbarObject.gameObject.transform.localScale = new Vector3 (0f, 0.05f, 0.001f); // 0.003f, 0.001f);
 		//Debug.Log ("ausmaße progressbar lossyScale nacher: " + progressbarObject.gameObject.transform.lossyScale.ToString ());
 
 	}
