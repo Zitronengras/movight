@@ -11,10 +11,11 @@ public class ColorTemperature : MonoBehaviour {
 	GameObject light;
 	Light lightSource;
 	Color32 currentColor;
+	Color32 newColor;
 	Vector3 controlPoint;
 	Camera camera;
 
-	int bufferCounter = 0;
+	int bufferCounter = 0; //BAD!!!
 	//int bufferMax = 30;
 
 	//checkForMeaningfulChangesEntrance
@@ -35,7 +36,7 @@ public class ColorTemperature : MonoBehaviour {
 	float maxScreenRange;
 	float onePercentOfScreenRange;
 
-	float numberOfColumns = 39.0f;
+	float numberOfColumns; // = 39.0f;
 	//checkForMeaningfulChangesX
 	float lastXOnScreen = 0;
 	float compareAddition;
@@ -44,11 +45,11 @@ public class ColorTemperature : MonoBehaviour {
 	float currentXOnScreen;
 	float screenXRange = 280.0f;
 	float temperaturePositionRange = 40.0f;
-	Color color = new Color32();
+	Color32 color; // = new Color32();
 
 	//changeTemperature
 	Vector3 currentOnScreenPosition;
-	Color[] temperatureColors = new Color[39];
+	Color32[] temperatureColors = new Color32[39]; //39];
 	float percentageTemperaturValue;
 	float percentagePalmPosition;
 
@@ -64,11 +65,13 @@ public class ColorTemperature : MonoBehaviour {
 	//getColor
 	float widthOfOneColumn;
 
+	//Color32 colorNew = new Color32 (0, 0, 0, 1);
+
 	/////////////////////////////////////////////
 	//new modus
 	public static bool isTemperatureModusActive = false;
 
-	int bufferMax = 40; //SelectLight.waitCountdown;
+	int bufferMax = 30; //SelectLight.waitCountdown;
 
 
 	//Raycast
@@ -86,11 +89,13 @@ public class ColorTemperature : MonoBehaviour {
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
 
-		percentagWidthOfOneColumn = 100 / numberOfColumns;
 
 		if (MainMenu.isGroupAActive == true) {
 			
 			fillColorArray (temperatureColors);
+			numberOfColumns = temperatureColors.Length;
+			percentagWidthOfOneColumn = 100 / numberOfColumns;
+
 
 		}
 
@@ -171,31 +176,19 @@ public class ColorTemperature : MonoBehaviour {
 
 				if (Gestures.isTemperatureGesture == true) {
 
-					//Debug.Log ("Gesture is true ***************");
-
 					labelScript.displayLabel (controlPoint, labelScriptObject);
 
-					bufferCounter += 1;
-
-					if (bufferCounter >= bufferMax) {
-					
-						//Debug.Log ("im color temperature script********************");
-
-						//lightSource = light.GetComponentInChildren<Light> ();
 						controlPoint = Gestures.controlPoint;
-						//currentColor = lightSource.color;
-
 
 						if (temperatureShouldChange == true) {
+							
 							Debug.Log ("temperature should change*****************");
 							lightSource = light.GetComponentInChildren<Light> ();
 							currentColor = lightSource.color;
-
+							Debug.Log ("lightSource color: " + currentColor.ToString ());
 
 							temperatureUpDown.SetActive (true);
 							changeTemperature (controlPoint, lightSource, currentColor);
-							bufferCounter = 0;
-							//TODO bool
 
 						} else {
 							Debug.Log ("temperature should NOT change#########");
@@ -205,7 +198,6 @@ public class ColorTemperature : MonoBehaviour {
 							checkForMeaningfulChangesEntrance (controlPoint);
 
 						}
-					}
 
 				} else {
 					labelScriptObject.SetActive(false);
@@ -217,11 +209,6 @@ public class ColorTemperature : MonoBehaviour {
 	
 		}
 	}
-		//	}
-
-		//}
-	//}
-
 
 	//for groupB
 	void checkForTouchEvents(){
@@ -238,11 +225,7 @@ public class ColorTemperature : MonoBehaviour {
 				changeTemperatureColor (hitTile, light);
 
 			}
-
 		}
-
-
-
 	}
 
 	//for groupB
@@ -255,12 +238,11 @@ public class ColorTemperature : MonoBehaviour {
 		lightSource.color = currentColor;
 
 	}
-//}
+
 
 	
 	//for groupA
-	void calculateHorizontalRange(Vector3 currentPosition, Color currentColor){
-		Debug.Log ("calculateHorizontalRange()");
+	void calculateHorizontalRange(Vector3 currentPosition, Color32 currentColor){
 
 		//convert currentPosition into 2D (screen)
 		onScreenPosition = camera.WorldToScreenPoint(currentPosition);
@@ -287,7 +269,6 @@ public class ColorTemperature : MonoBehaviour {
 
 	//for groupA
 	void changeTemperature(Vector3 controlPoint, Light lightSource, Color32 currentColor){
-		Debug.Log ("changeTemperature()");
 
 		if (isHorizontalRangeCalculated == false) {
 
@@ -302,41 +283,40 @@ public class ColorTemperature : MonoBehaviour {
 			checkForMeaningfulChangesOnScreenX (currentXOnScreen);
 
 			if (progressbarInAction == false) {
-				Debug.Log ("LOOKING FOR NEW COLOR");
-				
+
 				percentagePalmPosition = getPercentagePalmPosition (currentXOnScreen);
-				lightSource.color = getColor (percentagePalmPosition, temperatureColors);
+				newColor = getColor (percentagePalmPosition, temperatureColors);
 
+				if(((currentColor.r != newColor.r) && (currentColor.r != newColor.r))
+					&& ((currentColor.g != newColor.g) && (currentColor.g != newColor.g))
+					|| ((currentColor.g != newColor.g) && (currentColor.g != newColor.g))
+					&& ((currentColor.b != newColor.b) && (currentColor.b != newColor.b))
+					|| ((currentColor.r != newColor.r) && (currentColor.r != newColor.r))
+					&& ((currentColor.b != newColor.b) && (currentColor.b != newColor.b)) ){
+
+					lightSource.color = newColor;
+				}
 			}
-
-
-			//Debug.Log ("currentX: " + currentXOnScreen);
-
-
-			//Debug.Log ("neue Farbe: " + getColor (percentagePalmPosition, temperatureColors).ToString ());
-
 		}
-			
 	}
+
 	//for groupA
 	float getPercentagePalmPosition(float currentXOnScreen){
-		Debug.Log ("getPercentagePalmPosition()");
 
 		currentPalmMinXDistance = currentXOnScreen - minScreenRange;
-		currentPercentagePalmPosition = (100 / screenXRange) * currentPalmMinXDistance;
+		currentPercentagePalmPosition = ((100.0f / screenXRange) * currentPalmMinXDistance);
 
-		if (currentPercentagePalmPosition > 100) {
-			currentPercentagePalmPosition = 100;
-		} else if (currentPercentagePalmPosition < 0) {
-			currentPercentagePalmPosition = 0;
+		if (currentPercentagePalmPosition > 100.0f) {
+			currentPercentagePalmPosition = 100.0f;
+		} else if (currentPercentagePalmPosition < 0.0f) {
+			currentPercentagePalmPosition = 0.0f;
 		}
-
 		return currentPercentagePalmPosition;
 
 	}
+
 	//for groupA
 	float getPercentageTemperatureValue(Color32 currentColor){
-		Debug.Log ("getPercentageTemperatureValue()");
 
 		for (int i = 0; i < temperatureColors.Length; i++) {
 
@@ -344,15 +324,11 @@ public class ColorTemperature : MonoBehaviour {
 				percentageTemperaturValue = ((100 / numberOfColumns) * i);
 			}
 		}
-
 		return percentageTemperaturValue;
 	}
 
 	//for groupA
 	void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
-
-		Debug.Log ("checkForMeaningfulChangesEntrance()");
-
 
 		changeValue = 0.001f; //0.0001f;
 		newPosition = controlPoint;
@@ -382,31 +358,23 @@ public class ColorTemperature : MonoBehaviour {
 		lastPosition = controlPoint;
 
 	}
+
 	//for groupA
 	void checkForMeaningfulChangesOnScreenX(float currentXOnScreen){
-		Debug.Log ("checkForMeaningfulChangesOnScreenX()");
 
-
-		changeValue = 20.0f; // 20
+		changeValue = 1.0f; // 20
 
 		compareAddition = lastXOnScreen + changeValue;
 		compareSubstraction = lastXOnScreen - changeValue;	
-		Debug.Log ("currentXOnScreen: " + currentXOnScreen.ToString ());
 
 		if (currentXOnScreen <= compareAddition && currentXOnScreen >= compareSubstraction) {
 
 			progressbarInAction = true;
-			Debug.Log ("progressbar in action");
 
-			//Progressbar.fillProgressbar (changeXCounter);
+			Progressbar.fillProgressbar (changeXCounter);
 			changeXCounter += 1;
-			//temperatureShouldChange = false;
 
-			Debug.Log ("changeXCounter: " + changeXCounter.ToString ());
-			//Debug.Log ("changeCounter " + changeCounter.ToString ());
 			if (changeXCounter == SelectLight.waitCountdown) {
-
-				Debug.Log ("eig counter zu ende");
 
 				progressbarInAction = false;
 				Progressbar.resetProgressbar ();
@@ -427,10 +395,10 @@ public class ColorTemperature : MonoBehaviour {
 		lastXOnScreen = currentXOnScreen;
 
 	}
-	//for groupA
-	Color32 getColor(float percentagePosition, Color[]temperatureColors){
-		Debug.Log ("getColor()");
 
+	//for groupA
+	Color32 getColor(float percentagePosition, Color32[]temperatureColors){
+		
 		widthOfOneColumn = temperaturePositionRange / numberOfColumns; //39 columns in 0.40 positionRange	
 
 		if (percentagePosition >= 0 && percentagePosition <= percentagWidthOfOneColumn) {
@@ -511,14 +479,13 @@ public class ColorTemperature : MonoBehaviour {
 			color = temperatureColors [37];
 		} else if (percentagePosition > (percentagWidthOfOneColumn * 38) && percentagePosition <= (percentagWidthOfOneColumn * 39)) { // 100%
 			color = temperatureColors [38];
-		}
+		} 
 
 		return color;
 
 	}
 	//for groupA
-	void fillColorArray(Color[] temperatureColors){
-
+	void fillColorArray(Color32[] temperatureColors){
 
 		temperatureColors[0] = new Color32 (227, 24, 23, 1);
 		temperatureColors[1] = new Color32 (233, 92, 14, 1);
