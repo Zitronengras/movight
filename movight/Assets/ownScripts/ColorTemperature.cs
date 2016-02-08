@@ -378,22 +378,23 @@ public class ColorTemperature : MonoBehaviour {
 
 		if (currentXOnScreen <= compareAddition && currentXOnScreen >= compareSubstraction) {
 
-				changeCounter += 1;
-				Progressbar.fillProgressbar ();
-				//Debug.Log ("changeCounter " + changeCounter.ToString ());
-				if (changeCounter == SelectLight.waitCountdown) {
+			Progressbar.fillProgressbar (changeCounter);
+			changeCounter += 1;
 
-					Progressbar.resetProgressbar ();
-					temperatureUpDown.SetActive (false);
-					temperatureShouldChange = false;
-					isHorizontalRangeCalculated = false;
+			//Debug.Log ("changeCounter " + changeCounter.ToString ());
+			if (changeCounter == SelectLight.waitCountdown) {
 
-					changeCounter = 0;
+				Progressbar.resetProgressbar ();
+				temperatureUpDown.SetActive (false);
+				temperatureShouldChange = false;
+				isHorizontalRangeCalculated = false;
 
-				}
+				changeCounter = 0;
+
+			}
 		} else {
-			changeCounter = 0;
 			Progressbar.resetProgressbar ();
+			changeCounter = 0;
 		}
 
 		lastXOnScreen = currentXOnScreen;

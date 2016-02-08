@@ -37,8 +37,8 @@ public class LightIntensity : MonoBehaviour {
 
 	//changeIntensity
 	float newIntensity;
-	int beforeChangeBuffer = 30;
-	int buffer = 0;
+	//int beforeChangeBuffer = 30;
+	//int buffer = 0;
 	float percentageOnScreenPalmPosition;
 
 	//getPercentageIntensity
@@ -58,6 +58,7 @@ public class LightIntensity : MonoBehaviour {
 	Vector3 newPosition;
 	Vector3 lastPosition;
 	int changeCounter = 0;
+	int entranceChangeCounter = 0;
 	public static bool intensityShouldChange = false;
 
 	//checkForMeaningfulYChanges
@@ -173,9 +174,6 @@ public class LightIntensity : MonoBehaviour {
 		}
 		if (isVerticalRangeCalculated == true) {
 
-
-			//buffer += 1;
-
 			onScreenPosition = camera.WorldToScreenPoint (controlPoint);
 
 			currentOnScreenY = onScreenPosition.y;
@@ -184,11 +182,9 @@ public class LightIntensity : MonoBehaviour {
 
 			percentageOnScreenPalmPosition = getPercentageFistPosition (currentOnScreenY);
 			newIntensity = ((possibleMax / 100.0f) * percentageOnScreenPalmPosition); 
-			Debug.Log ("new intensity: " + newIntensity.ToString ());
+			//Debug.Log ("new intensity: " + newIntensity.ToString ());
 			lightSource.intensity = newIntensity;
-
-			//if (buffer >= beforeChangeBuffer) {
-			//}
+		
 		}
 
 	}
@@ -197,7 +193,7 @@ public class LightIntensity : MonoBehaviour {
 		
 		//Debug.Log ("currentY: " + currentY.ToString ());
 		currentPositionDistance = currentOnScreenY - minYIntensityRange; 
-		Debug.Log ("currentPositionDistance: " + currentPositionDistance.ToString ());
+		//Debug.Log ("currentPositionDistance: " + currentPositionDistance.ToString ());
 
 		percentagFistY = (100 / screenYRange) * currentPositionDistance;
 
@@ -213,7 +209,7 @@ public class LightIntensity : MonoBehaviour {
 
 		}
 
-		Debug.Log ("percentageFistPosition: " + percentagFistY.ToString ());
+		//Debug.Log ("percentageFistPosition: " + percentagFistY.ToString ());
 		return percentagFistY;
 	}
 
@@ -234,7 +230,7 @@ public class LightIntensity : MonoBehaviour {
 		}
 
 
-		Debug.Log ("percentageIntensity: " + percentageIntensity.ToString());
+		//Debug.Log ("percentageIntensity: " + percentageIntensity.ToString());
 
 		return percentageIntensity;
 	}
@@ -251,18 +247,22 @@ public class LightIntensity : MonoBehaviour {
 
 			if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {
 
-				changeCounter += 1;
+				entranceChangeCounter += 1;
 
-				if (changeCounter == SelectLight.waitCountdown) {
+				if (entranceChangeCounter == SelectLight.waitCountdown) {
 
 					intensityShouldChange = true;
 					intensityUpDown.SetActive (true);
 					isVerticalRangeCalculated = false;
 
-					changeCounter = 0;
+					entranceChangeCounter = 0;
 
 				}
+			} else {				
+				entranceChangeCounter = 0;
 			}
+		} else {				
+			entranceChangeCounter = 0;
 		}
 			
 		lastPosition = controlPoint;
@@ -278,25 +278,29 @@ public class LightIntensity : MonoBehaviour {
 
 		if ((currentPosition <= compareAddition) && (currentPosition >= compareSubstraction)) {
 			
-				changeCounter += 1;
-				Progressbar.fillProgressbar ();
-				//Debug.Log ("changeCounter " + changeCounter.ToString ());
+			Progressbar.fillProgressbar (changeCounter);
+			changeCounter += 1;
 
-				if (changeCounter == SelectLight.waitCountdown) {
 
-					Progressbar.resetProgressbar ();
-					intensityShouldChange = false;
-					intensityUpDown.SetActive (false);
-					isVerticalRangeCalculated = false;
+			if (changeCounter == SelectLight.waitCountdown) {
 
-					changeCounter = 0;
-					buffer = 0;
+				intensityShouldChange = false;
+				intensityUpDown.SetActive (false);
+				isVerticalRangeCalculated = false;
+				Progressbar.resetProgressbar ();
 
-				}
+				changeCounter = 0;
+
+			}
 		} else {
+			
 			changeCounter = 0;
 			Progressbar.resetProgressbar ();
+
 		}
+
+		Debug.Log ("changeCounter: " + changeCounter.ToString ());
+
 
 		lastYOnScreen = currentPosition;
 

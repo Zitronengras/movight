@@ -321,8 +321,8 @@ public class Position : MonoBehaviour {
 
 		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
 
+			Progressbar.fillProgressbar (xCounter);
 			xCounter += 1;
-			Progressbar.fillProgressbar ();
 
 			if (xCounter == SelectLight.deselectCountdown) {
 
@@ -342,8 +342,9 @@ public class Position : MonoBehaviour {
 
 		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
 
+
+			Progressbar.fillProgressbar (zCounter);
 			zCounter += 1;
-			Progressbar.fillProgressbar ();
 
 			if (zCounter == SelectLight.waitCountdown) {
 

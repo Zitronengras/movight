@@ -64,8 +64,8 @@ public class SelectLight : MonoBehaviour{
 
 					if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {			
 
+						Progressbar.fillProgressbar (hitCounter);
 						hitCounter += 1;
-						Progressbar.fillProgressbar ();
 
 						//Debug.Log ("hitCounter: " + hitCounter.ToString ());
 
@@ -108,8 +108,8 @@ public class SelectLight : MonoBehaviour{
 
 						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 							
+							Progressbar.fillProgressbar (hitCounter);
 							hitCounter += 1;
-							Progressbar.fillProgressbar ();
 
 							//Debug.Log ("hitCounter: " + hitCounter.ToString ());
 
@@ -142,8 +142,8 @@ public class SelectLight : MonoBehaviour{
 
 						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
+							Progressbar.fillProgressbar (hitCounter);
 							hitCounter += 1;
-							Progressbar.fillProgressbar ();
 
 							//Debug.Log ("hitCounter: " + hitCounter.ToString ());
 

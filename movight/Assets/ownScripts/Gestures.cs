@@ -89,7 +89,7 @@ public class Gestures : MonoBehaviour {
 
 		} else {
 
-			Progressbar.resetProgressbar ();
+			//Progressbar.resetProgressbar ();
 			isSelectGesture = false;
 			isIntensityGesture = false;	
 			isPositionGesture = false;
@@ -177,7 +177,7 @@ public class Gestures : MonoBehaviour {
 							} 
 						}
 					} else{
-						Progressbar.resetProgressbar ();
+						//Progressbar.resetProgressbar ();
 
 						isSelectGesture = false;
 						isIntensityGesture = false;	
@@ -186,7 +186,7 @@ public class Gestures : MonoBehaviour {
 
 					}
 				} else{
-					Progressbar.resetProgressbar ();
+					//Progressbar.resetProgressbar ();
 
 					isSelectGesture = false;
 					isIntensityGesture = false;	
@@ -197,7 +197,7 @@ public class Gestures : MonoBehaviour {
 			}
 		} else{
 
-			Progressbar.resetProgressbar ();
+			//Progressbar.resetProgressbar ();
 
 			isSelectGesture = false;
 			isIntensityGesture = false;	
