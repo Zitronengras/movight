@@ -26,7 +26,7 @@ public class Progressbar : MonoBehaviour {
 	void Update () {
 
 
-		Debug.Log ("runThrough" + runThrough.ToString ());
+		//Debug.Log ("runThrough" + runThrough.ToString ());
 		/*if(progressbarObject.activeSelf == true && justStarted == true){
 
 			progressbarStartPosition = progressbarObject.transform.position;
@@ -54,6 +54,7 @@ public class Progressbar : MonoBehaviour {
 		currentPos.y = currentY;
 		//Debug.Log ("current X position" + currentX.ToString ());
 		progressbarObject.transform.position = currentPos;
+
 		//Debug.Log ("position.x" + progressbarObject.transform.position.x.ToString ());
 
 	}
