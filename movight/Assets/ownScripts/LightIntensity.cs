@@ -74,7 +74,7 @@ public class LightIntensity : MonoBehaviour {
 
 		labelScriptObject = GameObject.Find ("IntensityLabelObject");
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
-		//labelScriptObject.SetActive(false);
+		labelScriptObject.SetActive(false);
 
 		intensityUpDown = GameObject.Find ("IntensityUpDown");
 		intensityUpDown.SetActive(false);

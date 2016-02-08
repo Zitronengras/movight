@@ -167,6 +167,13 @@ public class Gestures : MonoBehaviour {
 									isPositionGesture = false;
 									checkForTemperatureGesture (rightHand);
 
+								} else if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
+
+										isSelectGesture = false;
+										isTemperatureGesture = false;
+										isPositionGesture = false;
+										checkForIntensityGesture (rightHand);								 
+
 								} else {
 
 									checkForSelectGesture (rightHand);
