@@ -242,7 +242,7 @@ public class LightIntensity : MonoBehaviour {
 
 	void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
 
-		changeValue = 0.0015f; //0.001f;
+		changeValue = 0.0019f; //0.0015f;
 		newPosition = controlPoint;
 
 		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
@@ -285,7 +285,6 @@ public class LightIntensity : MonoBehaviour {
 			
 			Progressbar.fillProgressbar (changeCounter);
 			changeCounter += 1;
-
 
 			if (changeCounter == SelectLight.waitCountdown) {
 

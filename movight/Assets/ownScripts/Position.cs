@@ -416,7 +416,7 @@ public class Position : MonoBehaviour {
 	void checkForMeaningfulChangesZX (float newX, float newZ){//float lastX, float newX, float lastZ, float newZ){
 		Debug.Log ("checkForMeaningfulChangesZX");
 
-		float changeValue = 0.05f;
+		float changeValue = 0.07f; //0.05
 
 		Debug.Log ("lastX: " + lastX.ToString ());
 		Debug.Log ("newX " + newX.ToString ());
