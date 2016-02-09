@@ -460,7 +460,7 @@ public class Position : MonoBehaviour {
 
 	void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
 		Debug.Log ("checkForMeaningfulChangesEntrance");
-		float changeValue = 0.0015f; //0.001f;
+		float changeValue = 0.002f; //0.001f;
 		newPosition = controlPoint;
 
 		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
