@@ -276,7 +276,7 @@ public class LightIntensity : MonoBehaviour {
 
 	void checkForMeaningfulYChanges(float currentPosition){
 
-		changeYValue = 4.0f; //0.001f;
+		changeYValue = 5.0f; //0.001f;
 
 		compareAddition = lastYOnScreen + changeYValue;
 		compareSubstraction = lastYOnScreen - changeYValue;
