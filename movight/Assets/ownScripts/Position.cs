@@ -12,7 +12,7 @@ public class Position : MonoBehaviour {
 
 	LayerMask onlyLightLayer;
 
-	int bufferCounter = 0;
+	int buffer = 0;
 	int bufferMax = 30;
 
 	GameObject light;
@@ -51,6 +51,8 @@ public class Position : MonoBehaviour {
 	Vector3 normalizedFingerDirection;
 	Vector3 newLightVector;
 
+	//bool isPositioningActive = false;
+
 	int startBufferMax = 20;
 	int startBuffer;
 	//checkForMeaningfulChanges
@@ -61,6 +63,7 @@ public class Position : MonoBehaviour {
 	//checkForMeaningfulChangesEntrance
 	Vector3 newPosition;
 	Vector3 lastPosition;
+	int entranceCounter = 0;
 	int changeCounter = 0;
 
 	//getPercentageFingerPos
@@ -76,7 +79,7 @@ public class Position : MonoBehaviour {
 		labelScript = labelScriptObject.GetComponent<HandFeedback> ();
 		labelScriptObject.SetActive(false);
 
-		int startBuffer = startBufferMax;
+		int buffer = bufferMax;
 
 
 	}
@@ -93,40 +96,83 @@ public class Position : MonoBehaviour {
 			if (SelectLight.isLightSelected == true) {
 
 				if (Gestures.isPositionGesture == true) { //beeing in selectionsequence
+					
+					palmCenter = Gestures.palmCenter;
+					labelScript.displayLabel (palmCenter, labelScriptObject);
 
 					if (!MainMenu.isGroupAActive) {
 						
 						if (!ColorTemperature.isTemperatureModusActive) {
+							controlPoint = Gestures.controlPoint;
 
-							bufferCounter += 1;
+							if (lightShouldMove == false) {
 
-							if (bufferCounter >= bufferMax) {
+								Debug.Log ("buffer");
+
+								buffer -= 1;
+								if (buffer <= 0) {
+									
+									if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+
+										checkForMeaningfulChangesEntrance (controlPoint);
+
+										/*if (lightShouldMove == true) {
+										
+										hitLight = hitObject.collider.gameObject;
+										light = SelectLight.light; //selected light
+										lightPosition = light.transform.position; //position of selected light
+										
+										//if (Equals (hitLight.name, light.name)) {
+
+										moveLight (light, lightPosition, controlPoint);
+										//lightShouldMove = true;
+										//bufferCounter = 0;
+
+										//}
+
+									}*/				
+									}
+								} 
+							} else if (lightShouldMove == true) {
+
+								hitLight = hitObject.collider.gameObject;
 								light = SelectLight.light; //selected light
 								lightPosition = light.transform.position; //position of selected light
 
+								moveLight (light, lightPosition, controlPoint);
+								SelectLight.setHighlighterPosition (light);
+
+							}
+
+
+
+							/* lightShouldMove == true) {
+
+
+							}*/
+
+							//bufferCounter += 1;
+
+							/*if (lightShouldMove == true) {
+								
+								light = SelectLight.light; //selected light
+								lightPosition = light.transform.position; //position of selected light
+
+
+
+							}*/
+
+							//if (bufferCounter >= bufferMax) {
+								
+
 								//Debug.Log ("in position script and gesture == true");
 
-								controlPoint = Gestures.controlPoint;
-								palmCenter = Gestures.palmCenter;
-
-								labelScript.displayLabel (palmCenter, labelScriptObject);
 
 
-								if (lightShouldMove == false) {
 
-									if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+								/*if (lightShouldMove == false) {
 
-										hitLight = hitObject.collider.gameObject;
-
-										//Debug.Log ("Licht getroffen");
-
-										if (Equals (hitLight.name, light.name)) {
-
-											lightShouldMove = true;
-											//bufferCounter = 0;
-
-										}
-									}
+									
 								}
 								if (lightShouldMove == true) {
 
@@ -134,53 +180,59 @@ public class Position : MonoBehaviour {
 									SelectLight.setHighlighterPosition (light);
 									//bufferCounter = 0;
 
-								}
-							}
+								}*/
+							//}
 
 						}
 					}
 					if (MainMenu.isGroupAActive) {
+						
 
 						labelScript.displayLabel (palmCenter, labelScriptObject);
-												
-							bufferCounter += 1;
+						controlPoint = Gestures.controlPoint;
+						palmCenter = Gestures.palmCenter;												
 
-							if (bufferCounter >= bufferMax) {
-								light = SelectLight.light; //selected light
-								lightPosition = light.transform.position; //position of selected light
+						//Debug.Log ("in position script and gesture == true");
 
-								//Debug.Log ("in position script and gesture == true");
+								
+						if (lightShouldMove == false) {
 
-								controlPoint = Gestures.controlPoint;
-								palmCenter = Gestures.palmCenter;
+							Debug.Log ("buffer");
 
-								if (lightShouldMove == false) {
+							buffer -= 1;
+							if (buffer <= 0) {
 
-									if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+								if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-										hitLight = hitObject.collider.gameObject;
+									checkForMeaningfulChangesEntrance (controlPoint);
 
-										//Debug.Log ("Licht getroffen");
+									//hitLight = hitObject.collider.gameObject;
 
-										if (Equals (hitLight.name, light.name)) {
+									//Debug.Log ("Licht getroffen");
 
-											lightShouldMove = true;
-											//bufferCounter = 0;
+									//if (Equals (hitLight.name, light.name)) {
 
-										}
-									}
-								}
-								if (lightShouldMove == true) {
-
-									labelScript.displayLabel (palmCenter, labelScriptObject);
-
-									moveLight (light, lightPosition, controlPoint);
-									SelectLight.setHighlighterPosition (light);
+									//lightShouldMove = true;
 									//bufferCounter = 0;
 
+									//}
 								}
 							}
+						} else if (lightShouldMove == true) {
+
+							//labelScript.displayLabel (palmCenter, labelScriptObject);
+							hitLight = hitObject.collider.gameObject;
+							light = SelectLight.light; //selected light
+							lightPosition = light.transform.position; //position of selected light
+
+							moveLight (light, lightPosition, controlPoint);
+							SelectLight.setHighlighterPosition (light);
+
+								//bufferCounter = 0;
+
+							//}
 						}
+					}
 										
 				} else {
 
@@ -247,13 +299,13 @@ public class Position : MonoBehaviour {
 
 		if (isDepthRangeCalculated == true) {
 
-			Debug.Log ("startBuffer: " + startBuffer.ToString ());
+			//Debug.Log ("startBuffer: " + startBuffer.ToString ());
 
-			if (startBuffer > 0) {
+			//if (startBuffer > 0) {
 				
-				startBuffer -= 1;
+			//	startBuffer -= 1;
 
-			} else {
+			//} else {
 
 				checkForMeaningfulChangesZX (lightPosition.x, lightPosition.z);//lastX, lightPosition.x, lastZ, lightPosition.z);
 
@@ -291,12 +343,13 @@ public class Position : MonoBehaviour {
 
 				SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
 
+
 				//Debug.Log("new light position: " + light.transform.position.ToString());
 
 				//lastX = newLightVector.x;
 				//lastZ = newLightVector.z;
 
-			}
+			//}
 
 
 
@@ -361,8 +414,9 @@ public class Position : MonoBehaviour {
 	}*/
 
 	void checkForMeaningfulChangesZX (float newX, float newZ){//float lastX, float newX, float lastZ, float newZ){
+		Debug.Log ("checkForMeaningfulChangesZX");
 
-		float changeValue = 0.05f;
+		float changeValue = 0.07f; //0.05
 
 		Debug.Log ("lastX: " + lastX.ToString ());
 		Debug.Log ("newX " + newX.ToString ());
@@ -371,67 +425,88 @@ public class Position : MonoBehaviour {
 
 		if (((newX <= (lastX + changeValue)) && (newX >= (lastX - changeValue)))
 		   && ((newZ <= (lastZ + changeValue)) && (newZ >= (lastZ - changeValue)))) {
-
-
+							
 			Progressbar.fillProgressbar (zCounter);
 			zCounter += 1;
 
 			if (zCounter == SelectLight.waitCountdown) {
 
-				Progressbar.resetProgressbar ();
 
 				//disable current positioning selection
 				lightShouldMove = false;
+				isDepthRangeCalculated = false;
+				Progressbar.resetProgressbar ();
+
+				buffer = bufferMax;
+
 
 				//Debug.Log ("lampe positioniert");
 
 				zCounter = 0;
-				startBuffer = startBufferMax;
+				//startBuffer = startBufferMax;
 				//xCounter = 0;
 			}
 		} else {
+			
 			zCounter = 0;
 			Progressbar.resetProgressbar ();
 
 		}
+
 		lastX = newX;
 		lastZ = newZ;
+
 	}
 
-	/*void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
-
-		float changeValue = 0.0015f; //0.001f;
+	void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
+		Debug.Log ("checkForMeaningfulChangesEntrance");
+		float changeValue = 0.002f; //0.001f;
 		newPosition = controlPoint;
 
 		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
-			&& newPosition.y <= (lastPosition.y + changeValue) && newPosition.y >= (lastPosition.y - changeValue)
-			&& newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
+		    && newPosition.y <= (lastPosition.y + changeValue) && newPosition.y >= (lastPosition.y - changeValue)
+		    && newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
 
 			//Debug.Log ("no big change***********************");
 
-			if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {
+			//if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {
 
 				//Debug.Log ("values " + newPosition.x.ToString () + newPosition.y.ToString () + newPosition.z.ToString ());
-
-				changeCounter += 1;
+				Progressbar.fillProgressbar (entranceCounter);
+				entranceCounter += 1;
 				//Debug.Log ("changeCounter " + changeCounter.ToString());
 
-				if (changeCounter == SelectLight.waitCountdown) {
+				if (entranceCounter == SelectLight.waitCountdown) {
 
+					buffer = bufferMax;
 					lightShouldMove = true;
+					//isPositioningActive = true;
+					isDepthRangeCalculated = false;
+					Progressbar.resetProgressbar ();
+					entranceCounter = 0;
+
 					//intensityUp.SetActive (true);
 
 					//Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
-					changeCounter = 0;
 
 				}
+			} else {
+
+				entranceCounter = 0;
+				Progressbar.resetProgressbar ();
+
 			}
-		}
+		//} else {
+			
+			//entranceCounter = 0;
+			//Progressbar.resetProgressbar ();
+
+		//}
 
 		Debug.Log ("shouldPositionChange??????: " + lightShouldMove.ToString ());
 
 		lastPosition = controlPoint;
 
-	}*/
+	}
 
 }

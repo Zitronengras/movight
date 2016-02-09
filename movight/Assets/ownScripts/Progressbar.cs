@@ -46,14 +46,14 @@ public class Progressbar : MonoBehaviour {
 		}
 		//progressbarObject.transform.position = (Gestures.headRotation * progressbarObject.transform.position);//transform.LookAt (Gestures.handControllerPos);
 
-		progressbarObject.gameObject.transform.localScale += new Vector3(0, (0.042f / SelectLight.waitCountdown), 0); //TODO change 0.1 ; 0,0
-		currentPos = progressbarObject.transform.position;
+		progressbarObject.gameObject.transform.localScale += new Vector3(0, (0.075f / SelectLight.waitCountdown), 0); //TODO change 0.042f
+		/*currentPos = progressbarObject.transform.position;
 		currentY = currentPos.y;
 		moveUp = ((0.042f / SelectLight.waitCountdown)/2);
 		currentY = (currentY + moveUp); //TODO change 0.1
 		currentPos.y = currentY;
 		//Debug.Log ("current X position" + currentX.ToString ());
-		progressbarObject.transform.position = currentPos;
+		progressbarObject.transform.position = currentPos;*/
 
 		//Debug.Log ("position.x" + progressbarObject.transform.position.x.ToString ());
 
@@ -63,16 +63,16 @@ public class Progressbar : MonoBehaviour {
 
 		progressbarObject.SetActive (false);
 
-		if (runThrough == true) {
+		/*if (runThrough == true) {
 			
 			progressbarObject.transform.position = progressbarStartPosition;
 			progressbarObject.gameObject.transform.localScale = new Vector3 (0.003f, 0f, 0.001f); // 0.003f, 0.001f);
 			runThrough = false;
 
-		} else if (runThrough == false){
+		} else if (runThrough == false){*/
 			
-			progressbarObject.gameObject.transform.localScale = new Vector3 (0.003f, 0f, 0.001f); // 0.003f, 0.001f);
+			progressbarObject.gameObject.transform.localScale = new Vector3 (0.003f, 0.03f, 0.001f); // 0.003f, 0, 0.001f);
 
-		}
+		//}
 	}
 }
