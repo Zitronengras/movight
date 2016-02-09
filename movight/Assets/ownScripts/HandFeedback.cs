@@ -37,7 +37,7 @@ public class HandFeedback : MonoBehaviour {
 		length = controlPoint.magnitude;
 
 		//get depth of handpalm
-		palmDepth = 0.001f; //0.05f; ////0.13f;
+		palmDepth = 0.1f; //0.0006f; //0.001f; ////0.13f;
 		newLength = length +  palmDepth;
 
 		labelPosition = (controlPoint.normalized) * newLength;

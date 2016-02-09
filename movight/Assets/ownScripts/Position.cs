@@ -96,14 +96,17 @@ public class Position : MonoBehaviour {
 			if (SelectLight.isLightSelected == true) {
 
 				if (Gestures.isPositionGesture == true) { //beeing in selectionsequence
-					
-					palmCenter = Gestures.palmCenter;
-					labelScript.displayLabel (palmCenter, labelScriptObject);
+
+					//TODO
+					//palmCenter = Gestures.palmCenter;
+					//labelScript.displayLabel (palmCenter, labelScriptObject);
 
 					if (!MainMenu.isGroupAActive) {
 						
 						if (!ColorTemperature.isTemperatureModusActive) {
 							controlPoint = Gestures.controlPoint;
+
+							labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
 
 							if (lightShouldMove == false) {
 
@@ -165,12 +168,12 @@ public class Position : MonoBehaviour {
 							//if (bufferCounter >= bufferMax) {
 								
 
-								//Debug.Log ("in position script and gesture == true");
+							//Debug.Log ("in position script and gesture == true");
 
 
 
 
-								/*if (lightShouldMove == false) {
+							/*if (lightShouldMove == false) {
 
 									
 								}
@@ -182,6 +185,9 @@ public class Position : MonoBehaviour {
 
 								}*/
 							//}
+
+						} else if (ColorTemperature.isTemperatureModusActive == true) {
+							controlPoint = Gestures.controlPoint;
 
 						}
 					}

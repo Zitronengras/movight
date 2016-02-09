@@ -374,7 +374,7 @@ public class Gestures : MonoBehaviour {
 		extendedFingers = rightHand.Fingers.Extended();
 
 		if (!extendedFingers.IsEmpty) {	
-
+			//TODO
 			indexFinger = extendedFingers [0];
 			middleFinger = extendedFingers [1];
 			ringFinger = extendedFingers [2];
@@ -394,18 +394,21 @@ public class Gestures : MonoBehaviour {
 				headRotation = Cardboard.SDK.HeadRotation;
 				palmCenter = (headRotation * rotHMDPalmCenter);
 
+				//TODO
+				/*
 				//indexfinger
 				leapIndexTipPosition = indexFinger.TipPosition;
 				// work with tipPositon
 				unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
 				rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
 				//get head rotation
-				headRotation = Cardboard.SDK.HeadRotation;
+				//headRotation = Cardboard.SDK.HeadRotation;
 
-				tmpControlPoint = (headRotation * rotHMDIndexFingerTip);
-				controlPoint = Quaternion.Euler (0, 3, 0) * tmpControlPoint;
+				//tmpControlPoint 
+				controlPoint = (headRotation * rotHMDIndexFingerTip);
+				//controlPoint = Quaternion.Euler (0, 3, 0) * tmpControlPoint;*/
 
-				Debug.DrawRay (handControllerPos, controlPoint, Color.yellow, 2.0f, true);
+				Debug.DrawRay (handControllerPos, palmCenter, Color.yellow, 2.0f, true);
 				
 			} else {
 

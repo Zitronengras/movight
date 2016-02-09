@@ -101,7 +101,7 @@ public class ColorTemperature : MonoBehaviour {
 
 		if (MainMenu.isGroupAActive == false) {
 			onlyGUILayer = 1 << LayerMask.NameToLayer("temperatureMenu");
-			temperatureMenu = GameObject.Find ("TemperatureMenu");
+			temperatureMenu = GameObject.Find ("TemperatureColorTiles");
 			temperatureMenu.SetActive(false);
 		}			
 	}
@@ -118,13 +118,14 @@ public class ColorTemperature : MonoBehaviour {
 				
 				if (Gestures.isTemperatureGesture == true) {
 
-					controlPoint = Gestures.palmCenter;
+					//controlPoint = Gestures.palmCenter;
 
 					//Debug.Log("controlPoint: " + controlPoint.ToString());
 					//Debug.Log("fingerTip: " + fingerTip.ToString());
 
 					//labelScriptObject.SetActive (true);
-					labelScript.displayLabel (controlPoint, labelScriptObject);
+					//TODO
+					labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
 
 					//Debug.Log ("TemperatureGesture ##########################");
 
@@ -144,7 +145,8 @@ public class ColorTemperature : MonoBehaviour {
 
 						} else if (isTemperatureModusActive == false) {
 
-							labelScript.displayLabel (controlPoint, labelScriptObject);
+							//TODO
+							//labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
 							isTemperatureModusActive = true;
 							temperatureMenu.SetActive(true);
 
@@ -163,12 +165,14 @@ public class ColorTemperature : MonoBehaviour {
 
 						fingerTip = Gestures.controlPoint;
 
-						labelScript.displayLabel (fingerTip, labelScriptObject); //Gestures.palmCenter
+						//TODO
+						labelScript.displayLabel (Gestures.controlPoint, labelScriptObject); //Gestures.palmCenter
 
 						if (Gestures.isPositionGesture == true) {
 
 							//labelScriptObject.SetActive (true);
-							labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
+							//TODO
+							//labelScript.displayLabel (Gestures.controlPoint, labelScriptObject); //, Gestures.palmCenter
 							//controlPoint = Gestures.controlPoint;
 
 							checkForTouchEvents ();
@@ -234,16 +238,22 @@ public class ColorTemperature : MonoBehaviour {
 
 
 
-		if (Physics.Raycast (Gestures.handControllerPos, fingerTip, out hitObject, ConstructionDistance.maxWallDistance, onlyGUILayer)) {			
+		if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyGUILayer)) {			
 
 			hitTile = hitObject.collider.gameObject;
 			Vector3 hitTilePos = hitTile.transform.position;
 			//Debug.Log ("hittile: " + hitTile.ToString ());
 
-			float distanceToGoal = Vector3.Distance (hitTilePos, fingerTip);
+			float distanceToGoal = Vector3.Distance (hitTilePos, Gestures.controlPoint);
+			Debug.Log ("position temperatureMenu: " + temperatureMenu.transform.position.ToString ());
 			Debug.Log ("Distance: " + distanceToGoal.ToString ());
 
-			if (distanceToGoal <= 0.2f) {
+			/*Vector3 fingerOnScreen = camera.WorldToScreenPoint (fingerTip);
+			float fingerXOnScreen = fingerOnScreen.x;
+			float fingerYOnScreen
+			float fingerXOnScreen = fingerTip*/
+
+			if (distanceToGoal <= 0.1f) {
 
 				currentColor = hitTile.GetComponent<Renderer>().material.color;
 
