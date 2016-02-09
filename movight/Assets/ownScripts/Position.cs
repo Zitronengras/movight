@@ -140,6 +140,7 @@ public class Position : MonoBehaviour {
 								lightPosition = light.transform.position; //position of selected light
 
 								moveLight (light, lightPosition, controlPoint);
+								SelectLight.setHighlighterPosition (light);
 
 							}
 
@@ -185,48 +186,53 @@ public class Position : MonoBehaviour {
 						}
 					}
 					if (MainMenu.isGroupAActive) {
-						/*
+						
 
 						labelScript.displayLabel (palmCenter, labelScriptObject);
-												
-							//bufferCounter += 1;
+						controlPoint = Gestures.controlPoint;
+						palmCenter = Gestures.palmCenter;												
 
-							if (buffer > 0) {
-								light = SelectLight.light; //selected light
-								lightPosition = light.transform.position; //position of selected light
+						//Debug.Log ("in position script and gesture == true");
 
-								//Debug.Log ("in position script and gesture == true");
+								
+						if (lightShouldMove == false) {
 
-								controlPoint = Gestures.controlPoint;
-								palmCenter = Gestures.palmCenter;
+							Debug.Log ("buffer");
 
-								if (lightShouldMove == false) {
+							buffer -= 1;
+							if (buffer <= 0) {
 
-									if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
+								if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
-										hitLight = hitObject.collider.gameObject;
+									checkForMeaningfulChangesEntrance (controlPoint);
 
-										//Debug.Log ("Licht getroffen");
+									//hitLight = hitObject.collider.gameObject;
 
-										if (Equals (hitLight.name, light.name)) {
+									//Debug.Log ("Licht getroffen");
 
-											lightShouldMove = true;
-											//bufferCounter = 0;
+									//if (Equals (hitLight.name, light.name)) {
 
-										}
-									}
-								}
-								if (lightShouldMove == true) {
-
-									labelScript.displayLabel (palmCenter, labelScriptObject);
-
-									moveLight (light, lightPosition, controlPoint);
-									SelectLight.setHighlighterPosition (light);
+									//lightShouldMove = true;
 									//bufferCounter = 0;
 
+									//}
 								}
-							}*/
+							}
+						} else if (lightShouldMove == true) {
+
+							//labelScript.displayLabel (palmCenter, labelScriptObject);
+							hitLight = hitObject.collider.gameObject;
+							light = SelectLight.light; //selected light
+							lightPosition = light.transform.position; //position of selected light
+
+							moveLight (light, lightPosition, controlPoint);
+							SelectLight.setHighlighterPosition (light);
+
+								//bufferCounter = 0;
+
+							//}
 						}
+					}
 										
 				} else {
 
@@ -336,6 +342,7 @@ public class Position : MonoBehaviour {
 				newLightVector = normalizedFingerDirection * newLightVectorLength;
 
 				SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
+
 
 				//Debug.Log("new light position: " + light.transform.position.ToString());
 
