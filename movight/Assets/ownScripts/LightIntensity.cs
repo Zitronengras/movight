@@ -116,8 +116,7 @@ public class LightIntensity : MonoBehaviour {
 				}*/
 			} else {
 
-				//TODO
-				//labelScriptObject.SetActive(false);
+				labelScriptObject.SetActive(false);
 
 				//intensityUp.SetActive(false);
 

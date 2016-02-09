@@ -123,31 +123,30 @@ public class Gestures : MonoBehaviour {
 							isTemperatureGesture = false;
 
 
-						} else if (SelectLight.isLightSelected == true) { //when light is selected
-							
-							if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
+						} else if (SelectLight.isLightSelected == true) { //when light is selected							
 
-								isSelectGesture = false;
-								isTemperatureGesture = false;
-								isPositionGesture = false;
-								checkForIntensityGesture (rightHand);
-
-							} else if (Position.lightShouldMove == true) { //if light is moving
-
-								isSelectGesture = false;
-								isTemperatureGesture = false;
-								isIntensityGesture = false;
-								checkForPositionGesture (rightHand);
-
-							}
 							if (MainMenu.isGroupAActive == false) { //groupB
-								
-								if (ColorTemperature.isTemperatureModusActive) {
+
+								if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
+
+									isSelectGesture = false;
+									isTemperatureGesture = false;
+									isPositionGesture = false;
+									checkForIntensityGesture (rightHand);
+
+								} else if (ColorTemperature.isTemperatureModusActive == true) {
 
 									isSelectGesture = false;
 									isIntensityGesture = false;	
 									checkForTemperatureGesture (rightHand);
 									checkForPositionGesture (rightHand);
+
+								} else if (Position.lightShouldMove == true) { //if light is moving
+
+										isSelectGesture = false;
+										isTemperatureGesture = false;
+										isIntensityGesture = false;
+										checkForPositionGesture (rightHand);
 
 								} else {
 
@@ -157,8 +156,7 @@ public class Gestures : MonoBehaviour {
 									checkForTemperatureGesture (rightHand);
 
 								}
-							}
-							if (MainMenu.isGroupAActive == true) {
+							} else if (MainMenu.isGroupAActive == true) {
 								
 								if (ColorTemperature.temperatureShouldChange == true) {//if color is changing
 									
@@ -169,10 +167,17 @@ public class Gestures : MonoBehaviour {
 
 								} else if (LightIntensity.intensityShouldChange == true) {//if intensity is changing
 
-										isSelectGesture = false;
-										isTemperatureGesture = false;
-										isPositionGesture = false;
-										checkForIntensityGesture (rightHand);								 
+									isSelectGesture = false;
+									isTemperatureGesture = false;
+									isPositionGesture = false;
+									checkForIntensityGesture (rightHand);								 
+
+								} else if (Position.lightShouldMove == true) { //if light is moving
+
+									isSelectGesture = false;
+									isTemperatureGesture = false;
+									isIntensityGesture = false;
+									checkForPositionGesture (rightHand);
 
 								} else {
 

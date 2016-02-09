@@ -106,8 +106,7 @@ public class ColorTemperature : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update ()
-	{
+	void Update () {
 
 		if (SelectLight.isLightSelected == true) {
 
@@ -158,22 +157,23 @@ public class ColorTemperature : MonoBehaviour {
 
 					if (isTemperatureModusActive == true) {
 
-						labelScript.displayLabel (controlPoint, labelScriptObject);
+						labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
 
 						if (Gestures.isPositionGesture == true) {
 
 							//labelScriptObject.SetActive (true);
-							labelScript.displayLabel (controlPoint, labelScriptObject);
-							controlPoint = Gestures.controlPoint;
+							labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
+							//controlPoint = Gestures.controlPoint;
 
 							checkForTouchEvents ();
 						} else {
-
+							//TODO
 							labelScriptObject.SetActive (false);
 
 						}
 					} else {
-						
+						//TODO
+
 						labelScriptObject.SetActive (false);
 
 					}
@@ -206,11 +206,13 @@ public class ColorTemperature : MonoBehaviour {
 						}
 
 				} else {
+					//TODO
 					labelScriptObject.SetActive(false);
 				}
 
 			} else {
-				labelScriptObject.SetActive(false);
+				//TODO
+				//labelScriptObject.SetActive(false);
 			}
 	
 		}
