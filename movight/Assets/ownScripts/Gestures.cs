@@ -392,7 +392,18 @@ public class Gestures : MonoBehaviour {
 				rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
 				//get head rotation
 				headRotation = Cardboard.SDK.HeadRotation;
-				controlPoint = (headRotation * rotHMDPalmCenter);
+				palmCenter = (headRotation * rotHMDPalmCenter);
+
+				//indexfinger
+				leapIndexTipPosition = indexFinger.TipPosition;
+				// work with tipPositon
+				unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
+				rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
+				//get head rotation
+				headRotation = Cardboard.SDK.HeadRotation;
+
+				tmpControlPoint = (headRotation * rotHMDIndexFingerTip);
+				controlPoint = Quaternion.Euler (0, 3, 0) * tmpControlPoint;
 
 				Debug.DrawRay (handControllerPos, controlPoint, Color.yellow, 2.0f, true);
 				

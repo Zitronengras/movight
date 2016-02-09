@@ -17,7 +17,7 @@ public class HandFeedback : MonoBehaviour {
 	void Start () {
 
 		camera = Camera.main;
-		Debug.Log("Camera" + camera.ToString());
+		//Debug.Log("Camera" + camera.ToString());
 			
 	}
 	
@@ -31,7 +31,7 @@ public class HandFeedback : MonoBehaviour {
 
 		label.SetActive(true);
 
-		Debug.Log ("LABEL : " + label.ToString ());
+		//Debug.Log ("LABEL : " + label.ToString ());
 
 		palmCenter = controlPoint;
 		length = controlPoint.magnitude;
