@@ -1,15 +1,14 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ownScripts\Position.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ownScripts\HandFeedback.cs">
     <Files>
-      <File FileName="Assets\ownScripts\Progressbar.cs" Line="76" Column="4" />
-      <File FileName="Assets\ownScripts\Gestures.cs" Line="86" Column="23" />
-      <File FileName="Assets\ownScripts\Position.cs" Line="55" Column="18" />
-      <File FileName="Assets\ownScripts\MainMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\ownScripts\SelectLight.cs" Line="90" Column="7" />
-      <File FileName="Assets\ownScripts\HandFeedback.cs" Line="1" Column="1" />
-      <File FileName="Assets\ownScripts\LightIntensity.cs" Line="184" Column="31" />
-      <File FileName="Assets\ownScripts\ColorTemperature.cs" Line="215" Column="21" NotebookId="1" />
+      <File FileName="Assets\ownScripts\Progressbar.cs" Line="8" Column="1" />
+      <File FileName="Assets\ownScripts\Gestures.cs" Line="386" Column="5" />
+      <File FileName="Assets\ownScripts\SelectLight.cs" Line="193" Column="1" />
+      <File FileName="Assets\ownScripts\Position.cs" Line="378" Column="3" />
+      <File FileName="Assets\ownScripts\HandFeedback.cs" Line="27" Column="48" />
+      <File FileName="Assets\ownScripts\ColorTemperature.cs" Line="129" Column="1" NotebookId="1" />
+      <File FileName="Assets\ownScripts\LightIntensity.cs" Line="164" Column="4" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

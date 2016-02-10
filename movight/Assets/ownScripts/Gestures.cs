@@ -228,10 +228,10 @@ public class Gestures : MonoBehaviour {
 
 		if (!extendedFingers.IsEmpty) {	
 
-			indexFinger = extendedFingers [0]; //since there is only one per hand
-			middleFinger = extendedFingers [1]; //since there is only one per hand
-			ringFinger = extendedFingers [2]; //since there is only one per hand
-			pinkyFinger = extendedFingers [3]; //since there is only one per hand
+			indexFinger = extendedFingers [0];
+			middleFinger = extendedFingers [1];
+			ringFinger = extendedFingers [2]; 
+			pinkyFinger = extendedFingers [3];
 
 			if (indexFinger.IsValid && middleFinger.IsValid) {
 				if (!ringFinger.IsValid && !pinkyFinger.IsValid) {
@@ -256,7 +256,6 @@ public class Gestures : MonoBehaviour {
 
 					controlPoint = Quaternion.Euler (0, 3, 0) * tmpControlPoint;
 
-
 					Debug.DrawRay (handControllerPos, controlPoint, Color.red, 2.0f, true);
 
 				} else {
@@ -275,19 +274,17 @@ public class Gestures : MonoBehaviour {
 
 		}
 	}
-
-	//TODO is in position even when the gesture is not there
-
+		
 	void checkForPositionGesture(Hand rightHand){
 		//check for extended fingers on right hand
 		extendedFingers = rightHand.Fingers.Extended();
 
 		if (!extendedFingers.IsEmpty) {	
 
-			indexFinger = extendedFingers [0]; //since there is only one per hand
-			middleFinger = extendedFingers [1]; //since there is only one per hand
-			ringFinger = extendedFingers [2]; //since there is only one per hand
-			pinkyFinger = extendedFingers [3]; //since there is only one per hand
+			indexFinger = extendedFingers [0];
+			middleFinger = extendedFingers [1];
+			ringFinger = extendedFingers [2];
+			pinkyFinger = extendedFingers [3];
 
 			if(indexFinger.IsValid){
 				if (!middleFinger.IsValid && !ringFinger.IsValid && !pinkyFinger.IsValid) {
@@ -311,7 +308,6 @@ public class Gestures : MonoBehaviour {
 					rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
 					//get head rotation
 					headRotation = Cardboard.SDK.HeadRotation;
-
 
 					tmpControlPoint = (headRotation * rotHMDIndexFingerTip);
 					controlPoint = Quaternion.Euler (0, 3, 0) * tmpControlPoint;
@@ -346,18 +342,12 @@ public class Gestures : MonoBehaviour {
 			isIntensityGesture = true;
 
 			leapPalmCenter = rightHand.PalmPosition;
-
-			// work with tipPositon
 			unityPalmCenter = leapPalmCenter.ToUnityScaled ();
-
 			rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
 
 			//get head rotation
 			headRotation = Cardboard.SDK.HeadRotation;
-
 			controlPoint = (headRotation * rotHMDPalmCenter);
-
-			//Debug.Log ("FistPosition.y: " + controlPoint.y.ToString ());
 
 			Debug.DrawRay (handControllerPos, controlPoint, Color.green, 2.0f, true);
 
@@ -374,7 +364,7 @@ public class Gestures : MonoBehaviour {
 		extendedFingers = rightHand.Fingers.Extended();
 
 		if (!extendedFingers.IsEmpty) {	
-
+			//TODO
 			indexFinger = extendedFingers [0];
 			middleFinger = extendedFingers [1];
 			ringFinger = extendedFingers [2];
@@ -392,9 +382,9 @@ public class Gestures : MonoBehaviour {
 				rotHMDPalmCenter = Quaternion.Euler (270, 180, 0) * unityPalmCenter;
 				//get head rotation
 				headRotation = Cardboard.SDK.HeadRotation;
-				controlPoint = (headRotation * rotHMDPalmCenter);
+				palmCenter = (headRotation * rotHMDPalmCenter);
 
-				Debug.DrawRay (handControllerPos, controlPoint, Color.yellow, 2.0f, true);
+				Debug.DrawRay (handControllerPos, palmCenter, Color.yellow, 2.0f, true);
 				
 			} else {
 

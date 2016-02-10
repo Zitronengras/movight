@@ -8,6 +8,7 @@ public class ColorTemperature : MonoBehaviour {
 
 	GameObject temperatureUpDown;
 
+	Vector3 fingerTip;
 	GameObject light;
 	Light lightSource;
 	Color32 currentColor;
@@ -15,8 +16,7 @@ public class ColorTemperature : MonoBehaviour {
 	Vector3 controlPoint;
 	Camera camera;
 
-	int bufferCounter = 0; //BAD!!!
-	//int bufferMax = 30;
+	int bufferCounter = 0;
 
 	//checkForMeaningfulChangesEntrance
 	Vector3 newPosition;
@@ -36,7 +36,7 @@ public class ColorTemperature : MonoBehaviour {
 	float maxScreenRange;
 	float onePercentOfScreenRange;
 
-	float numberOfColumns; // = 39.0f;
+	float numberOfColumns;
 	//checkForMeaningfulChangesX
 	float lastXOnScreen = 0;
 	float compareAddition;
@@ -49,7 +49,7 @@ public class ColorTemperature : MonoBehaviour {
 
 	//changeTemperature
 	Vector3 currentOnScreenPosition;
-	Color32[] temperatureColors = new Color32[39]; //39];
+	Color32[] temperatureColors = new Color32[39];
 	float percentageTemperaturValue;
 	float percentagePalmPosition;
 
@@ -70,7 +70,6 @@ public class ColorTemperature : MonoBehaviour {
 	public static bool isTemperatureModusActive = false;
 
 	int bufferMax = SelectLight.waitCountdown;
-
 
 	//Raycast
 	RaycastHit hitObject = new RaycastHit();
@@ -100,7 +99,7 @@ public class ColorTemperature : MonoBehaviour {
 
 		if (MainMenu.isGroupAActive == false) {
 			onlyGUILayer = 1 << LayerMask.NameToLayer("temperatureMenu");
-			temperatureMenu = GameObject.Find ("TemperatureMenu");
+			temperatureMenu = GameObject.Find ("TemperatureColorTiles");
 			temperatureMenu.SetActive(false);
 		}			
 	}
@@ -117,10 +116,7 @@ public class ColorTemperature : MonoBehaviour {
 				
 				if (Gestures.isTemperatureGesture == true) {
 
-					controlPoint = Gestures.controlPoint;
-
-					//labelScriptObject.SetActive (true);
-					labelScript.displayLabel (controlPoint, labelScriptObject);
+					labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
 
 					//Debug.Log ("TemperatureGesture ##########################");
 
@@ -130,21 +126,19 @@ public class ColorTemperature : MonoBehaviour {
 
 						if (isTemperatureModusActive == true) {
 
-							//labelScriptObject.SetActive(false);
 							isTemperatureModusActive = false;
 							temperatureMenu.SetActive(false);
 
-							Debug.Log ("isTemperatureModusActive = false");
+							//Debug.Log ("isTemperatureModusActive = false");
 							bufferCounter = 0;
 
 
 						} else if (isTemperatureModusActive == false) {
 
-							labelScript.displayLabel (controlPoint, labelScriptObject);
 							isTemperatureModusActive = true;
 							temperatureMenu.SetActive(true);
 
-							Debug.Log ("isTemperatureModusActive = true");
+							//Debug.Log ("isTemperatureModusActive = true");
 
 							bufferCounter = 0;
 
@@ -157,22 +151,18 @@ public class ColorTemperature : MonoBehaviour {
 
 					if (isTemperatureModusActive == true) {
 
-						labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
+						labelScript.displayLabel (Gestures.palmCenter, labelScriptObject); //Gestures.palmCenter
 
 						if (Gestures.isPositionGesture == true) {
 
-							//labelScriptObject.SetActive (true);
-							labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
-							//controlPoint = Gestures.controlPoint;
-
 							checkForTouchEvents ();
+
 						} else {
-							//TODO
+
 							labelScriptObject.SetActive (false);
 
 						}
 					} else {
-						//TODO
 
 						labelScriptObject.SetActive (false);
 
@@ -187,7 +177,7 @@ public class ColorTemperature : MonoBehaviour {
 
 					labelScript.displayLabel (controlPoint, labelScriptObject);
 
-						controlPoint = Gestures.controlPoint;
+					controlPoint = Gestures.palmCenter;
 
 						if (temperatureShouldChange == true) {
 							
@@ -206,22 +196,15 @@ public class ColorTemperature : MonoBehaviour {
 						}
 
 				} else {
-					//TODO
 					labelScriptObject.SetActive(false);
 				}
 
-			} else {
-				//TODO
-				//labelScriptObject.SetActive(false);
-			}
-	
+			} 	
 		}
 	}
 
 	//for groupB
 	void checkForTouchEvents(){
-
-		//Debug.Log ("checkForTouchEvents");
 
 		if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyGUILayer)) {			
 
@@ -229,10 +212,11 @@ public class ColorTemperature : MonoBehaviour {
 			Vector3 hitTilePos = hitTile.transform.position;
 			//Debug.Log ("hittile: " + hitTile.ToString ());
 
-			float distanceToGoal = Vector3.Distance (hitTilePos, controlPoint);
-			Debug.Log ("Distance: " + distanceToGoal.ToString ());
+			float distanceToGoal = Vector3.Distance (hitTilePos, Gestures.controlPoint);
+			//Debug.Log ("position temperatureMenu: " + temperatureMenu.transform.position.ToString ());
+			//Debug.Log ("Distance: " + distanceToGoal.ToString ());
 
-			if (distanceToGoal <= .1f) {
+			if (distanceToGoal <= 0.1f) {
 
 				currentColor = hitTile.GetComponent<Renderer>().material.color;
 
@@ -244,6 +228,7 @@ public class ColorTemperature : MonoBehaviour {
 					&& ((currentColor.b != newColor.b) && (currentColor.b != newColor.b)) ){
 
 					changeTemperatureColor (currentColor, light);
+					//Debug.Log ("COLOR CHANGED**************************************");
 
 				}
 			}
@@ -252,9 +237,6 @@ public class ColorTemperature : MonoBehaviour {
 
 	//for groupB
 	void changeTemperatureColor(Color32 currentColor, GameObject light){
-		
-		//currentColor = hitTile.GetComponent<Renderer>().material.color;
-		//Debug.Log ("color : " + currentColor.ToString ());
 
 		lightSource = light.GetComponentInChildren<Light> ();
 		lightSource.color = currentColor;
@@ -282,9 +264,6 @@ public class ColorTemperature : MonoBehaviour {
 		//Debug.Log ("minScreenRange : " + minScreenRange.ToString ());
 		//Debug.Log ("maxScreenRange : " + maxScreenRange.ToString ());
 
-	
-		//TODO what if out of range???
-	
 	}
 
 	//for groupA

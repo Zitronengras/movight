@@ -5,7 +5,6 @@ using System.Collections;
 public class Progressbar : MonoBehaviour {
 
 	public static GameObject progressbarObject;
-	//static Vector3 progressbarStartPosition;
 	static Vector3 currentPos;
 	static float currentY;
 	static float moveUp;
@@ -22,19 +21,6 @@ public class Progressbar : MonoBehaviour {
 
 	}
 
-	// Update is called once per frame
-	void Update () {
-
-
-		//Debug.Log ("runThrough" + runThrough.ToString ());
-		/*if(progressbarObject.activeSelf == true && justStarted == true){
-
-			progressbarStartPosition = progressbarObject.transform.position;
-			justStarted = false;
-		
-		}*/
-	}
-
 	public static void fillProgressbar(float counter){
 
 		progressbarObject.SetActive (true);
@@ -44,35 +30,15 @@ public class Progressbar : MonoBehaviour {
 			progressbarStartPosition = progressbarObject.transform.position;
 			runThrough = true;
 		}
-		//progressbarObject.transform.position = (Gestures.headRotation * progressbarObject.transform.position);//transform.LookAt (Gestures.handControllerPos);
 
-		progressbarObject.gameObject.transform.localScale += new Vector3(0, (0.075f / SelectLight.waitCountdown), 0); //TODO change 0.042f
-		/*currentPos = progressbarObject.transform.position;
-		currentY = currentPos.y;
-		moveUp = ((0.042f / SelectLight.waitCountdown)/2);
-		currentY = (currentY + moveUp); //TODO change 0.1
-		currentPos.y = currentY;
-		//Debug.Log ("current X position" + currentX.ToString ());
-		progressbarObject.transform.position = currentPos;*/
-
-		//Debug.Log ("position.x" + progressbarObject.transform.position.x.ToString ());
+		progressbarObject.gameObject.transform.localScale += new Vector3(0, (0.075f / SelectLight.waitCountdown), 0);
 
 	}
 
 	public static void resetProgressbar(){
 
 		progressbarObject.SetActive (false);
+		progressbarObject.gameObject.transform.localScale = new Vector3 (0.003f, 0.03f, 0.001f);
 
-		/*if (runThrough == true) {
-			
-			progressbarObject.transform.position = progressbarStartPosition;
-			progressbarObject.gameObject.transform.localScale = new Vector3 (0.003f, 0f, 0.001f); // 0.003f, 0.001f);
-			runThrough = false;
-
-		} else if (runThrough == false){*/
-			
-			progressbarObject.gameObject.transform.localScale = new Vector3 (0.003f, 0.03f, 0.001f); // 0.003f, 0, 0.001f);
-
-		//}
 	}
 }
