@@ -126,7 +126,6 @@ public class ColorTemperature : MonoBehaviour {
 
 						if (isTemperatureModusActive == true) {
 
-							//labelScriptObject.SetActive(false);
 							isTemperatureModusActive = false;
 							temperatureMenu.SetActive(false);
 
@@ -136,8 +135,6 @@ public class ColorTemperature : MonoBehaviour {
 
 						} else if (isTemperatureModusActive == false) {
 
-							//TODO
-							//labelScript.displayLabel (Gestures.palmCenter, labelScriptObject);
 							isTemperatureModusActive = true;
 							temperatureMenu.SetActive(true);
 
@@ -153,8 +150,6 @@ public class ColorTemperature : MonoBehaviour {
 					bufferCounter = 0;
 
 					if (isTemperatureModusActive == true) {
-
-						//fingerTip = Gestures.controlPoint;
 
 						labelScript.displayLabel (Gestures.palmCenter, labelScriptObject); //Gestures.palmCenter
 
@@ -210,8 +205,6 @@ public class ColorTemperature : MonoBehaviour {
 
 	//for groupB
 	void checkForTouchEvents(){
-
-		//fingerTip = Gestures.controlPoint;
 
 		if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyGUILayer)) {			
 
