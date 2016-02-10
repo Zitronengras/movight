@@ -118,22 +118,7 @@ public class Position : MonoBehaviour {
 									if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
 
 										checkForMeaningfulChangesEntrance (controlPoint);
-
-										/*if (lightShouldMove == true) {
-										
-										hitLight = hitObject.collider.gameObject;
-										light = SelectLight.light; //selected light
-										lightPosition = light.transform.position; //position of selected light
-										
-										//if (Equals (hitLight.name, light.name)) {
-
-										moveLight (light, lightPosition, controlPoint);
-										//lightShouldMove = true;
-										//bufferCounter = 0;
-
-										//}
-
-									}*/				
+						
 									}
 								} 
 							} else if (lightShouldMove == true) {
@@ -147,46 +132,8 @@ public class Position : MonoBehaviour {
 
 							}
 
-
-
-							/* lightShouldMove == true) {
-
-
-							}*/
-
-							//bufferCounter += 1;
-
-							/*if (lightShouldMove == true) {
-								
-								light = SelectLight.light; //selected light
-								lightPosition = light.transform.position; //position of selected light
-
-
-
-							}*/
-
-							//if (bufferCounter >= bufferMax) {
-								
-
-							//Debug.Log ("in position script and gesture == true");
-
-
-
-
-							/*if (lightShouldMove == false) {
-
-									
-								}
-								if (lightShouldMove == true) {
-
-									moveLight (light, lightPosition, controlPoint);
-									SelectLight.setHighlighterPosition (light);
-									//bufferCounter = 0;
-
-								}*/
-							//}
-
 						} else if (ColorTemperature.isTemperatureModusActive == true) {
+							
 							controlPoint = Gestures.controlPoint;
 
 						}
@@ -199,11 +146,10 @@ public class Position : MonoBehaviour {
 						palmCenter = Gestures.palmCenter;												
 
 						//Debug.Log ("in position script and gesture == true");
-
 								
 						if (lightShouldMove == false) {
 
-							Debug.Log ("buffer");
+							//Debug.Log ("buffer");
 
 							buffer -= 1;
 							if (buffer <= 0) {
@@ -212,31 +158,17 @@ public class Position : MonoBehaviour {
 
 									checkForMeaningfulChangesEntrance (controlPoint);
 
-									//hitLight = hitObject.collider.gameObject;
-
-									//Debug.Log ("Licht getroffen");
-
-									//if (Equals (hitLight.name, light.name)) {
-
-									//lightShouldMove = true;
-									//bufferCounter = 0;
-
-									//}
 								}
 							}
 						} else if (lightShouldMove == true) {
 
-							//labelScript.displayLabel (palmCenter, labelScriptObject);
 							hitLight = hitObject.collider.gameObject;
 							light = SelectLight.light; //selected light
 							lightPosition = light.transform.position; //position of selected light
 
 							moveLight (light, lightPosition, controlPoint);
 							SelectLight.setHighlighterPosition (light);
-
-								//bufferCounter = 0;
-
-							//}
+								
 						}
 					}
 										
@@ -282,13 +214,6 @@ public class Position : MonoBehaviour {
 		maxFingerRange = fingerControllerDistanceBegin + ((100 - percentagePosOfFingerAtBeginning) * onePercentOfFingerRange);
 		//Debug.Log ("maxFingerRange: " + maxFingerRange.ToString ());
 
-		//TODO was wenn min in negativ bereich???
-		/*if (minRangeValue < 0.10) {
-			//Debug.LogFormat ("minRangeValue < 0.10");
-		}
-		if (maxRangeValue > 0.60) {
-			//Debug.LogFormat ("maxRangeValue > 0.0");
-		}*/
 		Debug.Log ("range calculated");
 	}
 
@@ -304,14 +229,6 @@ public class Position : MonoBehaviour {
 		}
 
 		if (isDepthRangeCalculated == true) {
-
-			//Debug.Log ("startBuffer: " + startBuffer.ToString ());
-
-			//if (startBuffer > 0) {
-				
-			//	startBuffer -= 1;
-
-			//} else {
 
 				checkForMeaningfulChangesZX (lightPosition.x, lightPosition.z);//lastX, lightPosition.x, lastZ, lightPosition.z);
 
@@ -349,17 +266,8 @@ public class Position : MonoBehaviour {
 
 				SelectLight.light.transform.position = new Vector3(newLightVector.x, lightY, newLightVector.z); //newLightPosition;
 
-
 				//Debug.Log("new light position: " + light.transform.position.ToString());
 
-				//lastX = newLightVector.x;
-				//lastZ = newLightVector.z;
-
-			//}
-
-
-
-		
 		}
 	}
 
@@ -390,34 +298,12 @@ public class Position : MonoBehaviour {
 
 	float getPercentageLightPosition(float distance){
 
-		percentagePosOfLightAtBeginning = ((100 / maxWallDistance) * distance); // like 26%
+		percentagePosOfLightAtBeginning = ((100 / maxWallDistance) * distance);
 		//Debug.Log ("percentagePosOfLightAtBeginning: " + percentagePosOfLightAtBeginning.ToString());
 
 		return percentagePosOfLightAtBeginning;
 
 	}
-
-	/*void checkForMeaningfulChangesX(float lastValue, float newValue){
-
-		if(newValue <= (lastValue + changeValue) && newValue >= (lastValue - changeValue)){
-
-			Progressbar.fillProgressbar (xCounter);
-			xCounter += 1;
-
-			if (xCounter == SelectLight.deselectCountdown) {
-
-				Progressbar.resetProgressbar ();
-
-				//disable current positioning selection
-				lightShouldMove = false;
-
-				//Debug.Log ("lampe positioniert");
-
-				xCounter = 0;
-				zCounter = 0;
-			}
-		}
-	}*/
 
 	void checkForMeaningfulChangesZX (float newX, float newZ){//float lastX, float newX, float lastZ, float newZ){
 		Debug.Log ("checkForMeaningfulChangesZX");
@@ -437,20 +323,15 @@ public class Position : MonoBehaviour {
 
 			if (zCounter == SelectLight.waitCountdown) {
 
-
 				//disable current positioning selection
 				lightShouldMove = false;
 				isDepthRangeCalculated = false;
 				Progressbar.resetProgressbar ();
 
 				buffer = bufferMax;
-
-
+				zCounter = 0;
 				//Debug.Log ("lampe positioniert");
 
-				zCounter = 0;
-				//startBuffer = startBufferMax;
-				//xCounter = 0;
 			}
 		} else {
 			
@@ -465,7 +346,7 @@ public class Position : MonoBehaviour {
 	}
 
 	void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
-		Debug.Log ("checkForMeaningfulChangesEntrance");
+		//Debug.Log ("checkForMeaningfulChangesEntrance");
 		float changeValue = 0.002f; //0.001f;
 		newPosition = controlPoint;
 
@@ -473,46 +354,26 @@ public class Position : MonoBehaviour {
 		    && newPosition.y <= (lastPosition.y + changeValue) && newPosition.y >= (lastPosition.y - changeValue)
 		    && newPosition.z <= (lastPosition.z + changeValue) && newPosition.z >= (lastPosition.z - changeValue)) {
 
-			//Debug.Log ("no big change***********************");
+			Progressbar.fillProgressbar (entranceCounter);
+			entranceCounter += 1;
 
-			//if (!(newPosition.x == lastPosition.x) && !(newPosition.y == lastPosition.y) && !(newPosition.z == lastPosition.z)) {
+			if (entranceCounter == SelectLight.waitCountdown) {
 
-				//Debug.Log ("values " + newPosition.x.ToString () + newPosition.y.ToString () + newPosition.z.ToString ());
-				Progressbar.fillProgressbar (entranceCounter);
-				entranceCounter += 1;
-				//Debug.Log ("changeCounter " + changeCounter.ToString());
-
-				if (entranceCounter == SelectLight.waitCountdown) {
-
-					buffer = bufferMax;
-					lightShouldMove = true;
-					//isPositioningActive = true;
-					isDepthRangeCalculated = false;
-					Progressbar.resetProgressbar ();
-					entranceCounter = 0;
-
-					//intensityUp.SetActive (true);
-
-					//Debug.Log("######## intensityShouldChange ###### " + intensityShouldChange.ToString());
-
-				}
-			} else {
-
-				entranceCounter = 0;
+				buffer = bufferMax;
+				lightShouldMove = true;
+				isDepthRangeCalculated = false;
 				Progressbar.resetProgressbar ();
+				entranceCounter = 0;
 
 			}
-		//} else {
+		} else {
+
+			entranceCounter = 0;
+			Progressbar.resetProgressbar ();
+
+		}
 			
-			//entranceCounter = 0;
-			//Progressbar.resetProgressbar ();
-
-		//}
-
-		Debug.Log ("shouldPositionChange??????: " + lightShouldMove.ToString ());
-
 		lastPosition = controlPoint;
 
 	}
-
 }

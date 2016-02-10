@@ -17,14 +17,7 @@ public class HandFeedback : MonoBehaviour {
 	void Start () {
 
 		camera = Camera.main;
-		//Debug.Log("Camera" + camera.ToString());
 			
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	
 	}
 
 	public void displayLabel(Vector3 controlPoint, GameObject label){
@@ -37,7 +30,7 @@ public class HandFeedback : MonoBehaviour {
 		length = controlPoint.magnitude;
 
 		//get depth of handpalm
-		palmDepth = 0.1f; //0.0006f; //0.001f; ////0.13f;
+		palmDepth = 0.075f; //0.0006f; //0.001f; ////0.13f;
 		newLength = length +  palmDepth;
 
 		labelPosition = (controlPoint.normalized) * newLength;
