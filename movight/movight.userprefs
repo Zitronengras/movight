@@ -1,12 +1,17 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ownScripts\Gestures.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ownScripts\Progressbar.cs">
     <Files>
-      <File FileName="Assets\ownScripts\Position.cs" Line="6" Column="27" />
-      <File FileName="Assets\ownScripts\Progressbar.cs" Line="1" Column="1" />
-      <File FileName="Assets\ownScripts\Gestures.cs" Line="368" Column="35" />
-      <File FileName="Assets\ownScripts\SelectLight.cs" Line="1" Column="1" />
-      <File FileName="Assets\ownScripts\HandFeedback.cs" Line="27" Column="48" />
+      <File FileName="Assets\ownScripts\Position.cs" Line="1" Column="1" />
+      <File FileName="Assets\ownScripts\HandFeedback.cs" Line="1" Column="1" />
+      <File FileName="..\..\schriftliches\Abbildungen\Quellcode\Position.cs" Line="303" Column="34" />
+      <File FileName="Assets\ownScripts\Progressbar.cs" Line="38" Column="39" />
+      <File FileName="..\..\schriftliches\Abbildungen\Quellcode\SelectLight.cs" Line="1" Column="1" />
+      <File FileName="..\..\schriftliches\Abbildungen\Quellcode\Gestures.cs" Line="366" Column="49" />
+      <File FileName="Assets\ownScripts\Gestures.cs" Line="311" Column="16" />
+      <File FileName="Assets\ownScripts\SelectLight.cs" Line="86" Column="30" />
+      <File FileName="..\..\schriftliches\Abbildungen\Quellcode\LightIntensity.cs" Line="151" Column="43" />
+      <File FileName="..\..\schriftliches\Abbildungen\Quellcode\ColorTemperature.cs" Line="239" Column="69" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

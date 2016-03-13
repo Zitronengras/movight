@@ -100,11 +100,13 @@ public class Gestures : MonoBehaviour {
 
 	void checkForGesture(){
 
-		//gets Hands objects
-		allHandsInFrame = frame.Hands;
 
 		//iterate detected hands
 		if (!frame.Hands.IsEmpty) {
+			
+			//get hands
+			allHandsInFrame = frame.Hands;
+
 			for (int i = 0; i < frame.Hands.Count; i++) {
 
 				currentHand = allHandsInFrame [i];
@@ -306,7 +308,7 @@ public class Gestures : MonoBehaviour {
 					// work with tipPositon
 					unityIndexFingerTip = leapIndexTipPosition.ToUnityScaled ();
 					rotHMDIndexFingerTip = Quaternion.Euler (270, 180, 0) * unityIndexFingerTip;
-					//get head rotation
+					//get headrotation
 					headRotation = Cardboard.SDK.HeadRotation;
 
 					tmpControlPoint = (headRotation * rotHMDIndexFingerTip);
