@@ -23,7 +23,7 @@ public class ConstructionDistance : MonoBehaviour {
 		isMaxDistanceDetermined = false;
 
 		degreeCounter = 0;
-		wallScanVector = Vector3.forward; //right; // (1,0,0)
+		wallScanVector = Vector3.forward;
 		ceilingScanVector =  Vector3.up;
 		maxWallDistance = 0;
 		onlyWallsLayer = 1 << LayerMask.NameToLayer ("wall");
@@ -35,14 +35,11 @@ public class ConstructionDistance : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		//Debug.Log ("isMaxDistanceDetected: " + isMaxDistanceDetermined.ToString ());
-
 		// do once at the beginning
 		if (isMaxDistanceDetermined == false) {
 			
 			determineDistanceHeadCeiling ();
 			determineMaxDistanceToWall ();
-			//Debug.Log ("maxDistance at the end: " + determineMaxDistanceToWall ());
 
 		}
 	}
@@ -58,12 +55,10 @@ public class ConstructionDistance : MonoBehaviour {
 				if (wallDistance > maxWallDistance) {
 				
 					maxWallDistance = wallDistance;
-					//Debug.Log ("maxDistance:" + maxWallDistance.ToString ());
 
 				}
 
 				wallScanVector = Quaternion.Euler (0, 1, 0) * wallScanVector; //rotate one degree
-				//Debug.Log ("Scan Vector: " + scanVector.ToString ());
 
 				degreeCounter += 1;
 

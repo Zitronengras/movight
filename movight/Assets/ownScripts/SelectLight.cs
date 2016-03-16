@@ -12,7 +12,7 @@ public class SelectLight : MonoBehaviour{
 	static GameObject highlighter;
 	MeshRenderer highlighterRenderer;
 	Material highlighterMaterial;
-	float ceilingY = ConstructionDistance.ceilingDistance; //TODO get dynamicly
+	float ceilingY = ConstructionDistance.ceilingDistance;
 	static float hitObjectHeight;
 	static Vector3 highlighterPosition;
 
@@ -22,7 +22,6 @@ public class SelectLight : MonoBehaviour{
 	public static GameObject light;
 	public static Vector3 lightPosition;
 	static Collider lightCollider;
-	//public static int castDistance;
 
 	//countdown
 	bool firstPassThrough = true;
@@ -30,7 +29,7 @@ public class SelectLight : MonoBehaviour{
 	public static bool isLightSelected = false;
 	int hitCounter = 0;
 	public static int deselectCountdown = 40;
-	public static int waitCountdown = 40; //15;
+	public static int waitCountdown = 40;
 
 	int bufferCounter = 0;
 	int bufferMax = 50;
@@ -67,8 +66,6 @@ public class SelectLight : MonoBehaviour{
 						Progressbar.fillProgressbar (hitCounter);
 						hitCounter += 1;
 
-						//Debug.Log ("hitCounter: " + hitCounter.ToString ());
-
 						if (hitCounter == waitCountdown) {
 
 							lightCollider = hitObject.collider;
@@ -78,8 +75,6 @@ public class SelectLight : MonoBehaviour{
 							highlighter.SetActive (true);
 							setHighlighterPosition (light);
 							Progressbar.resetProgressbar ();
-
-							//Debug.Log ("Licht Objekt ausgewählt*********************************: " + light.ToString ());
 
 							//stop tmp elements of select sequence
 							hitCounter = 0;
@@ -100,7 +95,6 @@ public class SelectLight : MonoBehaviour{
 			} else {
 				
 				bufferCounter += 1;
-				//Debug.Log ("bufferCounter: " + bufferCounter.ToString ());
 
 				if (bufferCounter >= bufferMax) {
 
@@ -111,15 +105,11 @@ public class SelectLight : MonoBehaviour{
 							Progressbar.fillProgressbar (hitCounter);
 							hitCounter += 1;
 
-							//Debug.Log ("hitCounter: " + hitCounter.ToString ());
-
 							if (hitCounter == waitCountdown) {
 
 								lightCollider = hitObject.collider;
 								light = hitObject.collider.gameObject;
 								lightPosition = light.transform.position;
-
-								//Debug.Log ("Licht Objekt ausgewählt**************************************************: " + light.ToString ());
 
 								highlighter.SetActive (true);
 								setHighlighterPosition (light);
@@ -137,7 +127,6 @@ public class SelectLight : MonoBehaviour{
 
 						}
 					}
-					//
 					if (isLightSelected == true) { //deselect light
 
 						if (Physics.Raycast (Gestures.handControllerPos, Gestures.controlPoint, out hitObject, ConstructionDistance.maxWallDistance, onlyLightLayer)) {
@@ -145,11 +134,7 @@ public class SelectLight : MonoBehaviour{
 							Progressbar.fillProgressbar (hitCounter);
 							hitCounter += 1;
 
-							//Debug.Log ("hitCounter: " + hitCounter.ToString ());
-
 							if (hitCounter == waitCountdown) {
-
-								//Debug.Log ("Licht abgewählt ***************************************: " + light.ToString ());
 
 								highlighter.SetActive (false);
 								Progressbar.resetProgressbar ();
@@ -183,8 +168,6 @@ public class SelectLight : MonoBehaviour{
 
 		hitObjectHeight = lightCollider.bounds.extents.y;
 		highlighterPosition = light.transform.position;
-		//Debug.Log ("hitObjectHeight: " + hitObjectHeight.ToString ());
-		//Debug.Log ("ConstructionDistance.ceilingDistance: " + ConstructionDistance.ceilingDistance.ToString ());
 		highlighterPosition.y = ((ConstructionDistance.ceilingDistance - (2 * hitObjectHeight)) - 0.07f);
 		highlighter.transform.position = highlighterPosition;
 

@@ -24,7 +24,6 @@ public class LightIntensity : MonoBehaviour {
 	string lightSourceTag = "lightSource";
 
 	//range
-	//TODO balancing
 	float intensityRangeVolume = 0.20f; //20 virtual cm
 	float minYIntensityRange;
 	float maxYIntensityRange;
@@ -37,8 +36,6 @@ public class LightIntensity : MonoBehaviour {
 
 	//changeIntensity
 	float newIntensity;
-	//int beforeChangeBuffer = 30;
-	//int buffer = 0;
 	float percentageOnScreenPalmPosition;
 
 	//getPercentageIntensity
@@ -90,8 +87,6 @@ public class LightIntensity : MonoBehaviour {
 
 			if (Gestures.isIntensityGesture == true) {
 				
-				//Debug.Log ("im intensity script******************************************************");
-
 				controlPoint = Gestures.controlPoint;
 
 				labelScript.displayLabel (controlPoint, labelScriptObject);
@@ -126,20 +121,15 @@ public class LightIntensity : MonoBehaviour {
 		//get percentage intensity
 		//percentage position of fist between display left and display right
 		percentageIntensityAtBeginning = getPercentageIntensity(currentIntensity);
-		//Debug.Log ("percentageIntensityAtBeginning at the beginning: " + percentageIntensityAtBeginning.ToString());
 
 		percentagePosOnScreenAtBeginning = percentageIntensityAtBeginning; //adapt percentage position of light on position of finger
-		//Debug.Log ("percentagePosOfFistAtBeginning at the beginning: " + percentagePosOnScreenAtBeginning.ToString());
 
 		onePercentOfScreenRange = screenYRange / 100;
 
 		maxYIntensityRange = currentYOnScreen + ((100 - percentagePosOnScreenAtBeginning) * onePercentOfScreenRange);
-		//Debug.Log ("maxYIntensityRange: " + maxYIntensityRange.ToString ());
 
 		minYIntensityRange = currentYOnScreen - (percentagePosOnScreenAtBeginning * onePercentOfScreenRange);
-		//Debug.Log ("minYIntensityRange: " + minYIntensityRange.ToString ());
 
-		//Debug.Log ("range calculated");
 	}
 
 	void changeIntensity(Vector3 controlPoint, float intensity, Light lightSource){
@@ -157,7 +147,6 @@ public class LightIntensity : MonoBehaviour {
 
 			percentageOnScreenPalmPosition = getPercentageFistPosition (currentOnScreenY);
 			newIntensity = ((possibleMax / 100.0f) * percentageOnScreenPalmPosition); 
-			//Debug.Log ("new intensity: " + newIntensity.ToString ());
 			lightSource.intensity = newIntensity;
 
 			checkForMeaningfulYChanges (currentOnScreenY);
@@ -169,9 +158,7 @@ public class LightIntensity : MonoBehaviour {
 
 	float getPercentageFistPosition(float currentOnScreenY){
 		
-		//Debug.Log ("currentY: " + currentY.ToString ());
 		currentPositionDistance = currentOnScreenY - minYIntensityRange; 
-		//Debug.Log ("currentPositionDistance: " + currentPositionDistance.ToString ());
 
 		percentagFistY = (100 / screenYRange) * currentPositionDistance;
 
@@ -187,7 +174,6 @@ public class LightIntensity : MonoBehaviour {
 
 		}
 
-		//Debug.Log ("percentageFistPosition: " + percentagFistY.ToString ());
 		return percentagFistY;
 	}
 
@@ -206,16 +192,13 @@ public class LightIntensity : MonoBehaviour {
 			percentageIntensity = 0;
 
 		}
-
-
-		//Debug.Log ("percentageIntensity: " + percentageIntensity.ToString());
-
+			
 		return percentageIntensity;
 	}
 
 	void checkForMeaningfulChangesEntrance(Vector3 controlPoint){
 
-		changeValue = 0.0019f; //0.0019f;
+		changeValue = 0.0019f;
 		newPosition = controlPoint;
 
 		if (newPosition.x <= (lastPosition.x + changeValue) && newPosition.x >= (lastPosition.x - changeValue)
@@ -275,9 +258,7 @@ public class LightIntensity : MonoBehaviour {
 			Progressbar.resetProgressbar ();
 
 		}
-
-		//Debug.Log ("changeCounter: " + changeCounter.ToString ());
-
+			
 		lastYOnScreen = currentPosition;
 
 	}

@@ -48,13 +48,12 @@ public class Gestures : MonoBehaviour {
 
 	//checkForScreenTapGesture
 	bool firstRun = true;
-	ScreenTapGesture tapGesture; //= new ScreenTapGesture();
+	ScreenTapGesture tapGesture;
 	bool detectTapGesture;
 
 
 	public static Vector3 controlPoint;
 
-	//TODO get them down
 	Vector3 indexControlPoint;
 	Vector3 middleControlPoint;
 
@@ -100,7 +99,6 @@ public class Gestures : MonoBehaviour {
 
 	void checkForGesture(){
 
-
 		//iterate detected hands
 		if (!frame.Hands.IsEmpty) {
 			
@@ -115,7 +113,6 @@ public class Gestures : MonoBehaviour {
 				if (currentHand.IsValid) {
 					if (currentHand.IsRight) {
 						rightHand = currentHand;
-						//Debug.Log ("Found right hand" + rightHand);
 
 						if (SelectLight.isLightSelected == false) { //when no light is selected
 
@@ -238,8 +235,6 @@ public class Gestures : MonoBehaviour {
 			if (indexFinger.IsValid && middleFinger.IsValid) {
 				if (!ringFinger.IsValid && !pinkyFinger.IsValid) {
 
-					//Debug.Log ("now there should be the selectGesture##################");
-
 					isSelectGesture = true;
 
 					//palm
@@ -291,8 +286,6 @@ public class Gestures : MonoBehaviour {
 			if(indexFinger.IsValid){
 				if (!middleFinger.IsValid && !ringFinger.IsValid && !pinkyFinger.IsValid) {
 
-					//Debug.Log("############### positionGesture ######################");
-
 					isPositionGesture = true;
 
 					//palm
@@ -334,12 +327,12 @@ public class Gestures : MonoBehaviour {
 	}
 
 	void checkForIntensityGesture(Hand rightHand){
+		
 		//check for extended fingers on right hand
 		extendedFingers = rightHand.Fingers.Extended();
 
 		if (extendedFingers.IsEmpty) {	
 
-			//Debug.Log ("******FAUST**");
 
 			isIntensityGesture = true;
 
@@ -374,8 +367,6 @@ public class Gestures : MonoBehaviour {
 
 			if (indexFinger.IsValid && middleFinger.IsValid && ringFinger.IsValid && pinkyFinger.IsValid) {
 
-				//Debug.Log ("now there should be the TemperatureGesture##################");
-
 				isTemperatureGesture = true;
 
 				//palm
@@ -399,6 +390,4 @@ public class Gestures : MonoBehaviour {
 
 		}
 	}
-
-
 }
